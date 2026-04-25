@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 714677181b4f39440a248d8ae62fba51, type: 3}
+  m_Name: Triple Shot
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1252024313, guid: 7d8586c7058307748950cfd89867fa20, type: 3}
+  sound: {fileID: 8300000, guid: 36ecab5f5149b374a87e11f76210452b, type: 3}
+  coolDown: 1
+  castObject: {fileID: 1511927781803526295, guid: 18b3df9556a6ea24fab0b09f1c2797f8, type: 3}
+  castingOrigin: 0
+  requireTarget: 1
+  faceInterestDirection: 1
+  useRegularAttackClip: 1
+  overrideClip: {fileID: 0}
+  useMana: 0
+  manaCost: 0
+  useBlood: 0
+  bloodCost: 0
+  useHealing: 0
+  healingAmount: 0
+  useMeleeHitbox: 0
+  minAttackDistance: 10
+  requiredWeapon: 2
+  damageMode: 0
+  minDamage: 1
+  maxDamage: 4

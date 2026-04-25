@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1990e1a905979244909c6836c3cdd68, type: 3}
+  m_Name: Bleed Debuff
+  m_EditorClassIdentifier: 
+  effectName: Burn
+  icon: {fileID: 1677955414, guid: c548632c29e13d848a21524ad93e4f36, type: 3}
+  duration: 30
+  particlePrefab: {fileID: 5167482078269840593, guid: 7f90f3b8000d37c4da10199d94b19d6d, type: 3}
+  particlePositionOffset: {x: 0, y: 0, z: 0}
+  particleRotationOffset: {x: 0, y: 0, z: 0}
+  debuffType: 4
+  damageReduction: 0
+  magicDamageReduction: 0
+  defenseReduction: 0
+  attackSpeedReduction: 0
+  moveSpeedReduction: 0
+  accuracyReduction: 0
+  evasionReduction: 0
+  dotDamagePercent: 1
+  dotInterval: 1

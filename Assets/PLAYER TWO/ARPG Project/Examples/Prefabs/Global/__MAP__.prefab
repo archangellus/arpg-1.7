@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1885936581449703912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5725283008210773490}
+  - component: {fileID: 2100523405194136197}
+  - component: {fileID: 2103346123029570630}
+  - component: {fileID: 5139351740431673019}
+  m_Layer: 0
+  m_Name: __MAP__
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5725283008210773490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885936581449703912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2100523405194136197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885936581449703912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b10b951a549be429c85db311952f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  texture: {fileID: 2800000, guid: f430db8b1e6ddb5499d46f853aec6a19, type: 3}
+  center: {x: 0, y: 0, z: 0}
+  height: 40
+  length: 125
+  onMarkerAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  onMarkerRemoved:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2103346123029570630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885936581449703912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66681057c42110a4ca00410575f1db97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: Map Texture
+  resolution: {x: 1024, y: 1024}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 759
+--- !u!114 &5139351740431673019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885936581449703912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b22ba7f6700fa42930bead6df898fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resolution: 256
+  updateRate: 10
+  fogShader: {fileID: 4800000, guid: fa99ccdc163dcc14d9c0c9dc655676b7, type: 3}
+  hiddenColor: {r: 0, g: 0, b: 0, a: 1}
+  discoveredColor: {r: 0, g: 0, b: 0, a: 0}
+  edgeSoftness: 2
+  edgeBias: 0.5

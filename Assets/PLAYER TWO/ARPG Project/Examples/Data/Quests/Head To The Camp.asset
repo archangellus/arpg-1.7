@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fadb75505e90364e88de4f2b82a4d09, type: 3}
+  m_Name: Head To The Camp
+  m_EditorClassIdentifier: 
+  title: Echoes at the Camp
+  description: "Brother Kaelen fears the worst \u2014 a group of soldiers sent to
+    combat underworld creatures has gone silent. Travel to their encampment near
+    the city and discover what became of them. Aid them if possible... or bring word
+    of their fate."
+  objective: Investigate the soldier camp near the city.
+  targetProgress: 0
+  completingMode: 2
+  returnToGiver: 1
+  experience: 1000
+  coins: 0
+  items: []
+  destinationScene: 
+  progressKey: 
+  startDialogue: "Brave one... I come to you not with holy riddles, but with grim
+    news.\n\nA company of soldiers was dispatched days ago \u2014 sent to a camp
+    near the city to face the horrors rising from the underworld. They were strong,
+    steadfast, ready for battle.\n\nBut... we\u2019ve heard nothing since.\n\nNo
+    riders. No word. Not even a whisper on the wind.\n\nPlease \u2014 go to the camp.
+    See if they still draw breath... or if the darkness has claimed them. Should
+    they still stand, they will need your strength. If not... then we will need your
+    courage."
+  completeDialogue: "You're back... but I see the truth in your silence.\n\nSo they
+    are gone. Every soul. Brave hearts, swallowed by the abyss.\n\nThey marched into
+    darkness so others could live in the light. Their sacrifice will not be forgotten
+    \u2014 not by me, not by the gods.\n\nThank you, Hero. For walking where others
+    dared not. You carried their memory home. That, too, is an act of valor."

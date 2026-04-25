@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8485405070516832653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8485405070516832648}
+  - component: {fileID: 2342676559043860120}
+  - component: {fileID: 8485405070516832650}
+  m_Layer: 0
+  m_Name: Collectible Item
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8485405070516832648
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485405070516832653}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2342676559043860120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485405070516832653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0b45187fafac245b6af1b68bd13399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  interactOnce: 0
+  disableOnInteract: 0
+  animator: {fileID: 0}
+  guiName: {fileID: 7041194000525180191, guid: 4e777e5766ec0a246b82363ed4f7189a, type: 3}
+  nameColor: {r: 1, g: 1, b: 1, a: 1}
+  dropRegularClip: {fileID: 8300000, guid: 5159751915f77ed4cb151926386ece53, type: 3}
+  dropArmorClip: {fileID: 8300000, guid: 6fc307dc74c75474498fead5fedbc57f, type: 3}
+  dropWeaponClip: {fileID: 8300000, guid: a9ca1f63a2a53bb40bc71dff17a3ec4b, type: 3}
+  collectRegularClip: {fileID: 8300000, guid: fd7ffcbc991a22745a54b10c9a10c53f, type: 3}
+  collectArmorClip: {fileID: 8300000, guid: e1ab4975c7e823d4aa9579656f8745a0, type: 3}
+  collectWeaponClip: {fileID: 8300000, guid: e8fc89f79450de840a2d0c1751516f96, type: 3}
+--- !u!65 &8485405070516832650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485405070516832653}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

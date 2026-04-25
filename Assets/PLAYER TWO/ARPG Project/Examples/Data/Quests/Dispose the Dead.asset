@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fadb75505e90364e88de4f2b82a4d09, type: 3}
+  m_Name: Dispose the Dead
+  m_EditorClassIdentifier: 
+  title: Rest for the Fallen
+  description: "After a devastating battle, Captain Elira\u2019s fallen comrades
+    have been resurrected as undead by dark magic. She pleads with you to cleanse
+    the battlefield and put their tormented souls to rest. Track down the risen soldiers
+    and uncover what force animates them."
+  objective: Defeat 10 zombies
+  targetProgress: 10
+  completingMode: 1
+  returnToGiver: 1
+  experience: 1500
+  coins: 2500
+  items: []
+  destinationScene: 
+  progressKey: zombie
+  startDialogue: "The battle... it was a slaughter.\n\nI watched comrades I\u2019ve
+    bled beside for years fall beside me. Brave, loyal, unshakable. I buried them
+    myself \u2014 I swore they would know peace.\n\nBut peace... is a cruel illusion.\n\nThey\u2019ve
+    returned, Hero \u2014 not as the warriors they were, but as hollow, twisted things.
+    The underworld has claimed their bodies, raised them into a mockery of life.
+    My own soldiers \u2014 turned against the living.\n\nI\u2019m begging you...
+    find their remains and lay them to rest. Destroy the magic that binds them to
+    this wretched unlife. Only then can their spirits find peace."
+  completeDialogue: "It\u2019s done, isn\u2019t it?\n\nWere they... themselves at
+    all? Any trace of who they were?\n\nNo. Of course not. That wasn\u2019t them
+    \u2014 just their flesh, twisted by some cruel hand.\n\nThank you. You gave them
+    the peace I couldn\u2019t. And perhaps... you\u2019ve given me a little of it
+    too."

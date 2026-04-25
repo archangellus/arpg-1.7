@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1990e1a905979244909c6836c3cdd68, type: 3}
+  m_Name: Poison Entity Debuff
+  m_EditorClassIdentifier: 
+  effectName: Poison
+  icon: {fileID: -509676071, guid: c548632c29e13d848a21524ad93e4f36, type: 3}
+  duration: 30
+  particlePrefab: {fileID: 4118743617468501636, guid: 04508e02d2963024182b3ecee1039cb3, type: 3}
+  particlePositionOffset: {x: 0, y: 0, z: 0}
+  particleRotationOffset: {x: 0, y: 0, z: 0}
+  debuffType: 3
+  damageReduction: 0
+  defenseReduction: 0
+  attackSpeedReduction: 0
+  moveSpeedReduction: 0
+  dotDamagePercent: 1
+  dotInterval: 1

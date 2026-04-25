@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b64166c49c702499c334434aa31dfe, type: 3}
+  m_Name: Regular Zombies Loot
+  m_EditorClassIdentifier: 
+  lootChance: 0.5
+  loopCount: 0
+  randomPosition: 0
+  randomPositionMaxRadius: 3
+  randomPositionMinRadius: 1.5
+  groundOffset: 0.1
+  generateAttributes: 1
+  minAttributes: 0
+  maxAttributes: 2
+  items:
+  - {fileID: 11400000, guid: a9d3393a671f7c441a74af4a81c00896, type: 2}
+  - {fileID: 11400000, guid: 7de6cdd817a59a0418b75bf32982c2a3, type: 2}
+  - {fileID: 11400000, guid: 9cb964af1fa5b3c4c82335cc71f9deb0, type: 2}
+  - {fileID: 11400000, guid: ee2abf50e21d4c940bd7ca25b12b9194, type: 2}
+  - {fileID: 11400000, guid: 4cb46060deb33ae4aa017fdadc88eeae, type: 2}
+  - {fileID: 11400000, guid: 5b8922a9ddc64b846b581c03afe8c916, type: 2}
+  moneyChance: 0.5
+  minMoneyAmount: 500
+  maxMoneyAmount: 2500
+  multiplyByEntityLevel: 0

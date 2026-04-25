@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Humanoid Two Hand Sword
+  m_Controller: {fileID: 9100000, guid: b7a6235fe49f35142a4cdc4adc21cd35, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 01c647c22e41921419a9b538ad3c79c2, type: 2}
+    m_OverrideClip: {fileID: -3056480956982887098, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 6a60e55c530415344b4cd4a58b57203a, type: 2}
+    m_OverrideClip: {fileID: -2296572529793370849, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: d42e36603bf1b2e48a85aeef761a0b1c, type: 2}
+    m_OverrideClip: {fileID: 9139718198153650314, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: fc7ed1da6ffcdea489a46e5d52dbaa98, type: 2}
+    m_OverrideClip: {fileID: -2357250562573039398, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: d8645eacda6130b46b59e003f708127a, type: 2}
+    m_OverrideClip: {fileID: -7847466796326333299, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 47ede99e5c22e484980800755c4eb29a, type: 2}
+    m_OverrideClip: {fileID: -1886992083083787325, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 508fc6c14d27a4647b01ac395adeee6c, type: 2}
+    m_OverrideClip: {fileID: -2668981258062576350, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: ef80fb3d341933e4fa833fb5b17c9284, type: 2}
+    m_OverrideClip: {fileID: 1091387550991242503, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}

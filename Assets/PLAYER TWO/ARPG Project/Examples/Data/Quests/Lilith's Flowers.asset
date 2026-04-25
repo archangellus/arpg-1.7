@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fadb75505e90364e88de4f2b82a4d09, type: 3}
+  m_Name: Lilith's Flowers
+  m_EditorClassIdentifier: 
+  title: Lilith's Bloom
+  description: "The village soldiers are critically wounded. Brother Kaelen believes
+    the mythical Lilith\u2019s Flowers can save them \u2014 a rare and powerful herb
+    found only in dangerous, corrupted lands. Locate the flowers and bring them back
+    before it's too late."
+  objective: Collect 5 Lilith's Flowers
+  targetProgress: 5
+  completingMode: 1
+  returnToGiver: 1
+  experience: 2500
+  coins: 2000
+  items: []
+  destinationScene: 
+  progressKey: lilith flower
+  startDialogue: "Ah... you\u2019ve come at a desperate time, friend. The village's
+    soldiers lie broken \u2014 their wounds too deep for poultices and prayer alone.\n\nThere
+    is... one hope. A sacred plant, lost to time and fear. Lilith's Flowers. A bloom
+    said to carry the breath of the gods \u2014 able to seal any wound, no matter
+    how cruel.\n\nBut it only grows in cursed soil, where shadows whisper and the
+    air forgets warmth.\n\nPlease, brave one \u2014 find these flowers. Bring them
+    to me, and I swear, the light will shine on these warriors once more."
+  completeDialogue: "By the spirits... is that\u2014? Yes! Lilith\u2019s Flower!\nYou
+    found it. Against all odds, you found it.\n\nIts energy... it hums with the power
+    of life itself. This will mend wounds no blade or magic could ever touch. You've
+    done more than save the soldiers \u2014 you've given this village a future.\n\nMay
+    the gods watch over you, as you have watched over us."

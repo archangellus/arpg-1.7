@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b64166c49c702499c334434aa31dfe, type: 3}
+  m_Name: Regular Skeleton Wizard
+  m_EditorClassIdentifier: 
+  lootChance: 0.8
+  loopCount: 0
+  randomPosition: 0
+  randomPositionMaxRadius: 3
+  randomPositionMinRadius: 1.5
+  rarityLevels:
+  - rarity: {fileID: 11400000, guid: 6bf6e707f6cea034d89284b322c6b883, type: 2}
+    chance: 0.5
+  - rarity: {fileID: 11400000, guid: 1ac92e692017a89428f1c658b6f2938a, type: 2}
+    chance: 0.25
+  items:
+  - {fileID: 11400000, guid: 7de6cdd817a59a0418b75bf32982c2a3, type: 2}
+  - {fileID: 11400000, guid: 19679ddc8109d4348b5e60a8b5cdb2d6, type: 2}
+  - {fileID: 11400000, guid: 7a74949e05a1a0641ac2b6d86533424f, type: 2}
+  - {fileID: 11400000, guid: 77e91c522ce0e044492839c820e45489, type: 2}
+  - {fileID: 11400000, guid: e8f97257528e6ef499e98f031294b208, type: 2}
+  - {fileID: 11400000, guid: f296091cb8c51ec49af9a07c9acf9cc7, type: 2}
+  - {fileID: 11400000, guid: b5eabe5e653c87a48b3ec1bfe7f64ab7, type: 2}
+  - {fileID: 11400000, guid: 8a2041a6e0665fc42bb9d3b7b3d7c77a, type: 2}
+  - {fileID: 11400000, guid: 5b8922a9ddc64b846b581c03afe8c916, type: 2}
+  moneyChance: 0.5
+  minMoneyAmount: 500
+  maxMoneyAmount: 2500

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a1694ab2af2eaca4b8f3c49743ecae82
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Items/Attributes/WeaponAttributes.cs
+  uploadId: 883356

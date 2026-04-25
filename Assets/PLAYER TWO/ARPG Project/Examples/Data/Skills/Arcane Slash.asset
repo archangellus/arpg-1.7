@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 714677181b4f39440a248d8ae62fba51, type: 3}
+  m_Name: Arcane Slash
+  m_EditorClassIdentifier: 
+  icon: {fileID: -314992031, guid: 7d8586c7058307748950cfd89867fa20, type: 3}
+  sound: {fileID: 8300000, guid: ff3194a23b5958441b31003b08ee4682, type: 3}
+  coolDown: 5
+  castObject: {fileID: 1644841586978610676, guid: f1cd27120f1ef554ab6ece4a355d67aa, type: 3}
+  castingOrigin: 0
+  requireTarget: 1
+  faceInterestDirection: 1
+  useRegularAttackClip: 1
+  overrideClip: {fileID: 0}
+  useMana: 1
+  manaCost: 15
+  useBlood: 0
+  bloodCost: 0
+  useHealing: 0
+  healingAmount: 0
+  useMeleeHitbox: 1
+  minAttackDistance: 1.5
+  requiredWeapon: 1
+  damageMode: 0
+  minDamage: 8
+  maxDamage: 16
