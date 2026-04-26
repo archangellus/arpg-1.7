@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f1d9ee29b54e4944cbf9b9e72468dcda
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2655988077585873504
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Presets/DoorsProject_TagsAndLayers.preset
+  uploadId: 779771

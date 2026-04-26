@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9512260bdc2bb3845bb8f08d7498d181
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/Editor/ClusterEditor.cs
+  uploadId: 457882

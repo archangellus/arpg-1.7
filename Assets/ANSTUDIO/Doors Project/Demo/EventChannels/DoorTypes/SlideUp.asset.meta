@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1bf6b3ab11fa5c43b41df23236c95fa
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/SlideUp.asset
+  uploadId: 779771

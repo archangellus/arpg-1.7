@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fa0397a94d3c98749b3db2b21ef54610
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/Spikes/SpikeMaterial.mat
+  uploadId: 779771

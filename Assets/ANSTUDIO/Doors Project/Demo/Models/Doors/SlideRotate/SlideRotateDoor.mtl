@@ -1,0 +1,5 @@
+newmtl SlideRotating
+map_Kd DoorsProject_Grid.png
+Kd 1 0.4196078 0
+d 1
+

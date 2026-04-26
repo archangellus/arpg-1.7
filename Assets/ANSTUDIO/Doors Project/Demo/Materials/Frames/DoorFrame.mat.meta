@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8e11cc5f3dd1c8b47af2f05f6ec44b38
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/Frames/DoorFrame.mat
+  uploadId: 779771

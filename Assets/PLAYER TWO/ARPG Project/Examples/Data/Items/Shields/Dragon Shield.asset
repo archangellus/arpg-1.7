@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fabc1ab5d3c2bfc459268b20840f8e1e, type: 3}
+  m_Name: Dragon Shield
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 919132149155446097, guid: 1bda60804ee4a2ea58cf32c1c270cf73, type: 3}
+  price: 0
+  dropPosition: {x: 0, y: 0, z: 0}
+  dropRotation: {x: 0, y: 0, z: 0}
+  image: {fileID: -2814511230199220947, guid: b54e5618bea88e046ab5466a204ddd45, type: 3}
+  rows: 2
+  columns: 2
+  canStack: 0
+  stackCapacity: 0
+  maxDurability: 5000000
+  requiredLevel: 1
+  requiredStrength: 0
+  requiredDexterity: 0
+  defense: 0
+  chanceToBlock: 45
+  armPosition: {x: 0, y: 0, z: 0}
+  armRotation: {x: 0, y: 0, z: 0}

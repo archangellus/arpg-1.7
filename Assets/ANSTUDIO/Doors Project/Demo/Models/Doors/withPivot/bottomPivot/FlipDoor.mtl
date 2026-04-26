@@ -1,0 +1,5 @@
+newmtl Flip
+map_Kd DoorsProject_Grid.png
+Kd 0.6320543 1 0
+d 1
+

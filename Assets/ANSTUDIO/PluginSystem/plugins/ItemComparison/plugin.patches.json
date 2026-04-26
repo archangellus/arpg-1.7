@@ -1,0 +1,39 @@
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/GUI/GUIItemInspector.cs",
+            "insert_at": [
+                {
+                    "id": "FIND:UpdateAll();|R10_3fc9845a",
+                    "line": 96,
+                    "column": 0,
+                    "insert": "EventBus.RaiseItemInspectorShown(this, m_item, m_guiItem);",
+                    "replace_line": false,
+                    "search": "UpdateAll();",
+                    "use_search": true,
+                    "search_line_range": 10
+                },
+                {
+                    "id": "FIND:m_item.onChanged -= updateHandler;|R5_06d062d9",
+                    "line": 109,
+                    "column": 0,
+                    "insert": "EventBus.RaiseItemInspectorHidden(this, m_item, m_guiItem);",
+                    "replace_line": false,
+                    "search": "m_item.onChanged -= updateHandler;",
+                    "use_search": true,
+                    "search_line_range": 5
+                },
+                {
+                    "id": "FIND:UpdateSkillInstruction();|R10_04702db3",
+                    "line": 118,
+                    "column": 0,
+                    "insert": "EventBus.RaiseItemInspectorUpdated(this, m_item, m_guiItem);",
+                    "replace_line": false,
+                    "search": "UpdateSkillInstruction();",
+                    "use_search": true,
+                    "search_line_range": 10
+                }
+            ]
+        }
+    ]
+}

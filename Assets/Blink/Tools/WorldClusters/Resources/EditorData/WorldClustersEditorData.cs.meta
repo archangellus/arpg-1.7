@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 357468e320e20f24e95440d4579eba2d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/Resources/EditorData/WorldClustersEditorData.cs
+  uploadId: 457882
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - iconContainsWorldClusters: {instanceID: 0}
+  - iconManager: {instanceID: 0}
+  - iconCluster: {instanceID: 0}
+  - iconCollider: {instanceID: 0}
+  - iconTrigger: {instanceID: 0}
+  - iconConditions: {fileID: 2800000, guid: 0216308b36286d24eb8bc87171c31922, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

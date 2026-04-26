@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3ccdca334a5eca94b85df57794f006bb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/Resources/EditorData/WorldClustersEditorSkin.guiskin
+  uploadId: 457882

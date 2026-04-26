@@ -1,0 +1,5 @@
+﻿{
+    "description": "When the inventory is Open, holding **Shift** shows stat differences between the highlighted item and what your character currently has equipped.",
+    "previewImageRelativePath": "pluginDetails/plugin_preview.jpg",
+    "iconRelativePath": ""
+}

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e266d07334b84c8438cc7439a0ccefae
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/Trap2.asset
+  uploadId: 779771

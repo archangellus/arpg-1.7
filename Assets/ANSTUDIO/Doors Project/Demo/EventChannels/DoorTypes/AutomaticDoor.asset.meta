@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 53133c87cff9ff949b0fec29c58eb7ea
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/AutomaticDoor.asset
+  uploadId: 779771

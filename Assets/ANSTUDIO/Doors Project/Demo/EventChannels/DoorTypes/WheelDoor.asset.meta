@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 66f4aefb1a009b947982577fcf186673
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/WheelDoor.asset
+  uploadId: 779771

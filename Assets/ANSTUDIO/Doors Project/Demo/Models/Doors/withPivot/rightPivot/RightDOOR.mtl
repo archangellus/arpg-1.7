@@ -1,0 +1,5 @@
+newmtl DoublelDoors
+map_Kd DoorsProject_Grid.png
+Kd 0.8988769 1 0
+d 1
+

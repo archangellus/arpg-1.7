@@ -1,0 +1,4 @@
+{
+    "description": "Adds arcing item drop animation driven through EventBus without modifying core GUI code.",
+    "previewAssetPath": ""
+}

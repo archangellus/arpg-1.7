@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8e55996c7a3afb0008ed736e14751711
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 127325
+  packageName: Particle Pack
+  packageVersion: 3.1
+  assetPath: Assets/SharedAssets/TextMeshPro/Shaders/TMP_SDF Overlay.shader
+  uploadId: 691001

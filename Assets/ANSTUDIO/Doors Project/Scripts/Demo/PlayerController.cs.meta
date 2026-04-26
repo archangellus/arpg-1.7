@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a3583aa7bb9b3a146bf2b50098343ff2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/Demo/PlayerController.cs
+  uploadId: 779771

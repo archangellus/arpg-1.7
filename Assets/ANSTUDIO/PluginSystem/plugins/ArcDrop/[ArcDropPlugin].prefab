@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &118172762076268337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3154878341374731224}
+  - component: {fileID: 4622419914652049937}
+  m_Layer: 0
+  m_Name: '[ArcDropPlugin]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3154878341374731224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118172762076268337}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4622419914652049937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118172762076268337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ff147d4aa546a59dea485a1cb20e64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PLAYERTWO.ARPGProject.ArcDrop.ArcDropRuntime
+  dropGroundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  droppedItemPrefab: {fileID: 2342676559043860120, guid: ddbeb43bb3ae20c4d8052803a47384ab, type: 3}
+  dropSpeed: 2
+  arcHeight: 2
+  arcCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.011978149
+      value: 0.000022888184
+      inSlope: 1.5640901
+      outSlope: 1.5640901
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.013202275
+    - serializedVersion: 3
+      time: 0.99468994
+      value: 0.0060768127
+      inSlope: -2.7754822
+      outSlope: -2.7754822
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.008189763
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rotateOnX: 1
+  rotateOnY: 1
+  rotateOnZ: 1
+  rotationSpeed: 250
+  dropRange: 2

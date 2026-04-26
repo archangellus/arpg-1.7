@@ -1,0 +1,4 @@
+In the animation event:
+
+select Function = PlaySound
+String field = [Sound Id]

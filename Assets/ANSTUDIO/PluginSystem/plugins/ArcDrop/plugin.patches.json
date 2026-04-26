@@ -1,0 +1,19 @@
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/GUI/GUI.cs",
+            "insert_at": [
+                {
+                    "id": "FIND:return;|R2_974f70e6",
+                    "line": 146,
+                    "column": 0,
+                    "insert": "            var selectedItem = selected;\n            var dropHandled = EventBus.RaiseArcDropRequested(\n                this,\n                selectedItem,\n                m_entity,\n                () =>\n                {\n                    if (selectedItem)\n                        Destroy(selectedItem.gameObject);\n\n                    if (selected == selectedItem)\n                        selected = null;\n\n                    m_dropTime = Time.time;\n                },\n                SafeDeselect\n            );\n\n            if (dropHandled)\n                return;",
+                    "replace_line": false,
+                    "search": "return;",
+                    "use_search": true,
+                    "search_line_range": 4
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4addc9f29c854cf0a6f84d06caa9ece4
+timeCreated: 1432496652
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38222
+  packageName: Action RPG FX
+  packageVersion: 2.02
+  assetPath: Assets/ARPG Effects/Prefabs/Loot/Items/Glow Item/ItemGlowYellow.prefab
+  uploadId: 689779

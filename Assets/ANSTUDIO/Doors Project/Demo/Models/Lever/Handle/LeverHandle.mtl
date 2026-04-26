@@ -1,0 +1,5 @@
+newmtl LeverHandle
+map_Kd DoorsProject_Grid.png
+Kd 1 0.4310312 0.3632075
+d 1
+

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b73f83f9fb6fccd439c10dea9dac8f4b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/DOORSystem/Player/PlayerActions.cs
+  uploadId: 779771

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 861538e689606bc4db0811743f813de7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/Terrain/TerrainLayer.terrainlayer
+  uploadId: 779771

@@ -1,0 +1,5 @@
+﻿{
+    "description": "ArcDrop is a plug-in that handles Inventory item drops through the EventBus instead of core edits. When a player drops an item in the GUI, ArcDrop animates the collectible along an adjustable arc toward the hit point the player clicked/tapped on the ground.\n\nFixed a bug with item duplication when ArcDrop is used along with the ItemRarity plugin",
+    "previewImageRelativePath": "",
+    "iconRelativePath": ""
+}

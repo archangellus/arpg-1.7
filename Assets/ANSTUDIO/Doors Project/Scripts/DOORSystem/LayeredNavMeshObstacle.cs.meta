@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 08fc5b9cefd999445adac78a57b8fd9a
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/DOORSystem/LayeredNavMeshObstacle.cs
+  uploadId: 779771

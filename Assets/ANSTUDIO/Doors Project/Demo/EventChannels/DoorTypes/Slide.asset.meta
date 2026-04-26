@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3d45559ff05c4c84889d498bd63d2448
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/Slide.asset
+  uploadId: 779771

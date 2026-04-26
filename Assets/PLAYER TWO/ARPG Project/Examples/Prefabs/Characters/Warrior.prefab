@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 3480577367158313939}
   - component: {fileID: 5666089066368032290}
   - component: {fileID: 1277022071643704089}
+  - component: {fileID: -8711389402233494546}
   m_Layer: 8
   m_Name: Warrior
   m_TagString: Entity/Player
@@ -375,6 +376,8 @@ MonoBehaviour:
   movementMode: 1
   skillActionBehavior: 0
   destinationEffect: {fileID: 9056652892218667553, guid: 85f99914336577741a0b24d67dbf0ce3, type: 3}
+  holdTargetDotThreshold: 0
+  postActionMoveLockDuration: 0.5
 --- !u!114 &2957117560480157750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,6 +408,12 @@ MonoBehaviour:
   onBlock:
     m_PersistentCalls:
       m_Calls: []
+  onImmune:
+    m_PersistentCalls:
+      m_Calls: []
+  onMiss:
+    m_PersistentCalls:
+      m_Calls: []
   onStunned:
     m_PersistentCalls:
       m_Calls: []
@@ -412,6 +421,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onRevive:
+    m_PersistentCalls:
+      m_Calls: []
+  onIncrementCombo:
+    m_PersistentCalls:
+      m_Calls: []
+  onHighlightChanged:
     m_PersistentCalls:
       m_Calls: []
   entityName: Entity
@@ -461,10 +476,17 @@ MonoBehaviour:
   baseMaxCombos: 1
   baseTimeToStopCombo: 1
   baseNextComboDelay: 0.1
+  immuneToElements: 0
+  resistantToElements: 0
+  weakToElements: 0
   canGainExperience: 1
   infiniteHealth: 0
   infiniteMana: 0
   immuneToStun: 0
+  alwaysHit: 0
+  alwaysEvade: 0
+  immuneToLeech: 0
+  immuneToReflection: 0
 --- !u!114 &2649749250148970344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,7 +569,8 @@ MonoBehaviour:
   onHealthConsumed:
     m_PersistentCalls:
       m_Calls: []
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: c5d05af11151a654caafe5b06ed8a230, type: 2}
   autoEquipFirstSkill: 1
   ignoreCoolDown: 0
   hands: {fileID: 2957117559850772991}
@@ -714,6 +737,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewRadius: 15
   mode: 0
+--- !u!81 &-8711389402233494546
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957117560480157748}
+  m_Enabled: 1
 --- !u!1 &4482667373222356333
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,14 +785,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4482667373222356333}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1

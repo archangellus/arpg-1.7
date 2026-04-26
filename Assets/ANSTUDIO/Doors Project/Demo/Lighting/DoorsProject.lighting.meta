@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3710d9bab97e1cd4391e1a32f9d5ea6b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Lighting/DoorsProject.lighting
+  uploadId: 779771

@@ -1,0 +1,60 @@
+{
+    "states": [
+        {
+            "plugin": "CharacterController",
+            "enabled": true
+        },
+        {
+            "plugin": "InventoryDualSort",
+            "enabled": true
+        },
+        {
+            "plugin": "MouseCameraRotate",
+            "enabled": true
+        },
+        {
+            "plugin": "SamplePlugin",
+            "enabled": false
+        },
+        {
+            "plugin": "ItemComparison",
+            "enabled": true
+        },
+        {
+            "plugin": "ItemGoldGather",
+            "enabled": true
+        },
+        {
+            "plugin": "WorldMapSupport",
+            "enabled": true
+        },
+        {
+            "plugin": "ArcDrop",
+            "enabled": true
+        },
+        {
+            "plugin": "MouseOverCollectible",
+            "enabled": true
+        },
+        {
+            "plugin": "NavInit",
+            "enabled": false
+        },
+        {
+            "plugin": "QuestWindowCompletion",
+            "enabled": true
+        },
+        {
+            "plugin": "ItemRarity",
+            "enabled": true
+        },
+        {
+            "plugin": "WorldMap",
+            "enabled": true
+        },
+        {
+            "plugin": "ProjectileHeightPlugin",
+            "enabled": true
+        }
+    ]
+}

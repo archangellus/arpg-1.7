@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f812af4ae8d950f40b647e9ae1ae7159
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/FullDoor.asset
+  uploadId: 779771

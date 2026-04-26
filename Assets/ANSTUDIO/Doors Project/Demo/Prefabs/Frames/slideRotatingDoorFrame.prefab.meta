@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9df1d740dc4a4254596044b9aad40374
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Prefabs/Frames/slideRotatingDoorFrame.prefab
+  uploadId: 779771

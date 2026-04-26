@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7792011a33025669a3b8d719fa945c, type: 3}
+  m_Name: DragonSoulEater_GoreProfile
+  m_EditorClassIdentifier: Assembly-CSharp::GenericGore.GenericGoreProfile
+  bloodBurstPrefab: {fileID: 0}
+  woundLoopPrefab: {fileID: 0}
+  capMaterial: {fileID: 2100000, guid: 1efe1337acf9e2784af773da481f9357, type: 2}
+  explosionForce: 8
+  explosionRadius: 1.2
+  upwardsModifier: 0.15
+  randomTorque: 8
+  debrisLifetime: 8
+  fallbackGroup: 0
+  groups:
+  - name: Core
+    pivotBonePath: 
+    bonePaths:
+    - 
+    forceMultiplier: 1
+  - name: Spine
+    pivotBonePath: Spine
+    bonePaths:
+    - Spine
+    - Spine/Chest
+    - Spine/Chest/Neck
+    - Spine/Chest/Neck/Head
+    - Spine/Chest/Neck/Head/Eye_Left
+    - Spine/Chest/Neck/Head/Eye_Right
+    - Spine/Chest/Neck/Head/Jaw
+    - Spine/Chest/Neck/Head/Jaw/JawTip
+    - Spine/Chest/Neck/Head/UpperMouth
+    - Spine/Chest/Neck/NeckFat_Left
+    - Spine/Chest/Neck/NeckFat_Right
+    - Spine/Chest/UpperArm_Left
+    - Spine/Chest/UpperArm_Left/LowerArm_Left
+    - Spine/Chest/UpperArm_Left/LowerArm_Left/Hand_Left
+    - Spine/Chest/UpperArm_Left/LowerArm_Left/Hand_Left/HandTip_Left
+    - Spine/Chest/UpperArm_Right
+    - Spine/Chest/UpperArm_Right/LowerArm_Right
+    - Spine/Chest/UpperArm_Right/LowerArm_Right/Hand_Right
+    - Spine/Chest/UpperArm_Right/LowerArm_Right/Hand_Right/HandTip_Right
+    - Spine/ValleyFat
+    - Spine/Wing01_Left
+    - Spine/Wing01_Left/Wing02_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingIndex01_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingIndex01_Left/WingIndex02_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingIndex01_Left/WingIndex02_Left/WingIndex03_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingMiddle01_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingMiddle01_Left/WingMiddle02_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingMiddle01_Left/WingMiddle02_Left/WingMiddle03_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingPinky01_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingPinky01_Left/WingPinky02_Left
+    - Spine/Wing01_Left/Wing02_Left/Wing03_Left/WingHand_Left/WingPinky01_Left/WingPinky02_Left/WingPinky03_Left
+    - Spine/Wing01_Right
+    - Spine/Wing01_Right/Wing02_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingIndex01_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingIndex01_Right/WingIndex02_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingIndex01_Right/WingIndex02_Right/WingIndex03_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingMiddle01_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingMiddle01_Right/WingMiddle02_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingMiddle01_Right/WingMiddle02_Right/WingMiddle03_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingPinky01_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingPinky01_Right/WingPinky02_Right
+    - Spine/Wing01_Right/Wing02_Right/Wing03_Right/WingHand_Right/WingPinky01_Right/WingPinky02_Right/WingPinky03_Right
+    forceMultiplier: 1
+  - name: Tail01
+    pivotBonePath: Tail01
+    bonePaths:
+    - Tail01
+    - Tail01/Tail02
+    - Tail01/Tail02/Tail03
+    - Tail01/Tail02/Tail03/TailEnd
+    forceMultiplier: 1
+  - name: UpperLeg_Left
+    pivotBonePath: UpperLeg_Left
+    bonePaths:
+    - UpperLeg_Left
+    - UpperLeg_Left/LowerLeg_Left
+    - UpperLeg_Left/LowerLeg_Left/ReverseLeg_Left
+    - UpperLeg_Left/LowerLeg_Left/ReverseLeg_Left/Feet_Left
+    - UpperLeg_Left/LowerLeg_Left/ReverseLeg_Left/Feet_Left/Toe_Left
+    forceMultiplier: 1
+  - name: UpperLeg_Right
+    pivotBonePath: UpperLeg_Right
+    bonePaths:
+    - UpperLeg_Right
+    - UpperLeg_Right/LowerLeg_Right
+    - UpperLeg_Right/LowerLeg_Right/ReverseLeg_Right
+    - UpperLeg_Right/LowerLeg_Right/ReverseLeg_Right/Feet_Right
+    - UpperLeg_Right/LowerLeg_Right/ReverseLeg_Right/Feet_Right/Toe_Right
+    forceMultiplier: 1

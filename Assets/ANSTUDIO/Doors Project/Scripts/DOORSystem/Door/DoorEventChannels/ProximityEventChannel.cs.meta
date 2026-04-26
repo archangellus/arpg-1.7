@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 96116e95675236a4fb497c8936fd4b9a
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/DOORSystem/Door/DoorEventChannels/ProximityEventChannel.cs
+  uploadId: 779771

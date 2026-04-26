@@ -1,0 +1,34 @@
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/GUI/GUIInventory.cs",
+            "insert_at": [
+                {
+                    "id": "L103_C16_677e2bde",
+                    "line": 101,
+                    "column": 16,
+                    "insert": "            {\r\n                autoSortButton.onClick.AddListener(() => m_inventory.Sort());\r\n                autoSortButton.onClick.AddListener(() =>\r\n                EventBus.RaiseInventoryAutoSortRequested(m_inventory)\r\n                );\r\n            }",
+                    "replace_line": true,
+                    "search": "autoSortButton.onClick.AddListener(() => m_inventory.Sort());",
+                    "use_search": true,
+                    "search_line_range": 10
+                }
+            ]
+        },
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/Inventory/Inventory.cs",
+            "insert_at": [
+                {
+                    "id": "L199_C12_63c49ce5",
+                    "line": 201,
+                    "column": 0,
+                    "insert": "if (items.ContainsKey(item))\r\nreturn false;",
+                    "replace_line": false,
+                    "search": "return false;",
+                    "use_search": true,
+                    "search_line_range": 2
+                }
+            ]
+        }
+    ]
+}

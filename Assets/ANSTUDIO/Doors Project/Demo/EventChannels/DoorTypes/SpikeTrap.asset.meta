@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8361e6b37255ffc4f97058ebb7b0dd0f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/SpikeTrap.asset
+  uploadId: 779771

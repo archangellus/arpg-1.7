@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bf4c1f8ae4fccc94ba32858e5126e9ef
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/DoubleDoorRight.asset
+  uploadId: 779771

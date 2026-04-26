@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ff6f8ebaaf7b20d4ab599c123b57da5f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/DoorTypes/DoubleSlide.asset
+  uploadId: 779771

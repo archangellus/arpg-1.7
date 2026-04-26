@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: da951d0e36bc2f84090db2b12df122f8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Animations/Animators/ChomperAnimator.controller
+  uploadId: 779771

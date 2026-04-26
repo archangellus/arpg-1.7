@@ -1,0 +1,5 @@
+newmtl LeverBase
+map_Kd DoorsProject_Grid.png
+Kd 0.3679245 0.3679245 0.3679245
+d 1
+

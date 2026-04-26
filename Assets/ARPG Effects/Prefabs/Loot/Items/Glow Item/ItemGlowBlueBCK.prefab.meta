@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2e6c55c7a2914b8fbb510e6c1a052829
+timeCreated: 1432496654
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38222
+  packageName: Action RPG FX
+  packageVersion: 2.02
+  assetPath: Assets/ARPG Effects/Prefabs/Loot/Items/Glow Item/ItemGlowBlue.prefab
+  uploadId: 689779

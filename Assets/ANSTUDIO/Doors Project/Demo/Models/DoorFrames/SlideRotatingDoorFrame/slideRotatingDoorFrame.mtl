@@ -1,0 +1,5 @@
+newmtl DoorsProjectGeneralMaterialURP_1
+map_Kd DoorsProject_TerrainGrid.png
+Kd 1 1 1
+d 1
+

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 037036d8a8f207f408969c8e7915ba6a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/Trigger Event Channel.asset
+  uploadId: 779771

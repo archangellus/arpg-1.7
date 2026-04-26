@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: de31bd4fbcf0f324c8a43fa141979a1f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/ProximityTypes/LeverProximityEventChannel.asset
+  uploadId: 779771

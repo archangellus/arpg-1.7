@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 51ea151a6103afd4e8f2582b0d1a6542
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/DoorTypes/Castle.mat
+  uploadId: 779771

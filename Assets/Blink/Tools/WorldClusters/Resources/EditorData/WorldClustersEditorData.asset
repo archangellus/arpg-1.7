@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 357468e320e20f24e95440d4579eba2d, type: 3}
+  m_Name: WorldClustersEditorData
+  m_EditorClassIdentifier: 
+  removeButtonSize: 20
+  labelWidth: 100
+  labelHeight: 18
+  openButtonStyle: OpenButton
+  collapseButtonStyle: CollapseButton
+  addButtonStyle: AddButton
+  addSmallButtonStyle: AddSmall
+  removeButtonStyle: RemoveButton
+  duplicateButtonStyle: DuplicateButton
+  buttonOffStyle: ButtonOff
+  buttonSelectedStyle: ButtonSelected
+  hierarchyIconsEnabled: 1
+  iconContainsWorldClusters: {fileID: 2800000, guid: 5eab12951d60ca546b23a2f9c749f134, type: 3}
+  iconManager: {fileID: 2800000, guid: 933c7eea15771f044b640b26ee4315d9, type: 3}
+  iconCluster: {fileID: 2800000, guid: 4817b9bf2257a324ea2c7d95d2f1d9f0, type: 3}
+  iconCollider: {fileID: 2800000, guid: 6a8a279c7bb222c4d8c31015dc1ca795, type: 3}
+  iconTrigger: {fileID: 2800000, guid: 1a90edadc2b55794996c452ea868df5f, type: 3}
+  iconConditions: {fileID: 2800000, guid: 0216308b36286d24eb8bc87171c31922, type: 3}

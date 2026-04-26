@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: df119672c9794da479d584c197c375bd
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/README.txt
+  uploadId: 457882

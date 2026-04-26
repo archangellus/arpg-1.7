@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 88fe516c3fc968447a7a25f5fe46e434
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/Resources/EditorData/WorldClustersEditorData.asset
+  uploadId: 457882

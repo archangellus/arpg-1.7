@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3518d9d2393d66d46885800a65f8d3bf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/DOORSystem/Door/Door.cs
+  uploadId: 779771

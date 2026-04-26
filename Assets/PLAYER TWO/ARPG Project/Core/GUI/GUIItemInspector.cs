@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace PLAYERTWO.ARPGProject
@@ -95,7 +95,7 @@ namespace PLAYERTWO.ARPGProject
             gameObject.SetActive(true);
             m_rect.SetAsLastSibling();
             UpdateAll();
-            FadIn();
+                        FadIn();
         }
 
         /// <summary>
@@ -105,13 +105,13 @@ namespace PLAYERTWO.ARPGProject
         {
             if (m_item != null)
                 m_item.onChanged -= updateHandler;
-
+                
             gameObject.SetActive(false);
         }
 
         protected virtual void UpdateAll()
         {
-            UpdatePriceText();
+                    UpdatePriceText();
             UpdateItemName();
             UpdatePotionDescription();
             UpdateAttributes();

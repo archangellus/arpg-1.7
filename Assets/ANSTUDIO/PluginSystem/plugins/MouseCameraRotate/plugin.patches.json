@@ -1,0 +1,39 @@
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityCamera.cs",
+            "insert_at": [
+                {
+                    "id": "L34_C0_d4605c31",
+                    "line": 33,
+                    "column": 0,
+                    "insert": "        private System.Action<object> __mouseRotateHandler;",
+                    "replace_line": false,
+                    "search": "public float rotationScrollMultiplier = 1500f;",
+                    "use_search": true,
+                    "search_line_range": 5
+                },
+                {
+                    "id": "L100_C0_9b378115",
+                    "line": 52,
+                    "column": 0,
+                    "insert": "        public void EventMouseCameraRotateDelta()\n        {\n            __mouseRotateHandler = payload =>\n            {\n                if (payload is float dx) m_targetRotation += dx;\n            };\n            EventBus.Subscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);\n        }\n\n        protected virtual void OnDestroy()\n        {\n            if (__mouseRotateHandler != null)\n                EventBus.Unsubscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);\n        }",
+                    "replace_line": false,
+                    "search": "protected InputAction m_scrollAction;",
+                    "use_search": true,
+                    "search_line_range": 5
+                },
+                {
+                    "id": "L149_C0_81fb7b1a",
+                    "line": 148,
+                    "column": 0,
+                    "insert": "EventMouseCameraRotateDelta();",
+                    "replace_line": false,
+                    "search": "InitializeActionsCallbacks();",
+                    "use_search": true,
+                    "search_line_range": 15
+                }
+            ]
+        }
+    ]
+}

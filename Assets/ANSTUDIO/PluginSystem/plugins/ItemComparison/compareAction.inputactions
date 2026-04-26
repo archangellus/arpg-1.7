@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "compareAction",
+    "maps": [
+        {
+            "name": "Compare",
+            "id": "9ac7624f-0fc3-4942-b83f-66be4b7ae21d",
+            "actions": [
+                {
+                    "name": "ShiftToCompare",
+                    "type": "Button",
+                    "id": "624cf75e-a55f-4dd3-a087-2e2801022992",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f50ca519-8e3a-4fec-b082-da0f1594faaf",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShiftToCompare",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 36a0b5472966eb44a9710ed2653e134e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/EventChannels/ProximityTypes/Cube
+    Proximity Event Channel.asset
+  uploadId: 779771

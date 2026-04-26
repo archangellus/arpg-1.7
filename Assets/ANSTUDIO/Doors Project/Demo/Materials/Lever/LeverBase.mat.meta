@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2189a478b30c8424f8b90c1becfe8cde
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/Lever/LeverBase.mat
+  uploadId: 779771

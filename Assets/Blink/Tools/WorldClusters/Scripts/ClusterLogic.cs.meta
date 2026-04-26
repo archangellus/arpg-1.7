@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4a41c00bb5ec5d54abec0168842e21a9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 204451
+  packageName: World Clusters
+  packageVersion: 1.0.5
+  assetPath: Assets/Blink/Tools/WorldClusters/Scripts/ClusterLogic.cs
+  uploadId: 457882

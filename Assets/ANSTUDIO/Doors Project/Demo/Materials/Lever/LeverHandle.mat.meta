@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4ada2a6ae1a542e4d96e1ceed1957272
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Demo/Materials/Lever/LeverHandle.mat
+  uploadId: 779771

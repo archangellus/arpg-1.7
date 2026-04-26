@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -32,6 +32,9 @@ namespace PLAYERTWO.ARPGProject
 
         [Tooltip("The time in seconds it takes for the scroll to reach its target value.")]
         public float scrollSmoothTime = 0.1f;
+        // >>> PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
+                private System.Action<object> __mouseRotateHandler;
+        // <<< PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
 
         protected float m_distance;
         protected float m_rotation;
@@ -48,6 +51,22 @@ namespace PLAYERTWO.ARPGProject
 
         protected Entity m_entity;
 
+// >>> PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
+        public void EventMouseCameraRotateDelta()
+        {
+            __mouseRotateHandler = payload =>
+            {
+                if (payload is float dx) m_targetRotation += dx;
+            };
+            EventBus.Subscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (__mouseRotateHandler != null)
+                EventBus.Unsubscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);
+        }
+// <<< PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
         protected virtual void InitializeEntity() => m_entity = Level.instance.player;
 
         protected virtual void InitializeActions()
@@ -128,6 +147,9 @@ namespace PLAYERTWO.ARPGProject
             InitializeEntity();
             InitializeActions();
             InitializeActionsCallbacks();
+            // >>> PLUGIN_PATCH:MouseCameraRotate::L149_C0_81fb7b1a
+            EventMouseCameraRotateDelta();
+            // <<< PLUGIN_PATCH:MouseCameraRotate::L149_C0_81fb7b1a
             Reset();
         }
 

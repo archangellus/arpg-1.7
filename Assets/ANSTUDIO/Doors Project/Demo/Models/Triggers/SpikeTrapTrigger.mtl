@@ -1,0 +1,5 @@
+newmtl AutomaticTriggerMaterialURP
+map_Kd DoorsProject_Grid.png
+Kd 0 0.5377358 0.3690344
+d 0.682353
+

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ff251a0b4b8a5934199db79a742e6ddb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324755
+  packageName: DOORS-Project
+  packageVersion: 1.0.1
+  assetPath: Assets/ANSTUDIO/Doors Project/Scripts/Demo/SmoothFollowCamera.cs
+  uploadId: 779771
