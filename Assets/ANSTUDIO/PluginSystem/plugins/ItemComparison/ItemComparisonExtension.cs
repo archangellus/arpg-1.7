@@ -266,7 +266,12 @@ namespace PLAYERTWO.ARPGProject.ItemComparison
                 return;
 
             comparisonTitleText.text = equipped.data.name;
-            comparisonAttributesText.text = equipped.Inspect(m_entity?.stats, m_inspector.attentionColor, m_inspector.invalidColor);
+           comparisonAttributesText.text = equipped.Inspect(
+                m_entity?.stats,
+                m_inspector.attentionColor,
+                m_inspector.invalidColor,
+                m_inspector.specialColor);
+
             comparisonAdditionalAttributesText.text = equipped.attributes?.Inspect() ?? string.Empty;
         }
 
@@ -452,11 +457,17 @@ private void UpdateComparisonTooltipPosition()
                     AppendDeltaLine(deltaLines, $"Defense: {FormatDelta(diff)}");
             }
 
-            int health = m_item.GetAdditionalHealth() - equipped.GetAdditionalHealth();
-            int mana = m_item.GetAdditionalMana() - equipped.GetAdditionalMana();
-            int damage = m_item.GetAdditionalDamage() - equipped.GetAdditionalDamage();
-            int speed = m_item.GetAttackSpeed() - equipped.GetAttackSpeed();
-            int defense = m_item.GetAdditionalDefense() - equipped.GetAdditionalDefense();
+            int health = m_item.GetAttribute(ItemAttributes.AttributeType.Health)
+                - equipped.GetAttribute(ItemAttributes.AttributeType.Health);
+            int mana = m_item.GetAttribute(ItemAttributes.AttributeType.Mana)
+                - equipped.GetAttribute(ItemAttributes.AttributeType.Mana);
+            int damage = m_item.GetAttribute(ItemAttributes.AttributeType.Damage)
+                - equipped.GetAttribute(ItemAttributes.AttributeType.Damage);
+            int speed = m_item.GetAttribute(ItemAttributes.AttributeType.AttackSpeed)
+                - equipped.GetAttribute(ItemAttributes.AttributeType.AttackSpeed);
+            int defense = m_item.GetAttribute(ItemAttributes.AttributeType.Defense)
+                - equipped.GetAttribute(ItemAttributes.AttributeType.Defense);
+
 
             if (damage != 0)
                 AppendDeltaLine(deltaLines, $"Additional Damage: {FormatDelta(damage)}");
@@ -482,7 +493,12 @@ private void UpdateComparisonTooltipPosition()
             }
 
             var equippedInspect = equipped
-                .Inspect(m_entity?.stats, m_inspector.attentionColor, m_inspector.invalidColor)
+                .Inspect(
+                    m_entity?.stats,
+                    m_inspector.attentionColor,
+                    m_inspector.invalidColor,
+                    m_inspector.specialColor)
+
                 .TrimEnd();
             var withEquippedDetails = new StringBuilder();
             withEquippedDetails.AppendLine($"Equipped: {equipped.data.name}");

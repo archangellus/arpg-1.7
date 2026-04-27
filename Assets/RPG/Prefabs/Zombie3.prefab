@@ -11891,14 +11891,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3672878061681931349}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.02993752, y: 0.7180961, z: 0.6951587, w: 0.014006913}
-  m_LocalPosition: {x: -0.282, y: -0, z: 0.06}
+  m_LocalRotation: {x: -0.69560534, y: -0.00021865961, z: -0.016586674, w: 0.71823263}
+  m_LocalPosition: {x: -0.3103, y: 0.0031, z: 0.0119}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8916859712185029936}
   m_Father: {fileID: 6143054901012338163}
-  m_LocalEulerAnglesHint: {x: -87.737, y: 213, z: -36.562}
+  m_LocalEulerAnglesHint: {x: -87.737, y: 35.2, z: -36.562}
 --- !u!33 &5816857636201641389
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11914,7 +11914,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3672878061681931349}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -18376,14 +18376,14 @@ GameObject:
   - component: {fileID: 6098203417241118375}
   - component: {fileID: 5449632171053393548}
   - component: {fileID: 5588091378133416776}
-  - component: {fileID: 1306192701536098905}
   - component: {fileID: 5043509119729737182}
   - component: {fileID: 640403313887035068}
   - component: {fileID: 8166233927606052964}
   - component: {fileID: 475817548199453243}
   - component: {fileID: 5874883792748782962}
   - component: {fileID: 9157718451514242410}
-  m_Layer: 8
+  - component: {fileID: -2078532736744181980}
+  m_Layer: 15
   m_Name: Zombie3
   m_TagString: Entity/Enemy
   m_Icon: {fileID: 0}
@@ -18436,7 +18436,10 @@ MonoBehaviour:
   attackCoolDown: 0.5
   addToAttackersList: 1
   limitSimultaneousAttackers: 1
-  maxSimultaneousAttackers: 2
+  maxSimultaneousAttackers: 3
+  canUseCombo: 0
+  comboChance: 0.5
+  maxCombos: 2
   searchDamageSource: 1
   searchDamageSourceDelay: 0.3
   searchDamageSourceDuration: 5
@@ -18470,6 +18473,7 @@ MonoBehaviour:
   onExperienceChanged:
     m_PersistentCalls:
       m_Calls: []
+  moveSpeed: 6
   level: 1
   strength: 10
   dexterity: 15
@@ -18479,10 +18483,17 @@ MonoBehaviour:
   baseMaxCombos: 1
   baseTimeToStopCombo: 1
   baseNextComboDelay: 0.1
+  immuneToElements: 0
+  resistantToElements: 0
+  weakToElements: 0
   canGainExperience: 0
   infiniteHealth: 0
   infiniteMana: 1
   immuneToStun: 0
+  alwaysHit: 0
+  alwaysEvade: 0
+  immuneToLeech: 0
+  immuneToReflection: 0
 --- !u!114 &5225625817002428200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18513,6 +18524,12 @@ MonoBehaviour:
   onBlock:
     m_PersistentCalls:
       m_Calls: []
+  onImmune:
+    m_PersistentCalls:
+      m_Calls: []
+  onMiss:
+    m_PersistentCalls:
+      m_Calls: []
   onStunned:
     m_PersistentCalls:
       m_Calls: []
@@ -18522,16 +18539,19 @@ MonoBehaviour:
   onRevive:
     m_PersistentCalls:
       m_Calls: []
+  onIncrementCombo:
+    m_PersistentCalls:
+      m_Calls: []
+  onHighlightChanged:
+    m_PersistentCalls:
+      m_Calls: []
   entityName: Ressurected Warrior
   targetTags: []
-  moveSpeed: 1
   rotationSpeed: 720
   canMoveToCancelAttack: 1
   attackDistance: 1
   groundSnapForce: 10
   hitbox: {fileID: 2624504875102634222}
-  autoCollectItems: 0
-  autoCollectCoolDown: 0.1
 --- !u!114 &7964384198484617440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18554,6 +18574,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onPerform:
+    m_PersistentCalls:
+      m_Calls: []
+  onManaConsumed:
+    m_PersistentCalls:
+      m_Calls: []
+  onHealthConsumed:
     m_PersistentCalls:
       m_Calls: []
   skills:
@@ -18644,6 +18670,8 @@ MonoBehaviour:
   blockClipName: Blocking
   stunClipName: Stunned
   baseAttackSpeed: 1
+  attackAnimationExitTime: 1
+  skillAnimationExitTime: 1
   baseBlockSpeed: 1
   baseStunSpeed: 1
 --- !u!114 &6098203417241118375
@@ -18708,9 +18736,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 30983fa0dd6fb184e9c2b6d0f115b325, type: 3}
   - {fileID: 8300000, guid: dde5f83b622bd2640b22442f01e26853, type: 3}
   - {fileID: 8300000, guid: d95383fc89da9e94e8b9f1a6c9318506, type: 3}
-  idleClips: []
-  idleClipMinInterval: 4
-  idleClipMaxInterval: 8
   targetSetClips:
   - {fileID: 8300000, guid: 8be87625c81b377469dcb99760d7b2e0, type: 3}
   - {fileID: 8300000, guid: 3b267f51408b84547a6bc6d529022c89, type: 3}
@@ -18734,20 +18759,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1011
   maxGroundDistance: 2
---- !u!114 &1306192701536098905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6055173624591985891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25b19a17d053dff4285a6a3f7a5f8364, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showOnlyWhenQuestIsActive: 1
-  enemyKey: zombiekill
 --- !u!114 &5043509119729737182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18779,6 +18790,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barType: 0
+  showMode: 1
+  visibleDuration: 3
   offset: {x: 0, y: 50}
 --- !u!114 &8166233927606052964
 MonoBehaviour:
@@ -18940,6 +18953,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2078532736744181980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6055173624591985891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f9b66518026b53f993e1134c792b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PLAYERTWO.ARPGProject.QuestEnabledEnemy
+  showOnlyWhenQuestIsActive: 1
+  enemyKey: zombiekill
 --- !u!1 &6126799258793149421
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,5 @@
+﻿{
+    "description": "Fixes the jittering glitch when trying to use an actual terrain\r\nAdded Y axis to be able to climb slopes\nAdd Dead Zone Radius around the player to prevent accidental clicks under the player",
+    "previewImageRelativePath": "pluginDetails/plugin_preview.png",
+    "iconRelativePath": ""
+}

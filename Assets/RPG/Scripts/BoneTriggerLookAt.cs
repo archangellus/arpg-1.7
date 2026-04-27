@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PLAYERTWO.ARPGProject;
 using UnityEngine;
 
 /// <summary>
@@ -117,6 +118,13 @@ public class BoneTriggerLookAt : MonoBehaviour
 
     [Tooltip("If true, the Animator returns to the previously playing state after the exit animation finishes.")]
     public bool returnToPreviousStateAfterExitAnimation = true;
+
+    [Header("Quest Conditions")]
+    [Tooltip("If enabled, override animations will stop and no new override clips will play after all quests assigned in the Quest Giver are completed.")]
+    public bool stopAnimationWhenQuestGiverCompleted;
+
+    [Tooltip("Quest Giver used to check whether all assigned quests are completed. If left empty, this script will try to find one on the same GameObject.")]
+    public QuestGiver questGiver;
 
     [Header("Animation Linked Object")]
     [Tooltip("If true, a scene object is enabled when an override animation starts and disabled after it ends.")]
@@ -297,6 +305,11 @@ public class BoneTriggerLookAt : MonoBehaviour
         m_trigger = GetComponent<Collider>();
         m_trigger.isTrigger = true;
 
+
+        if (stopAnimationWhenQuestGiverCompleted && !questGiver)
+            questGiver = GetComponent<QuestGiver>();
+
+
         ResolveBone();
         InitializeAnimationOverride();
 
@@ -469,8 +482,10 @@ public class BoneTriggerLookAt : MonoBehaviour
         m_isPlayingExitAnimation = false;
         m_waitingToRestorePreviousAnimatorState = false;
 
-        if (overrideAnimationWhenTracking && CanPlayOverrideAnimationsThisOccupancy())
+
+        if (overrideAnimationWhenTracking && CanPlayOverrideAnimationsThisOccupancy() && !ShouldStopOverrideAnimationsForCompletedQuests())
             PlayFacingAnimationOnOccupancyStart();
+
     }
 
     protected virtual void EndOccupancy()
@@ -605,6 +620,13 @@ public class BoneTriggerLookAt : MonoBehaviour
         if (!overrideAnimationWhenTracking || !m_animationInitialized || !animationAnimator || !m_runtimeOverrideController)
             return;
 
+        if (ShouldStopOverrideAnimationsForCompletedQuests())
+        {
+            StopOverrideAnimationsImmediately();
+            return;
+        }
+
+
         if (m_isOccupancyActive)
         {
             if (CanPlayOverrideAnimationsThisOccupancy()
@@ -629,6 +651,29 @@ public class BoneTriggerLookAt : MonoBehaviour
         }
     }
 
+    protected virtual bool ShouldStopOverrideAnimationsForCompletedQuests()
+    {
+        if (!stopAnimationWhenQuestGiverCompleted || !questGiver)
+            return false;
+
+        return questGiver.state == QuestGiver.State.None;
+    }
+
+    protected virtual void StopOverrideAnimationsImmediately()
+    {
+        m_isPlayingExitAnimation = false;
+        m_currentOverrideAnimationEndTime = 0f;
+        m_waitingToRestorePreviousAnimatorState = false;
+
+        if (returnToPreviousStateAfterExitAnimation)
+            RestorePreviousAnimatorState();
+        else
+            ClearStoredPreviousAnimatorState();
+
+        SetAnimationLinkedObjectActive(false, immediate: true);
+    }
+
+
     protected virtual void PlayFacingAnimationOnOccupancyStart()
     {
         if (playFacingAnimationOnlyOnEnter)
@@ -647,6 +692,11 @@ public class BoneTriggerLookAt : MonoBehaviour
 
     protected virtual bool PlayNextFacingAnimation()
     {
+        // If the quests are completed, we shouldn't play any new override animations, but if we're already playing one, we should let it finish instead of abruptly stopping it.
+        if (ShouldStopOverrideAnimationsForCompletedQuests())
+            return false;
+
+
         if (!TryGetRandomClip(facingAnimations, m_lastFacingClip, out var facingClip))
             return false;
 

@@ -34,7 +34,7 @@
         },
         {
             "plugin": "MouseOverCollectible",
-            "enabled": true
+            "enabled": false
         },
         {
             "plugin": "NavInit",
@@ -46,7 +46,7 @@
         },
         {
             "plugin": "ItemRarity",
-            "enabled": true
+            "enabled": false
         },
         {
             "plugin": "WorldMap",

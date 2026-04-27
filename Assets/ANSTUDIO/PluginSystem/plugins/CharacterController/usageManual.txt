@@ -1,0 +1,3 @@
+If you want to edit Character Controller plugin options, add CharacterControllerExtras to the player prefab (for example, Warrior).
+- clickDeadZoneRadius controls the movement dead zone under the character.
+- ignoredMovementLayers lets you choose layers that should be ignored for point-and-click movement.

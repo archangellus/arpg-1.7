@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb802ff9f4ee12e4fa0f698f11c51eed, type: 3}
+  m_Name: Leather Armor Gloves
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 919132149155446097, guid: ffb6ef9adf0735e468b344d79b254511, type: 3}
+  price: 500
+  dropPosition: {x: 0, y: 0.1, z: 0}
+  dropRotation: {x: -90, y: 0, z: 45}
+  image: {fileID: -8801449190307681389, guid: 292b095561537c54b973127342ffb8bf, type: 3}
+  rows: 2
+  columns: 2
+  canStack: 0
+  stackCapacity: 0
+  maxDurability: 8
+  requiredLevel: 1
+  requiredStrength: 15
+  requiredDexterity: 10
+  slot: 5
+  defense: 2
+  mesh: {fileID: -685991781073432574, guid: 0b20b461df077644cac0d1767d5e250d, type: 3}
+  materials:
+  - {fileID: 2100000, guid: ada2fc6797d426a4693a8223c584051d, type: 2}
+  - {fileID: 2100000, guid: e9f652621c128bb4db70a9005fcc7246, type: 2}

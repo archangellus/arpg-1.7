@@ -1,0 +1,39 @@
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityInputs.cs",
+            "insert_at": [
+                {
+                    "id": "FIND:m_entity.MoveTo(m_target.position);|R5_7e692e35",
+                    "line": 239,
+                    "column": 0,
+                    "insert": "EventBus.allowMoveToTarget(m_entity, m_target);",
+                    "replace_line": true,
+                    "search": "m_entity.MoveTo(m_target.position);",
+                    "use_search": true,
+                    "search_line_range": 10
+                },
+                {
+                    "id": "FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c",
+                    "line": 358,
+                    "column": 0,
+                    "insert": "EventBus.allowMoveToTarget(m_entity, m_interactive.transform);",
+                    "replace_line": true,
+                    "search": "m_entity.MoveTo(m_interactive.transform.position);",
+                    "use_search": true,
+                    "search_line_range": 5
+                },
+                {
+                    "id": "FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb",
+                    "line": 401,
+                    "column": 0,
+                    "insert": "{\nEventBus.allowMoveToPoint(m_entity, hit);\n}",
+                    "replace_line": true,
+                    "search": "m_entity.MoveTo(hit.point);",
+                    "use_search": true,
+                    "search_line_range": 10
+                }
+            ]
+        }
+    ]
+}

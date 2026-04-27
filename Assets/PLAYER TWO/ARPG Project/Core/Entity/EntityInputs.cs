@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -237,7 +237,10 @@ namespace PLAYERTWO.ARPGProject
                 {
                     m_pendingInteractive = m_target.GetComponent<Interactive>();
                     m_entity.targetInteractive = m_pendingInteractive;
-                    m_entity.MoveTo(m_target.position);
+                    // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_target.position);|R5_7e692e35
+                    // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICBtX2VudGl0eS5Nb3ZlVG8obV90YXJnZXQucG9zaXRpb24pOw0K
+                    EventBus.allowMoveToTarget(m_entity, m_target);
+                    // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_target.position);|R5_7e692e35
                     return;
                 }
                 else if (movementMode != MovementMode.PointAndClick)
@@ -353,7 +356,10 @@ namespace PLAYERTWO.ARPGProject
         {
             m_interactive = m_areaScanner.GetClosestInteractiveObject();
 
-            if (m_interactive)
+            // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c
+            // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgaWYgKG1faW50ZXJhY3RpdmUpDQo=
+            EventBus.allowMoveToTarget(m_entity, m_interactive.transform);
+            // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c
             {
                 m_entity.targetInteractive = m_interactive;
                 m_entity.MoveTo(m_interactive.transform.position);
@@ -393,7 +399,12 @@ namespace PLAYERTWO.ARPGProject
                     else
                     {
                         m_target = null;
-                        m_entity.MoveTo(hit.point);
+                        // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
+                        // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICAgICAgbV9lbnRpdHkuTW92ZVRvKGhpdC5wb2ludCk7DQo=
+                        {
+                        EventBus.allowMoveToPoint(m_entity, hit);
+                        }
+                        // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
                     }
                 }
             }

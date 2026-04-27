@@ -15,13 +15,13 @@
                 },
                 {
                     "id": "L100_C0_9b378115",
-                    "line": 52,
+                    "line": 45,
                     "column": 0,
                     "insert": "        public void EventMouseCameraRotateDelta()\n        {\n            __mouseRotateHandler = payload =>\n            {\n                if (payload is float dx) m_targetRotation += dx;\n            };\n            EventBus.Subscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);\n        }\n\n        protected virtual void OnDestroy()\n        {\n            if (__mouseRotateHandler != null)\n                EventBus.Unsubscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);\n        }",
                     "replace_line": false,
                     "search": "protected InputAction m_scrollAction;",
                     "use_search": true,
-                    "search_line_range": 5
+                    "search_line_range": 10
                 },
                 {
                     "id": "L149_C0_81fb7b1a",
@@ -31,7 +31,7 @@
                     "replace_line": false,
                     "search": "InitializeActionsCallbacks();",
                     "use_search": true,
-                    "search_line_range": 15
+                    "search_line_range": 20
                 }
             ]
         }

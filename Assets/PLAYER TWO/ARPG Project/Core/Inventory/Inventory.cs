@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -200,6 +200,10 @@ namespace PLAYERTWO.ARPGProject
         {
             if (!CanInsertItem(item, row, column))
                 return false;
+                // >>> PLUGIN_PATCH:InventoryDualSort::L199_C12_63c49ce5
+                if (items.ContainsKey(item))
+                return false;
+                // <<< PLUGIN_PATCH:InventoryDualSort::L199_C12_63c49ce5
 
             items.Add(item, new(row, column));
 

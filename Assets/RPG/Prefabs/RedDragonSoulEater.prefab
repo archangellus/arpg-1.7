@@ -12314,7 +12314,7 @@ GameObject:
   - component: {fileID: 7362195212836663274}
   - component: {fileID: 2288927244017844207}
   - component: {fileID: 7210479675543423213}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: RedDragonSoulEater
   m_TagString: Entity/Enemy
   m_Icon: {fileID: 0}

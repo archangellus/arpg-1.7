@@ -1,8 +1,15 @@
 fileFormatVersion: 2
-guid: 59db6321be2c479438d2372166a19a4e
+guid: 041394d11df40f6feb93b3e2e200093f
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 9100000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Animations/Controllers/Merchant.controller
+  uploadId: 0

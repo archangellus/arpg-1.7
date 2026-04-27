@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace PLAYERTWO.ARPGProject
@@ -95,6 +95,9 @@ namespace PLAYERTWO.ARPGProject
             gameObject.SetActive(true);
             m_rect.SetAsLastSibling();
             UpdateAll();
+            // >>> PLUGIN_PATCH:ItemComparison::FIND:UpdateAll();|R10_3fc9845a
+            EventBus.RaiseItemInspectorShown(this, m_item, m_guiItem);
+            // <<< PLUGIN_PATCH:ItemComparison::FIND:UpdateAll();|R10_3fc9845a
             FadIn();
         }
 
@@ -105,12 +108,18 @@ namespace PLAYERTWO.ARPGProject
         {
             if (m_item != null)
                 m_item.onChanged -= updateHandler;
+                // >>> PLUGIN_PATCH:ItemComparison::FIND:m_item.onChanged -= updateHandler;|R5_06d062d9
+                EventBus.RaiseItemInspectorHidden(this, m_item, m_guiItem);
+                // <<< PLUGIN_PATCH:ItemComparison::FIND:m_item.onChanged -= updateHandler;|R5_06d062d9
 
             gameObject.SetActive(false);
         }
 
         protected virtual void UpdateAll()
         {
+        // >>> PLUGIN_PATCH:ItemComparison::FIND:UpdateSkillInstruction();|R10_04702db3
+        EventBus.RaiseItemInspectorUpdated(this, m_item, m_guiItem);
+        // <<< PLUGIN_PATCH:ItemComparison::FIND:UpdateSkillInstruction();|R10_04702db3
             UpdatePriceText();
             UpdateItemName();
             UpdatePotionDescription();

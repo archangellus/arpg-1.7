@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-//using PLAYERTWO.ARPGProject.Controllers;
+using PLAYERTWO.ARPGProject.Controllers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -225,7 +225,7 @@ namespace PLAYERTWO.ARPGProject
                 }
             );
         }
-/*
+
         public static void allowMoveToPoint(Entity m_entity, RaycastHit hit)
         {
             if (m_entity == null)
@@ -233,7 +233,7 @@ namespace PLAYERTWO.ARPGProject
 
             var destination = hit.point;
 
-            //var extras = m_entity.GetComponent<CharacterControllerExtras>();
+            var extras = m_entity.GetComponent<CharacterControllerExtras>();
 
             // Ignore tiny command noise from terrain raycasts while the mouse is held.
             // This threshold is configurable in CharacterControllerExtras.
@@ -270,7 +270,7 @@ namespace PLAYERTWO.ARPGProject
             if (!movedByPlugin)
                 m_entity.StandStill();
         }
-*/
+
         public static void allowMoveToTarget(Entity m_entity, Transform m_target)
         {
             if (m_entity == null || m_target == null)
