@@ -13,8 +13,6 @@ namespace PLAYERTWO.ARPGProject
 
         protected EntityInventory m_inventory;
 
-        public CharacterInventory() { }
-
         public CharacterInventory(Character data) => Initialize(data.inventory, data.initialMoney);
 
         public CharacterInventory(CharacterInventoryItem[] items, int money) => Initialize(items, money);
@@ -48,21 +46,19 @@ namespace PLAYERTWO.ARPGProject
 
         public static CharacterInventory CreateFromSerializer(InventorySerializer serializer)
         {
-            var inventory = new CharacterInventory();
-            inventory.initialMoney = serializer.money;
-            inventory.initialItems = new();
+            var items = new List<CharacterInventoryItem>();
 
-            foreach (var entry in serializer.items)
+            foreach (var item in serializer.items)
             {
-                var instance = ItemInstance.CreateFromSerializer(entry.item);
+                var data = GameDatabase.instance.FindElementById<Item>(item.item.itemId);
+                var attributes = CharacterItemAttributes.CreateFromSerializer(item.item.attributes);
+                var cItem = new CharacterItem(data, attributes, item.item.durability, item.item.stack);
+                var inventoryItem = new CharacterInventoryItem(cItem, item.row, item.column);
 
-                if (instance == null)
-                    continue;
-
-                inventory.initialItems.Add(instance, new(entry.row, entry.column));
+                items.Add(inventoryItem);
             }
 
-            return inventory;
+            return new CharacterInventory(items.ToArray(), serializer.money);
         }
     }
 }

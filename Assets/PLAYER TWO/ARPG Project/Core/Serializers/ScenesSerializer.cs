@@ -16,7 +16,6 @@ namespace PLAYERTWO.ARPGProject
             public Interactive[] interactives;
             public GameObject[] gameObjects;
             public DroppedItem[] droppedItems;
-            public DroppedMoney[] droppedMoney;
             public Discoverable[] discoverables;
             public byte[] fogOfWarCells;
         }
@@ -56,14 +55,6 @@ namespace PLAYERTWO.ARPGProject
             public UnitySerializer.Vector3 position;
             public UnitySerializer.Vector3 rotation;
             public ItemSerializer itemInstance;
-        }
-
-        [System.Serializable]
-        public class DroppedMoney
-        {
-            public UnitySerializer.Vector3 position;
-            public UnitySerializer.Vector3 rotation;
-            public int amount;
         }
 
         [System.Serializable]
@@ -123,14 +114,6 @@ namespace PLAYERTWO.ARPGProject
                                 position = new UnitySerializer.Vector3(i.position),
                                 rotation = new UnitySerializer.Vector3(i.rotation),
                                 itemInstance = new ItemSerializer(i.itemInstance),
-                            })
-                            .ToArray(),
-                        droppedMoney = scene
-                            .droppedMoney?.Select(m => new DroppedMoney()
-                            {
-                                position = new UnitySerializer.Vector3(m.position),
-                                rotation = new UnitySerializer.Vector3(m.rotation),
-                                amount = m.amount,
                             })
                             .ToArray(),
                         discoverables = scene

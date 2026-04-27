@@ -19,20 +19,111 @@ MonoBehaviour:
   dexterity: 15
   vitality: 15
   energy: 20
-  initialEquipments:
-    entries:
-    - slot: 0
-      item:
-        data: {fileID: 11400000, guid: c1a513f5b99edca4ba6554fd3529d7c2, type: 2}
-        stack: 0
-        attributes: []
-        durability: 0
-    - slot: 1
-      item:
-        data: {fileID: 11400000, guid: baca1f95bcc4f90468af7a025f5ef14d, type: 2}
-        stack: 0
-        attributes: []
-        durability: 0
+  rightHand:
+    data: {fileID: 11400000, guid: c1a513f5b99edca4ba6554fd3529d7c2, type: 2}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  leftHand:
+    data: {fileID: 11400000, guid: baca1f95bcc4f90468af7a025f5ef14d, type: 2}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  helm:
+    data: {fileID: 0}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  chest:
+    data: {fileID: 0}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  pants:
+    data: {fileID: 0}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  gloves:
+    data: {fileID: 0}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
+  boots:
+    data: {fileID: 0}
+    stack: 0
+    attributes:
+      damage: 0
+      damagePercent: 0
+      attackSpeed: 0
+      critical: 0
+      defense: 0
+      defensePercent: 0
+      mana: 0
+      manaPercent: 0
+      health: 0
+      healthPercent: 0
+    durability: 0
   maxConsumableSlots: 4
   initialConsumables:
   - {fileID: 11400000, guid: a9d3393a671f7c441a74af4a81c00896, type: 2}
@@ -43,26 +134,16 @@ MonoBehaviour:
       data: {fileID: 11400000, guid: a9d3393a671f7c441a74af4a81c00896, type: 2}
       stack: 2
       attributes:
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
+        damage: 0
+        damagePercent: 0
+        attackSpeed: 0
+        critical: 0
+        defense: 0
+        defensePercent: 0
+        mana: 0
+        manaPercent: 0
+        health: 0
+        healthPercent: 0
       durability: 0
     row: 0
     column: 0
@@ -70,28 +151,20 @@ MonoBehaviour:
       data: {fileID: 11400000, guid: 7de6cdd817a59a0418b75bf32982c2a3, type: 2}
       stack: 2
       attributes:
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
-      - type: 0
-        value: 0
+        damage: 0
+        damagePercent: 0
+        attackSpeed: 0
+        critical: 0
+        defense: 0
+        defensePercent: 0
+        mana: 0
+        manaPercent: 0
+        health: 0
+        healthPercent: 0
       durability: 0
     row: 0
     column: 1
-  availableSkills: []
-  equippedSkills: []
+  availableSkills:
+  - {fileID: 11400000, guid: c5d05af11151a654caafe5b06ed8a230, type: 2}
+  equippedSkills:
+  - {fileID: 11400000, guid: c5d05af11151a654caafe5b06ed8a230, type: 2}

@@ -14,7 +14,6 @@ namespace PLAYERTWO.ARPGProject
             public Interactive[] interactives;
             public GameObject[] gameObjects;
             public DroppedItem[] droppedItems;
-            public DroppedMoney[] droppedMoney;
             public Dictionary<string, Discoverable> discoverables;
             public byte[] fogOfWarCells;
         }
@@ -49,13 +48,6 @@ namespace PLAYERTWO.ARPGProject
             public Vector3 position;
             public Vector3 rotation;
             public ItemInstance itemInstance;
-        }
-
-        public class DroppedMoney
-        {
-            public Vector3 position;
-            public Vector3 rotation;
-            public int amount;
         }
 
         public class Discoverable
@@ -105,7 +97,6 @@ namespace PLAYERTWO.ARPGProject
             var interactives = GetInteractives(level);
             var gameObjects = GetGameObjects(level);
             var droppedItems = GetDroppedItems(level);
-            var droppedMoney = GetDroppedMoney(level);
             var discoverables = GetDiscoverables(level);
             var fogOfWarCells = GetFogOfWarCells();
 
@@ -119,7 +110,6 @@ namespace PLAYERTWO.ARPGProject
             scene.interactives = interactives;
             scene.gameObjects = gameObjects;
             scene.droppedItems = droppedItems;
-            scene.droppedMoney = droppedMoney;
             scene.discoverables = discoverables;
             scene.fogOfWarCells = fogOfWarCells;
         }
@@ -163,18 +153,6 @@ namespace PLAYERTWO.ARPGProject
                     position = item.transform.position,
                     rotation = item.transform.rotation.eulerAngles,
                     itemInstance = item.item,
-                })
-                .ToArray();
-        }
-
-        protected virtual DroppedMoney[] GetDroppedMoney(Level level)
-        {
-            return level
-                .droppedMoney.Select(money => new DroppedMoney()
-                {
-                    position = money.transform.position,
-                    rotation = money.transform.rotation.eulerAngles,
-                    amount = money.amount,
                 })
                 .ToArray();
         }
@@ -256,14 +234,6 @@ namespace PLAYERTWO.ARPGProject
                                     ),
                                 })
                                 .Where(item => item != null)
-                                .ToArray(),
-                            droppedMoney = scene
-                                .droppedMoney?.Select(m => new DroppedMoney()
-                                {
-                                    position = m.position.ToUnity(),
-                                    rotation = m.rotation.ToUnity(),
-                                    amount = m.amount,
-                                })
                                 .ToArray(),
                             discoverables = scene.discoverables?.ToDictionary(
                                 d => d.id,

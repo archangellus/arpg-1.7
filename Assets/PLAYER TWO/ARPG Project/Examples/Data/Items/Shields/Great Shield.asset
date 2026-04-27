@@ -25,7 +25,7 @@ MonoBehaviour:
   requiredLevel: 10
   requiredStrength: 25
   requiredDexterity: 20
-  defense: 13
-  chanceToBlock: 15
+  defense: 18
+  chanceToBlock: 95
   armPosition: {x: 0, y: 0, z: 0}
   armRotation: {x: -90, y: 0, z: 180}

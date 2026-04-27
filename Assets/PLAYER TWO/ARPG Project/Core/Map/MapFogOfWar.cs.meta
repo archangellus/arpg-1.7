@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 48b22ba7f6700fa42930bead6df898fd
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapFogOfWar.cs
+  uploadId: 883356

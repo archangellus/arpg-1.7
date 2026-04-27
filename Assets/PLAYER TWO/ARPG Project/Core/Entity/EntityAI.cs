@@ -50,20 +50,6 @@ namespace PLAYERTWO.ARPGProject
         )]
         public int maxSimultaneousAttackers = 2;
 
-        [Header("Combo Settings")]
-        [Tooltip("If true, the Entity will attempt to perform combo attacks.")]
-        public bool canUseCombo;
-
-        [Tooltip("The probability (0 to 1) that a combo chain starts when an attack is triggered.")]
-        [Range(0f, 1f)]
-        public float comboChance = 0.5f;
-
-        [Tooltip(
-            "The total number of attacks to perform in a combo chain. This takes priority over the Entity's stats Max Combos setting."
-        )]
-        [Min(1)]
-        public int maxCombos = 2;
-
         [Header("Search Settings")]
         [Tooltip("If true, this Entity will search the origin of the last damage it take.")]
         public bool searchDamageSource = true;
@@ -93,7 +79,6 @@ namespace PLAYERTWO.ARPGProject
         protected float m_nextTargetRefreshTime;
         protected float m_originalMoveSpeed;
         protected bool m_waitingToSearch;
-        protected bool m_isPerformingCombo;
 
         protected WaitForSeconds m_resetMoveDelay;
         protected WaitForSeconds m_searchDamageSourceDuration;
@@ -134,13 +119,12 @@ namespace PLAYERTWO.ARPGProject
             m_entity.states.ChangeTo<RandomMovementEntityState>();
             m_entity.useSkill = useSkill;
             m_entity.targetTags = targetTags;
-            m_originalMoveSpeed = m_entity.stats.moveSpeed;
+            m_originalMoveSpeed = m_entity.moveSpeed;
         }
 
         protected virtual void InitializeCallback()
         {
             m_entity.onDamage.AddListener(OnDamage);
-            m_entity.onBlock.AddListener(OnBlock);
             m_entity.onDie.AddListener(OnDie);
         }
 
@@ -153,56 +137,7 @@ namespace PLAYERTWO.ARPGProject
                 leader.onDie.AddListener(() => m_entity.Die());
         }
 
-        /// <summary>
-        /// Configures the Entity's hitbox to participate in the combo system
-        /// when combo usage is enabled for this AI.
-        /// </summary>
-        protected virtual void InitializeCombo()
-        {
-            if (!canUseCombo || !m_entity.hitbox)
-                return;
-
-            m_entity.hitbox.incrementCombo = true;
-            m_entity.onIncrementCombo.AddListener(OnComboIncrement);
-        }
-
         protected virtual void RegisterAI() => LevelAIManager.instance.RegisterAI(this);
-
-        /// <summary>
-        /// Called when the Entity increments its combo index. Starts a combo attack
-        /// coroutine if this AI decided to perform a combo.
-        /// </summary>
-        protected virtual void OnComboIncrement()
-        {
-            if (!m_isPerformingCombo)
-                return;
-
-            if (m_entity.comboIndex >= maxCombos)
-            {
-                m_isPerformingCombo = false;
-                m_entity.CancelCombo();
-                return;
-            }
-
-            StartCoroutine(PerformComboAttackRoutine());
-        }
-
-        /// <summary>
-        /// Waits for the combo's next-attack delay then performs the follow-up attack.
-        /// </summary>
-        protected virtual IEnumerator PerformComboAttackRoutine()
-        {
-            yield return new WaitForSeconds(m_entity.stats.nextComboDelay);
-
-            if (!m_entity.target || !m_isPerformingCombo || !m_entity.isPerformingCombo)
-                yield break;
-
-            m_lastAttackTime = Time.time + m_entity.attackDuration;
-            m_entity.Attack();
-
-            if (!m_entity.target || (m_entity.targetEntity && m_entity.targetEntity.isDead))
-                StopAttack();
-        }
 
         protected virtual void HandleViewSight()
         {
@@ -268,20 +203,38 @@ namespace PLAYERTWO.ARPGProject
                 StopAttack();
         }
 
+        /// <summary>
+        /// Returns true if the AI should use a skill for the next attack.
+        /// When the configured skill is on cooldown (or otherwise unavailable),
+        /// the AI falls back to the basic attack automatically.
+        /// </summary>
+        protected virtual bool ShouldUseSkill() => useSkill && m_entity.skills && m_entity.skills.CanUseSkill();
+
+        /// <summary>
+        /// Updates the Entity attack mode for this frame based on skill availability.
+        /// </summary>
+        protected virtual void UpdateAttackMode() => m_entity.useSkill = ShouldUseSkill();
+
+        /// <summary>
+        /// Returns the duration of the currently started attack.
+        /// </summary>
+        protected virtual float GetCurrentAttackDuration() => m_entity.useSkill ? m_entity.skillDuration : m_entity.attackDuration;
+
         protected virtual void HandleAttack()
         {
             if (!m_entity.target || m_entity.isAttacking || !canMove)
                 return;
 
+            UpdateAttackMode();
+
             if (m_entity.IsCloseToAttackTarget())
             {
                 if (Time.time - m_lastAttackTime > attackCoolDown)
                 {
-                    m_isPerformingCombo = canUseCombo && Random.value <= comboChance;
-                    m_lastAttackTime =
-                        Time.time
-                        + (canUseCombo ? m_entity.attackDuration : m_entity.skillDuration);
                     m_entity.Attack();
+
+                    if (m_entity.isAttacking)
+                        m_lastAttackTime = Time.time + GetCurrentAttackDuration();
 
                     if (!m_entity.target || (m_entity.targetEntity && m_entity.targetEntity.isDead))
                         StopAttack();
@@ -304,39 +257,25 @@ namespace PLAYERTWO.ARPGProject
 
             var destination = leader.position + leaderOffset;
             var distanceFromLeader = Vector3.Distance(transform.position, destination);
-            m_entity.stats.moveSpeed =
-                distanceFromLeader > 1f ? m_originalMoveSpeed : leader.stats.moveSpeed - 0.1f;
+            m_entity.moveSpeed =
+                distanceFromLeader > 1f ? m_originalMoveSpeed : leader.moveSpeed - 0.1f;
             m_entity.MoveTo(destination);
         }
 
-        protected virtual void HandleDamageSource(EntityDamageInfo info)
+        protected virtual void OnDamage(int amount, Vector3 source, bool critical)
         {
-            if (m_entity.target || info.damageMode != DamageMode.Active)
+            if (m_entity.target)
                 return;
 
-            if (m_entity.GetDistanceTo(info.sourcePosition) < spotRadius)
+            if (m_entity.GetDistanceTo(source) < spotRadius)
             {
                 SearchTarget(true);
             }
             else if (searchDamageSource)
             {
                 StopAllCoroutines();
-                StartCoroutine(SearchDamageSourceRoutine(info.sourcePosition));
+                StartCoroutine(SearchDamageSourceRoutine(source));
             }
-        }
-
-        protected virtual void OnDamage(EntityDamageInfo info) => HandleDamageSource(info);
-
-        protected virtual void OnBlock(EntityDamageInfo info)
-        {
-            StopAllCoroutines();
-            StartCoroutine(OnBlockRoutine(info));
-        }
-
-        protected virtual IEnumerator OnBlockRoutine(EntityDamageInfo info)
-        {
-            yield return new WaitForSeconds(m_entity.blockDuration);
-            HandleDamageSource(info);
         }
 
         protected virtual void OnDie()
@@ -418,7 +357,6 @@ namespace PLAYERTWO.ARPGProject
             InitializeEntity();
             InitializeCallback();
             InitializeLeader();
-            InitializeCombo();
             RegisterAI();
         }
 

@@ -167,7 +167,7 @@ namespace PLAYERTWO.ARPGProject
                             if (dropHandled)
                                 return;
                 // <<< PLUGIN_PATCH:ArcDrop::FIND:return;|R2_974f70e6
-
+                
             if (Level.instance.TryInstantiateItemDropAtMousePosition(selected.item))
             {
                 Destroy(selected.gameObject);

@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: aff50645b8ee5868195eaa4410a9407a
+guid: 09ed65708f4983cf385f5aaeca6ef835
 timeCreated: 1432805430
 licenseType: Store
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/Style
+    Sheets/Default Style Sheet.asset
+  uploadId: 883356

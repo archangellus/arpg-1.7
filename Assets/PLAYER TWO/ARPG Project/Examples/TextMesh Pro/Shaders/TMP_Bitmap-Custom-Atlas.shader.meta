@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 84933344a7faac393bc13c191768e30f
+guid: 67ee3a8962f3368a19122eb9724a8cf6
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,3 +7,10 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader
+  uploadId: 883356

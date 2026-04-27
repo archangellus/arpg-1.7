@@ -267,7 +267,7 @@ MonoBehaviour:
   attackCoolDown: 0.5
   addToAttackersList: 1
   limitSimultaneousAttackers: 1
-  maxSimultaneousAttackers: 2
+  maxSimultaneousAttackers: 3
   searchDamageSource: 1
   searchDamageSourceDelay: 0.3
   searchDamageSourceDuration: 5

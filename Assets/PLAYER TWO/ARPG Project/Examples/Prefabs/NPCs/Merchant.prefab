@@ -155,12 +155,6 @@ MonoBehaviour:
       attributes: 0
     - data: {fileID: 11400000, guid: 2d27cd7af50d4df42a0a70f829f40e0b, type: 2}
       attributes: 0
-    - data: {fileID: 11400000, guid: 8a91eeb7cb11a614da5772f971f818c7, type: 2}
-      attributes: 0
-    - data: {fileID: 11400000, guid: 7ac2c1132a04dfe4d879615f9b7c031b, type: 2}
-      attributes: 0
-    - data: {fileID: 11400000, guid: 0c2f941aed0b85c43b53b817210fa0dc, type: 2}
-      attributes: 0
 --- !u!114 &5795685653943557807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,10 +168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: b6fc94c668e79454fa035379c30c2b36, type: 2}
-  m_state: 1
-  onIconClicked:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &-7216128773366485493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,7 +197,6 @@ MonoBehaviour:
         m_CallState: 2
   maxIntensity: 1
   propertyName: _Emission
-  renderers: []
 --- !u!65 &7399124025929745388
 BoxCollider:
   m_ObjectHideFlags: 0

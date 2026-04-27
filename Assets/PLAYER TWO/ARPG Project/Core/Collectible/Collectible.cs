@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace PLAYERTWO.ARPGProject
@@ -7,6 +7,9 @@ namespace PLAYERTWO.ARPGProject
     public abstract class Collectible : Interactive
     {
         [Header("GUI Name Settings")]
+        [Tooltip("The GUI Collectible prefab that represents this Collectible name on the GUI.")]
+        public GUICollectibleName guiName;
+
         [Tooltip("The color of the text on the GUI Collectible.")]
         public Color nameColor = Color.white;
 
@@ -14,8 +17,11 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void InitializeCanvas()
         {
-            if (GUICollectibles.instance)
-                GUICollectibles.instance.Add(this);
+            var gui = Instantiate(guiName);
+            // >>> PLUGIN_PATCH:MouseOverCollectible::L19_C12_8e804517
+            EventBus.RaiseCollectibleGUINameInstantiated(this, gui);
+            // <<< PLUGIN_PATCH:MouseOverCollectible::L19_C12_8e804517
+            gui.SetCollectible(this, nameColor);
         }
 
         protected override void InitializeTag() => tag = GameTags.Collectible;
@@ -27,10 +33,6 @@ namespace PLAYERTWO.ARPGProject
         public virtual void Collect(object other)
         {
             onCollect.Invoke();
-
-            if (GUICollectibles.instance)
-                GUICollectibles.instance.Remove(this);
-
             Destroy(gameObject);
         }
 
@@ -44,12 +46,6 @@ namespace PLAYERTWO.ARPGProject
         /// Returns the name of the Item on the Collectible.
         /// </summary>
         public abstract string GetName();
-
-        /// <summary>
-        /// Returns the color used to display this Collectible's name label.
-        /// Defaults to <see cref="nameColor"/>; subclasses can override to drive color from data.
-        /// </summary>
-        public virtual Color GetNameColor() => nameColor;
 
         protected abstract bool TryCollect(Inventory inventory);
 

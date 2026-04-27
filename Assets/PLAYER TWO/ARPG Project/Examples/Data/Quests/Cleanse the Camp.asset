@@ -17,8 +17,8 @@ MonoBehaviour:
     have been resurrected as undead by dark magic. She pleads with you to cleanse
     the battlefield and put their tormented souls to rest. Track down the risen soldiers
     and uncover what force animates them."
-  objective: Defeat 5 zombies
-  targetProgress: 5
+  objective: Defeat 3 falled soldiers
+  targetProgress: 3
   completingMode: 1
   returnToGiver: 0
   experience: 1500

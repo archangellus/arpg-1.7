@@ -29,19 +29,9 @@ namespace PLAYERTWO.ARPGProject
         )]
         public float minimumGroundDistance = 1f;
 
-        [Tooltip(
-            "The speed at which the Projectile adjusts its position downwards when it exceeds the minimum ground distance."
-        )]
-        public float downwardAdjustmentSpeed = 10f;
-
-        [Tooltip("Ground layer mask for the Projectile to adjust its position.")]
-        public LayerMask groundLayer = ~0;
-
-        protected List<DamageLayer> m_damageLayers;
+        protected int m_damage;
         protected bool m_critical;
         protected List<string> m_targets;
-        protected EntityEffect[] m_targetEffects;
-        protected float m_targetEffectChance = 1f;
 
         protected Vector3 m_origin;
 
@@ -56,31 +46,20 @@ namespace PLAYERTWO.ARPGProject
         /// Sets the damage data for this Projectile.
         /// </summary>
         /// <param name="entity">The Entity casting this Projectile.</param>
-        /// <param name="layers">The per-type damage layers for this Projectile.</param>
+        /// <param name="damage">The amount of damage points.</param>
         /// <param name="critical">If true, the Projectile damage will be considered critical.</param>
-        /// <param name="targets">The list of targets' tags for this Projectile to interact with.</param>
+        /// <param name="target">The list of targets' tags for this Projectile to interact with.</param>
         public virtual void SetDamage(
             Entity entity,
-            List<DamageLayer> layers,
+            int damage,
             bool critical,
             List<string> targets
         )
         {
             m_entity = entity;
-            m_damageLayers = layers;
+            m_damage = damage;
             m_critical = critical;
             m_targets = new List<string>(targets);
-        }
-
-        /// <summary>
-        /// Sets the effects and their application chance to apply to entities hit by this Projectile.
-        /// </summary>
-        /// <param name="effects">The effect assets to apply on hit.</param>
-        /// <param name="chance">Probability (0 to 1) of applying all effects.</param>
-        public virtual void SetEffect(EntityEffect[] effects, float chance)
-        {
-            m_targetEffects = effects;
-            m_targetEffectChance = chance;
         }
 
         protected virtual void Start()
@@ -121,38 +100,25 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void HandleEntityAttack(Collider other)
         {
-            if (!other.InTagList(m_targets) || !other.TryGetComponent(out m_otherEntity))
-                return;
-
-            gameObject.SetActive(false);
-            m_otherEntity.Damage(
-                m_entity,
-                new EntityDamageInfo(
-                    m_damageLayers,
-                    m_critical,
-                    m_targetEffects,
-                    m_targetEffectChance
-                )
-            );
-            Destroy(gameObject);
+            if (other.InTagList(m_targets) && other.TryGetComponent(out m_otherEntity))
+            {
+                gameObject.SetActive(false);
+                m_otherEntity.Damage(m_entity, m_damage, m_critical);
+                Destroy(gameObject);
+            }
         }
 
         protected virtual void HandleDestructibleAttack(Collider other)
         {
             if (
-                !m_entity.IsPlayer()
-                || !other.IsDestructible()
-                || !other.TryGetComponent(out m_destructible)
+                m_entity.IsPlayer()
+                && other.IsDestructible()
+                && other.TryGetComponent(out m_destructible)
             )
-                return;
-
-            var totalDamage = 0;
-
-            foreach (var layer in m_damageLayers)
-                totalDamage += layer.amount;
-
-            m_destructible.Damage(totalDamage);
-            Destroy(gameObject);
+            {
+                m_destructible.Damage(m_damage);
+                Destroy(gameObject);
+            }
         }
 
         protected virtual void HandleImpact(Collider other)
@@ -178,21 +144,11 @@ namespace PLAYERTWO.ARPGProject
             var start = transform.position;
             var end = start + Vector3.down * minimumGroundDistance;
 
-            if (
-                Physics.Linecast(
-                    start,
-                    end,
-                    out var hit,
-                    groundLayer,
-                    QueryTriggerInteraction.Ignore
-                )
-            )
+            if (Physics.Linecast(start, end, out var hit))
             {
                 var safeDistance = Vector3.Distance(hit.point, end);
                 transform.position += Vector3.up * safeDistance;
             }
-            else
-                transform.position -= downwardAdjustmentSpeed * Time.deltaTime * Vector3.up;
         }
     }
 }

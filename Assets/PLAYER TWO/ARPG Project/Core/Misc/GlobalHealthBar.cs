@@ -22,7 +22,6 @@ namespace PLAYERTWO.ARPGProject
         public float visibleDuration = 1f;
 
         protected Entity m_entity;
-        protected Destructible m_destructible;
         protected float m_lastUpdateTime;
 
         protected virtual void Start()
@@ -33,10 +32,7 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Update()
         {
-            if (
-                !active
-                || ((m_entity || m_destructible) && Time.time > m_lastUpdateTime + visibleDuration)
-            )
+            if (!active || (m_entity && Time.time > m_lastUpdateTime + visibleDuration))
                 Disable();
         }
 
@@ -47,12 +43,6 @@ namespace PLAYERTWO.ARPGProject
 
             if (m_entity)
                 m_entity.stats.onHealthChanged.RemoveListener(UpdateHealthBar);
-
-            if (m_destructible)
-            {
-                m_destructible.onHitPointsChanged.RemoveListener(UpdateHealthBar);
-                m_destructible = null;
-            }
 
             m_entity = entity;
             nameText.text = entity.entityName;
@@ -66,51 +56,14 @@ namespace PLAYERTWO.ARPGProject
                 instance.Assign(entity);
         }
 
-        public virtual void Assign(Destructible destructible, string displayName = null)
-        {
-            if (!active || m_destructible == destructible)
-                return;
-
-            if (m_entity)
-            {
-                m_entity.stats.onHealthChanged.RemoveListener(UpdateHealthBar);
-                m_entity = null;
-            }
-
-            if (m_destructible)
-                m_destructible.onHitPointsChanged.RemoveListener(UpdateHealthBar);
-
-            m_destructible = destructible;
-            nameText.text = string.IsNullOrEmpty(displayName)
-                ? destructible.gameObject.name
-                : displayName;
-            m_destructible.onHitPointsChanged.AddListener(UpdateHealthBar);
-            UpdateHealthBar();
-        }
-
-        public static void AssignToInstance(Destructible destructible, string displayName = null)
-        {
-            if (instance)
-                instance.Assign(destructible, displayName);
-        }
-
         protected virtual void UpdateHealthBar()
         {
-            if (!active)
+            if (!active || !m_entity)
                 return;
 
-            if (m_destructible)
-            {
-                gameObject.SetActive(true);
-                fillBar.fillAmount = m_destructible.GetHitPointsPercent();
-                m_lastUpdateTime = Time.time;
-            }
-            else if (m_entity)
-            {
-                gameObject.SetActive(true);
-                fillBar.fillAmount = m_entity.stats.GetHealthPercent();
-                m_lastUpdateTime = Time.time;
-            }
+            gameObject.SetActive(true);
+            fillBar.fillAmount = m_entity.stats.GetHealthPercent();
+            m_lastUpdateTime = Time.time;
         }
 
         protected virtual void Disable()
@@ -118,11 +71,7 @@ namespace PLAYERTWO.ARPGProject
             if (m_entity)
                 m_entity.stats.onHealthChanged.RemoveListener(UpdateHealthBar);
 
-            if (m_destructible)
-                m_destructible.onHitPointsChanged.RemoveListener(UpdateHealthBar);
-
             m_entity = null;
-            m_destructible = null;
             gameObject.SetActive(false);
         }
     }

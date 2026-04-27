@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 70d073bdd5787b8f3b706058363f31ae
+guid: 4796e0b28fa4362f0b2f5d5a0c0d570a
 timeCreated: 1484171297
-licenseType: Pro
+licenseType: Store
 TrueTypeFontImporter:
   serializedVersion: 2
   fontSize: 16
@@ -17,3 +17,10 @@ TrueTypeFontImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Fonts/LiberationSans.ttf
+  uploadId: 883356

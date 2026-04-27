@@ -113,12 +113,13 @@ namespace PLAYERTWO.ARPGProject
             characterForm.gameObject.SetActive(m_creatingCharacter);
 
             if (!m_creatingCharacter)
-            {
-                if (m_currentCharacterId >= 0 && m_currentCharacterId < m_characters.Count)
-                    CharacterPreview.instance.Preview(m_characters[m_currentCharacterId].character);
-                else
-                    CharacterPreview.instance.Clear();
-            }
+                if (!m_creatingCharacter)
+{
+    if (m_currentCharacterId >= 0 && m_currentCharacterId < m_characters.Count)
+        CharacterPreview.instance.Preview(m_characters[m_currentCharacterId].character);
+    else
+        CharacterPreview.instance.Clear();
+}
         }
 
         /// <summary>
@@ -150,9 +151,9 @@ namespace PLAYERTWO.ARPGProject
                 return;
 
             characterWindow.gameObject.SetActive(false);
-            characterActions.SetActive(false);
-            CharacterPreview.instance.Clear();
+            characterActions.gameObject.SetActive(false);
             m_game.DeleteCharacter(m_currentCharacterId);
+            CharacterPreview.instance.Clear();
         }
 
         /// <summary>

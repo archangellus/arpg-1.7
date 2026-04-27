@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 492362b774169204ab75e09e09296d21
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapViewPan.cs
+  uploadId: 883356

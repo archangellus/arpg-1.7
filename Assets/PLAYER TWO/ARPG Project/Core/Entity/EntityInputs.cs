@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -33,19 +33,8 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("A particle system that plays when setting a destination.")]
         public ParticleSystem destinationEffect;
 
-        [Header("Hold Target Settings")]
-        [Tooltip(
-            "Dot product threshold below which the cursor is considered pointing away from the "
-                + "locked target, releasing the hold-attack. 0 = 90°, -0.5 = 120°."
-        )]
-        [Range(-1f, 1f)]
-        public float holdTargetDotThreshold = 0f;
-
-        [Tooltip(
-            "Duration in seconds to lock movement after an attack target dies or an interactive "
-                + "is triggered, giving the player time to release the button."
-        )]
-        public float postActionMoveLockDuration = 0.5f;
+        [Tooltip("How close the player must be to interact with clicked Interactive objects without entering their trigger collider.")]
+        [Min(0.1f)] public float clickInteractionRange = 1.5f;
 
         protected Entity m_entity;
         protected Transform m_target;
@@ -60,12 +49,8 @@ namespace PLAYERTWO.ARPGProject
         protected bool m_holdSkill;
         protected bool m_attackMode;
         protected bool m_pointerOverUi;
-        protected bool m_setDestinationHeld;
 
         protected float m_lockDirectionTime;
-        protected float m_postActionMoveLockTime;
-
-        protected Interactive m_pendingInteractive;
 
         protected RaycastHit[] m_hitResults = new RaycastHit[32];
 
@@ -195,6 +180,45 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool IsTargetInteractive() => m_target.IsInteractive();
 
+        protected virtual Interactive GetInteractiveFromCollider(Collider collider)
+        {
+            if (!collider)
+                return null;
+
+            if (collider.TryGetComponent<Interactive>(out var interactive))
+                return interactive;
+
+            return collider.GetComponentInParent<Interactive>();
+        }
+
+        protected virtual bool CanInteractFromClickRange(Collider collider)
+        {
+            if (!collider)
+                return false;
+
+            var closestPoint = collider.ClosestPoint(m_entity.position);
+            var distance = m_entity.GetDistanceTo(closestPoint);
+            return distance <= clickInteractionRange;
+        }
+
+        protected virtual bool TryInteractFromClick(Collider collider)
+        {
+            var interactive = GetInteractiveFromCollider(collider);
+
+            if (!interactive || !interactive.interactive)
+                return false;
+
+            m_entity.targetInteractive = interactive;
+
+            if (!CanInteractFromClickRange(collider))
+                return false;
+
+            interactive.Interact(m_entity);
+            m_entity.targetInteractive = null;
+            m_entity.StandStill();
+            return true;
+        }
+
         protected virtual Vector3 GetMouseDirection()
         {
             var screenPosition = GetPointerPosition();
@@ -216,11 +240,6 @@ namespace PLAYERTWO.ARPGProject
 #if UNITY_STANDALONE || UNITY_WEBGL
             if (m_gamePause.isPaused || (!m_entity.canMove && m_entity.comboIndex == 0))
                 return;
-
-            if (m_entity.states.IsCurrent<UseSkillEntityState>())
-                return;
-
-            m_setDestinationHeld = true;
             m_target = null;
             m_entity.useSkill = false;
 
@@ -235,9 +254,13 @@ namespace PLAYERTWO.ARPGProject
                 }
                 else if (IsTargetInteractive())
                 {
-                    m_pendingInteractive = m_target.GetComponent<Interactive>();
-                    m_entity.targetInteractive = m_pendingInteractive;
-                    m_entity.MoveTo(m_target.position);
+                    if (TryInteractFromClick(hit.collider))
+                        return;
+
+                    // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_target.position);|R5_7e692e35
+                    // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICBtX2VudGl0eS5Nb3ZlVG8obV90YXJnZXQucG9zaXRpb24pOw0K
+                    EventBus.allowMoveToTarget(m_entity, m_target);
+                    // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_target.position);|R5_7e692e35
                     return;
                 }
                 else if (movementMode != MovementMode.PointAndClick)
@@ -249,26 +272,15 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
-        protected virtual void OnSetDestinationCancelled(InputAction.CallbackContext _)
-        {
-            m_holdMove = m_holdAttack = m_setDestinationHeld = false;
-            m_postActionMoveLockTime = 0;
-            m_pendingInteractive = null;
-        }
+        protected virtual void OnSetDestinationCancelled(InputAction.CallbackContext _) =>
+            m_holdMove = m_holdAttack = false;
 
         protected virtual void OnDirectionalMovement(InputAction.CallbackContext _) =>
             m_target = null;
 
         protected virtual void OnSkill(InputAction.CallbackContext _)
         {
-            if (
-                m_gamePause.isPaused
-                || !m_entity.skills.CanUseSkill()
-                || m_entity.states.IsCurrent<UseSkillEntityState>()
-                || m_entity.states.IsCurrent<AttackEntityState>()
-                || m_holdMove
-                || GetMoveDirection().sqrMagnitude > 0
-            )
+            if (m_gamePause.isPaused || !m_entity.skills.CanUseSkill())
                 return;
 
             m_entity.useSkill = true;
@@ -322,13 +334,7 @@ namespace PLAYERTWO.ARPGProject
         {
             m_entity.skills.ChangeTo(index);
 
-            if (
-                skillActionBehavior == SkillActionBehavior.Equip
-                || m_entity.states.IsCurrent<UseSkillEntityState>()
-                || m_entity.states.IsCurrent<AttackEntityState>()
-                || m_holdMove
-                || GetMoveDirection().sqrMagnitude > 0
-            )
+            if (skillActionBehavior == SkillActionBehavior.Equip)
                 return;
 
             m_entity.useSkill = true;
@@ -356,7 +362,10 @@ namespace PLAYERTWO.ARPGProject
             if (m_interactive)
             {
                 m_entity.targetInteractive = m_interactive;
-                m_entity.MoveTo(m_interactive.transform.position);
+                // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c
+                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgIG1fZW50aXR5Lk1vdmVUbyhtX2ludGVyYWN0aXZlLnRyYW5zZm9ybS5wb3NpdGlvbik7DQo=
+                EventBus.allowMoveToTarget(m_entity, m_interactive.transform);
+                // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c
             }
         }
 
@@ -371,31 +380,14 @@ namespace PLAYERTWO.ARPGProject
                 m_entity.lookDirection = GetMouseDirection();
 
                 if (m_attackMode)
-                {
                     m_entity.FreeAttack();
-                }
                 else if (MouseRaycast(out var hit))
+                // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
+                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgIG1fZW50aXR5Lk1vdmVUbyhoaXQucG9pbnQpOw0K
                 {
-                    var foundTarget = TrySetTarget(hit.collider);
-
-                    if (foundTarget && IsTargetAttackable())
-                    {
-                        m_holdMove = false;
-                        m_holdAttack = true;
-                    }
-                    else if (foundTarget && IsTargetInteractive())
-                    {
-                        m_holdMove = false;
-                        m_pendingInteractive = m_target.GetComponent<Interactive>();
-                        m_entity.targetInteractive = m_pendingInteractive;
-                        m_entity.MoveTo(m_target.position);
-                    }
-                    else
-                    {
-                        m_target = null;
-                        m_entity.MoveTo(hit.point);
-                    }
+                EventBus.allowMoveToPoint(m_entity, hit);
                 }
+                // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
             }
 #endif
         }
@@ -419,21 +411,12 @@ namespace PLAYERTWO.ARPGProject
             }
             else if (IsTargetEntityActive() || TryRefreshTarget() && IsTargetAttackable())
             {
-                if (!m_attackMode && !IsCursorFacingTarget())
-                {
-                    m_holdAttack = false;
-                    m_holdMove = true;
-                    return;
-                }
-
                 m_entity.MoveToAttack(m_target);
             }
             else
             {
+                m_holdMove = !m_holdSkill;
                 m_holdAttack = false;
-
-                if (!m_holdSkill)
-                    m_postActionMoveLockTime = postActionMoveLockDuration;
             }
         }
 
@@ -463,50 +446,23 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool IsTargetEntityActive() => m_targetEntity && !m_targetEntity.isDead;
 
-        protected virtual bool IsCursorFacingTarget() =>
-            m_target != null && IsCursorFacingPosition(m_target.position);
-
-        protected virtual bool IsCursorFacingPosition(Vector3 targetPosition)
+        protected virtual void HandleClickInteractionRange()
         {
-            var toTarget = targetPosition - transform.position;
-            toTarget.y = 0;
-
-            if (toTarget.sqrMagnitude < 0.001f)
-                return true;
-
-            return Vector3.Dot(toTarget.normalized, GetMouseDirection()) >= holdTargetDotThreshold;
-        }
-
-        protected virtual void HandlePostActionLock()
-        {
-#if UNITY_STANDALONE || UNITY_WEBGL
-            if (m_pendingInteractive != null && m_entity.targetInteractive != null)
-            {
-                if (!IsCursorFacingPosition(m_pendingInteractive.transform.position))
-                {
-                    m_entity.targetInteractive = null;
-                    m_pendingInteractive = null;
-                    m_holdMove = true;
-                    return;
-                }
-            }
-#endif
-
-            if (m_pendingInteractive != null && m_entity.targetInteractive == null)
-            {
-                m_pendingInteractive = null;
-
-                if (m_setDestinationHeld)
-                    m_postActionMoveLockTime = postActionMoveLockDuration;
-            }
-
-            if (m_postActionMoveLockTime <= 0)
+            if (!m_entity.targetInteractive || !m_entity.targetInteractive.interactive)
                 return;
 
-            m_postActionMoveLockTime -= Time.deltaTime;
+            var colliders = m_entity.targetInteractive.GetComponentsInChildren<Collider>();
 
-            if (m_postActionMoveLockTime <= 0 && m_setDestinationHeld)
-                m_holdMove = true;
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (!CanInteractFromClickRange(colliders[i]))
+                    continue;
+
+                m_entity.targetInteractive.Interact(m_entity);
+                m_entity.targetInteractive = null;
+                m_entity.StandStill();
+                return;
+            }
         }
 
         public virtual Vector3 GetMoveDirection()
@@ -605,7 +561,7 @@ namespace PLAYERTWO.ARPGProject
             HandlePointer();
             HandleMovement();
             HandleAttack();
-            HandlePostActionLock();
+            HandleClickInteractionRange();
             HandleHighlight();
             HandleMoveDirectionUnlock();
         }

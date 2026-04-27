@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7481a1d21e3dd6bebb866c26c176fc66
+guid: f80aebb28103da14088a6b0b4084de20
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,3 +7,10 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader
+  uploadId: 883356

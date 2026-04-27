@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 0181217b6dc6d5649bc100a1d8ec7a39
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Game/Editor/GameSaveEditor.cs
+  uploadId: 883356

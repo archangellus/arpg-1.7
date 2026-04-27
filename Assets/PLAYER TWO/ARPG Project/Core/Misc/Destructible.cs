@@ -9,7 +9,6 @@ namespace PLAYERTWO.ARPGProject
     {
         public UnityEvent OnHit;
         public UnityEvent OnDestruct;
-        public UnityEvent onHitPointsChanged;
 
         [Header("General Settings")]
         [Tooltip("The amount of hits it can take before breaking.")]
@@ -41,8 +40,6 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The Audio Clip that plays when this object gets destroyed.")]
         public AudioClip breakingAudio;
 
-        protected int m_maxHitPoints;
-
         protected float m_lastHitTime;
 
         protected WaitForSeconds m_waitForDisableDelay;
@@ -50,8 +47,6 @@ namespace PLAYERTWO.ARPGProject
         protected const string k_crackedObjectParentName = "Cracked Objects";
 
         protected GameAudio m_audio => GameAudio.instance;
-
-        protected virtual void InitializeMaxHitPoints() => m_maxHitPoints = hitPoints;
 
         protected virtual void InitializeWaits()
         {
@@ -70,12 +65,6 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void InitializeTag() => tag = GameTags.Destructible;
 
         /// <summary>
-        /// Returns the current hit points as a normalized value between 0 and 1.
-        /// </summary>
-        public float GetHitPointsPercent() =>
-            m_maxHitPoints > 0 ? (float)hitPoints / m_maxHitPoints : 0f;
-
-        /// <summary>
         /// Damages this Destructible object.
         /// </summary>
         /// <param name="amount">The amount of damage received.</param>
@@ -89,7 +78,6 @@ namespace PLAYERTWO.ARPGProject
 
             m_lastHitTime = Time.time;
             hitPoints = Mathf.Max(hitPoints - amount, 0);
-            onHitPointsChanged.Invoke();
             OnHit.Invoke();
 
             if (hitPoints == 0)
@@ -117,7 +105,6 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Start()
         {
-            InitializeMaxHitPoints();
             InitializeWaits();
             InitializeRigidbody();
             InitializeTag();

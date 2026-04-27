@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 66681057c42110a4ca00410575f1db97
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapBaker.cs
+  uploadId: 883356

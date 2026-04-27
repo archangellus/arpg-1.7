@@ -14,9 +14,6 @@ namespace PLAYERTWO.ARPGProject
         public UnityEvent onExperienceChanged;
 
         [Header("General Settings")]
-        [Tooltip("The maximum speed this Entity will use to move around.")]
-        public float moveSpeed = 6f;
-
         [Tooltip("The initial level of this Entity.")]
         public int level = 1;
 
@@ -45,22 +42,6 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The delay before performing the next combo when an attack is triggered.")]
         public float baseNextComboDelay = 0.1f;
 
-        [Header("Elemental Resistance")]
-        [Tooltip(
-            "Damage types this Entity is immune to. Incoming damage is reduced to zero and effects cannot be applied."
-        )]
-        public ElementalDamageTypeMask immuneToElements;
-
-        [Tooltip(
-            "Damage types this Entity is resistant to. Incoming damage from these types is halved."
-        )]
-        public ElementalDamageTypeMask resistantToElements;
-
-        [Tooltip(
-            "Damage types this Entity is weak to. Incoming damage from these types is doubled."
-        )]
-        public ElementalDamageTypeMask weakToElements;
-
         [Header("Bot Settings")]
         [Tooltip("If true, the Entity will be able to gain experience.")]
         public bool canGainExperience = true;
@@ -73,20 +54,6 @@ namespace PLAYERTWO.ARPGProject
 
         [Tooltip("If true, the Entity will be immune to stun.")]
         public bool immuneToStun;
-
-        [Tooltip(
-            "If true, this entity's attacks always hit regardless of the accuracy vs evasion roll."
-        )]
-        public bool alwaysHit;
-
-        [Tooltip("If true, this entity always evades incoming active attacks.")]
-        public bool alwaysEvade;
-
-        [Tooltip("If true, attackers cannot leech health or mana from hits against this entity.")]
-        public bool immuneToLeech;
-
-        [Tooltip("If true, this entity cannot receive reflected damage.")]
-        public bool immuneToReflection;
 
         protected int m_health;
         protected int m_mana;
@@ -188,62 +155,6 @@ namespace PLAYERTWO.ARPGProject
         public int stunSpeed { get; protected set; }
 
         /// <summary>
-        /// Returns the accuracy rating used in the hit chance calculation.
-        /// Higher values increase the chance to land attacks against evasive targets.
-        /// </summary>
-        public int accuracy { get; protected set; }
-
-        /// <summary>
-        /// Returns the evasion rating used in the hit chance calculation.
-        /// Higher values increase the chance to avoid incoming active attacks.
-        /// </summary>
-        public int evasion { get; protected set; }
-
-        /// <summary>
-        /// Returns the skill cooldown reduction factor derived from item attributes (0 = no reduction).
-        /// </summary>
-        public float skillCoolDownReduction =>
-            m_additionalAttributes[ItemAttributes.AttributeType.SkillCoolDownPercent] / 100f;
-
-        /// <summary>Flat health gained by this entity on each successful hit.</summary>
-        public int healthOnHit => m_additionalAttributes[ItemAttributes.AttributeType.HealthOnHit];
-
-        /// <summary>Flat mana gained by this entity on each successful hit.</summary>
-        public int manaOnHit => m_additionalAttributes[ItemAttributes.AttributeType.ManaOnHit];
-
-        /// <summary>Percentage of damage dealt converted into health for the attacker.</summary>
-        public int healthLeechPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.HealthLeechPercent];
-
-        /// <summary>Percentage of damage dealt converted into mana for the attacker.</summary>
-        public int manaLeechPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.ManaLeechPercent];
-
-        /// <summary>Percentage of damage taken reflected back to the attacker.</summary>
-        public int damageReflectionPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.DamageReflectionPercent];
-
-        /// <summary>Percentage of damage taken converted into mana for this entity.</summary>
-        public int damageToManaPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.DamageToManaPercent];
-
-        /// <summary>Chance (0–100) to inflict Bleed on a successful hit, from item attributes.</summary>
-        public virtual int chanceToBleedPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.ChanceToBleedPercent];
-
-        /// <summary>Chance (0–100) to inflict Burn on a successful hit, from item attributes.</summary>
-        public virtual int chanceToBurnPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.ChanceToBurnPercent];
-
-        /// <summary>Chance (0–100) to inflict Freeze on a successful hit, from item attributes.</summary>
-        public virtual int chanceToFreezePercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.ChanceToFreezePercent];
-
-        /// <summary>Chance (0–100) to inflict Poison on a successful hit, from item attributes.</summary>
-        public virtual int chanceToPoisonPercent =>
-            m_additionalAttributes[ItemAttributes.AttributeType.ChanceToPoisonPercent];
-
-        /// <summary>
         /// Get or set the experience points.
         /// </summary>
         public int experience
@@ -295,8 +206,7 @@ namespace PLAYERTWO.ARPGProject
 
         protected EntityItemManager m_items;
         protected EntitySkillManager m_skills;
-        protected EntityEffectManager m_effects;
-        protected ItemAttributes m_additionalAttributes;
+        protected ItemFinalAttributes m_additionalAttributes;
         protected List<Entity> m_defeatedEntities = new();
 
         /// <summary>
@@ -319,7 +229,6 @@ namespace PLAYERTWO.ARPGProject
 
             InitializeItems();
             InitializeSkills();
-            InitializeEffects();
             Recalculate();
             Revitalize();
 
@@ -335,9 +244,6 @@ namespace PLAYERTWO.ARPGProject
         }
 
         protected virtual void InitializeSkills() => m_skills = GetComponent<EntitySkillManager>();
-
-        protected virtual void InitializeEffects() =>
-            m_effects = GetComponent<EntityEffectManager>();
 
         /// <summary>
         /// Bulk update all stats points and recalculate the stats.
@@ -391,89 +297,11 @@ namespace PLAYERTWO.ARPGProject
         public virtual float GetExperiencePercent() => experience / (float)nextLevelExp;
 
         /// <summary>
-        /// Returns true if the entity is immune to the given damage type.
-        /// </summary>
-        public bool IsImmuneToElement(DamageType type) =>
-            ((ElementalDamageTypeMask)(1 << (int)type) & immuneToElements)
-            != ElementalDamageTypeMask.None;
-
-        /// <summary>
-        /// Returns true if the entity is resistant to the given damage type (damage is halved).
-        /// </summary>
-        public bool IsResistantToElement(DamageType type) =>
-            ((ElementalDamageTypeMask)(1 << (int)type) & resistantToElements)
-            != ElementalDamageTypeMask.None;
-
-        /// <summary>
-        /// Returns true if the entity is weak to the given damage type (damage is doubled).
-        /// </summary>
-        public bool IsWeakToElement(DamageType type) =>
-            ((ElementalDamageTypeMask)(1 << (int)type) & weakToElements)
-            != ElementalDamageTypeMask.None;
-
-        /// <summary>
-        /// Returns the item-attribute-based elemental resistance multiplier for the given damage type,
-        /// clamped to [0, 1] to prevent negative damage.
-        /// </summary>
-        public virtual float GetElementalResistMultiplier(DamageType type) =>
-            Mathf.Clamp01(m_additionalAttributes.GetElementalResistMultiplier(type));
-
-        /// <summary>
-        /// Calculates the normal attack damage points for the given elemental type with the critical multiplier.
-        /// </summary>
-        /// <param name="damageType">The elemental type of the attack.</param>
-        /// <param name="critical">If true, the damage is critical.</param>
-        public virtual int GetDamage(DamageType damageType, out bool critical) =>
-            (int)(GetCriticalMultiplier(out critical) * GetFinalDamage(damageType));
-
-        /// <summary>
         /// Calculates the normal attack damage points with the critical multiplier.
         /// </summary>
         /// <param name="critical">If true, the damage is critical.</param>
         public virtual int GetDamage(out bool critical) =>
-            GetDamage(DamageType.Normal, out critical);
-
-        /// <summary>
-        /// Returns the damage layers for a weapon melee or bow attack. The first layer is
-        /// always Normal (physical). Additional elemental layers are added for each damage type
-        /// that has a positive flat bonus from item attribute affixes. Critical multiplier
-        /// applies only to the physical layer.
-        /// </summary>
-        /// <param name="critical">Set to true when the attack is a critical strike.</param>
-        public virtual List<DamageLayer> GetWeaponDamageLayers(out bool critical)
-        {
-            var critMultiplier = GetCriticalMultiplier(out critical);
-            var effectMult = m_effects?.damageMultiplier ?? 1f;
-            var layers = new List<DamageLayer>();
-
-            layers.Add(
-                new DamageLayer(
-                    DamageType.Normal,
-                    (int)(GetFinalDamage(DamageType.Normal) * critMultiplier)
-                )
-            );
-
-            foreach (DamageType elementType in System.Enum.GetValues(typeof(DamageType)))
-            {
-                if (elementType == DamageType.Normal)
-                    continue;
-
-                var flatBonus = m_additionalAttributes.GetElementalFlatDamageBonus(elementType);
-
-                if (flatBonus <= 0)
-                    continue;
-
-                var pctMultiplier = m_additionalAttributes.GetElementalDamageMultiplier(
-                    elementType
-                );
-                var elementalAmount = (int)(flatBonus * pctMultiplier * effectMult);
-
-                if (elementalAmount > 0)
-                    layers.Add(new DamageLayer(elementType, elementalAmount));
-            }
-
-            return layers;
-        }
+            (int)(GetCriticalMultiplier(out critical) * GetFinalDamage());
 
         /// <summary>
         /// Calculates the magic attack damage points using a given skill with the critical multiplier.
@@ -484,53 +312,10 @@ namespace PLAYERTWO.ARPGProject
             (int)(GetCriticalMultiplier(out critical) * GetSkillDamage(skill));
 
         /// <summary>
-        /// Returns the effective defense including any active debuff modifiers.
-        /// </summary>
-        public int effectiveDefense =>
-            m_effects == null ? defense : (int)(defense * m_effects.defenseMultiplier);
-
-        /// <summary>
-        /// Returns the effective damage-taken multiplier from active buff effects.
-        /// Values below 1 indicate a reduction (e.g., 0.7 = 30% less damage taken).
-        /// </summary>
-        public float damageTakenMultiplier =>
-            m_effects == null ? 1f : m_effects.damageTakenMultiplier;
-
-        /// <summary>
-        /// Returns the effective attack speed including any active buff or debuff modifiers,
-        /// clamped to the maximum allowed attack speed.
-        /// </summary>
-        public int effectiveAttackSpeed =>
-            m_effects == null
-                ? attackSpeed
-                : Mathf.Min(
-                    (int)(attackSpeed * m_effects.attackSpeedMultiplier),
-                    Game.instance.maxAttackSpeed
-                );
-
-        /// <summary>
-        /// Returns the effective move speed including any active buff or debuff modifiers.
-        /// </summary>
-        public float effectiveMoveSpeed =>
-            m_effects == null ? moveSpeed : moveSpeed * m_effects.moveSpeedMultiplier;
-
-        /// <summary>
-        /// Returns the effective accuracy rating including any active effect multipliers.
-        /// </summary>
-        public int effectiveAccuracy =>
-            m_effects == null ? accuracy : (int)(accuracy * m_effects.accuracyMultiplier);
-
-        /// <summary>
-        /// Returns the effective evasion rating including any active effect multipliers.
-        /// </summary>
-        public int effectiveEvasion =>
-            m_effects == null ? evasion : (int)(evasion * m_effects.evasionMultiplier);
-
-        /// <summary>
-        /// Return the attack animation speed multiplier based on the effective attack speed stat.
+        /// Return the attack animation speed multiplier based on the attack speed stat.
         /// </summary>
         public virtual float GetAnimationAttackSpeed() =>
-            effectiveAttackSpeed / (float)Game.instance.maxAttackSpeed;
+            attackSpeed / (float)Game.instance.maxAttackSpeed;
 
         /// <summary>
         /// Return the block animation speed multiplier based on the block speed stat.
@@ -539,99 +324,49 @@ namespace PLAYERTWO.ARPGProject
             blockSpeed / (float)Game.instance.maxBlockSpeed;
 
         /// <summary>
-        /// Returns the probability that an attack from this entity lands against the given defender.
-        /// Accounts for the level difference between attacker and defender, clamped to
-        /// [<see cref="Game.minHitChance"/>, <see cref="Game.maxHitChance"/>].
-        /// </summary>
-        /// <param name="defenderStats">The stats of the entity being attacked.</param>
-        public virtual float GetHitChance(EntityStatsManager defenderStats)
-        {
-            if (defenderStats == null)
-                return 1f;
-
-            var levelDiff = Mathf.Max(0, defenderStats.level - level);
-            var levelPenalty = 1f + levelDiff * Game.instance.evasionLevelPenaltyFactor;
-            var penalizedEvasion = defenderStats.effectiveEvasion * levelPenalty;
-            var raw = effectiveAccuracy / (effectiveAccuracy + penalizedEvasion);
-            return Mathf.Clamp(raw, Game.instance.minHitChance, Game.instance.maxHitChance);
-        }
-
-        /// <summary>
         /// Returns the stun speed multiplier based on the stun speed stat.
         /// </summary>
         public virtual float GetStunAnimationSpeed() =>
             stunSpeed / (float)Game.instance.maxStunSpeed;
 
         /// <summary>
-        /// Returns the final normal damage points, incorporating active effect modifiers and
-        /// elemental flat bonus and percent multiplier for the given damage type.
+        /// Returns the final normal damage points.
         /// </summary>
-        protected virtual int GetFinalDamage(DamageType damageType = DamageType.Normal)
-        {
-            var flatBonus = m_additionalAttributes.GetElementalFlatDamageBonus(damageType);
-            var elementalMultiplier = m_additionalAttributes.GetElementalDamageMultiplier(
-                damageType
-            );
-
-            var rolled = (int)(
-                (
-                    Random.Range(minDamage, maxDamage)
-                        * m_additionalAttributes.GetDamageMultiplier()
-                    + flatBonus
-                ) * elementalMultiplier
-            );
-
-            if (m_effects == null)
-                return rolled;
-
-            return (int)(rolled * m_effects.damageMultiplier);
-        }
+        protected virtual int GetFinalDamage() =>
+            (int)(Random.Range(minDamage, maxDamage) * m_additionalAttributes.damageMultiplier);
 
         /// <summary>
         /// Returns the final magical damage points.
         /// </summary>
-        protected virtual int GetFinalMagicDamage()
-        {
-            var rolled = (int)(
+        protected virtual int GetFinalMagicDamage() =>
+            (int)(
                 Random.Range(minMagicDamage, maxMagicDamage)
-                * m_additionalAttributes.GetMagicDamageMultiplier()
+                * m_additionalAttributes.damageMultiplier
             );
 
-            if (m_effects == null)
-                return rolled;
-
-            return (int)(rolled * m_effects.magicDamageMultiplier);
-        }
-
         /// <summary>
-        /// Returns the damage points given a skill, applying the skill's elemental flat bonus
-        /// and percent multiplier.
+        /// Returns the magic damage points given a skill.
         /// </summary>
-        /// <param name="skill">The skill you want to calculate damage from.</param>
+        /// <param name="skill">The skill you want to calculate magic damage from.</param>
         protected virtual int GetSkillDamage(Skill skill)
         {
             if (!skill || !skill.IsAttack())
                 return 0;
 
-            var attack = skill.AsAttack();
-            var flatBonus = m_additionalAttributes.GetElementalFlatDamageBonus(attack.damageType);
-            var elementalMultiplier = m_additionalAttributes.GetElementalDamageMultiplier(
-                attack.damageType
-            );
-            var damage = attack.GetDamage() + flatBonus;
+            var damage = skill.AsAttack().GetDamage();
 
-            switch (attack.damageMode)
+            switch (skill.AsAttack().damageMode)
             {
                 default:
                 case SkillAttack.DamageMode.Regular:
-                    damage += GetFinalDamage(attack.damageType);
+                    damage += GetFinalDamage();
                     break;
                 case SkillAttack.DamageMode.Magic:
                     damage += GetFinalMagicDamage();
                     break;
             }
 
-            return (int)(damage * elementalMultiplier);
+            return damage;
         }
 
         /// <summary>
@@ -701,7 +436,7 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
-        /// Returns the chance to block from the equipped items in percentage.
+        /// Returns the chance to block from the equipped items.
         /// </summary>
         protected virtual float GetItemsChanceToBlock()
         {
@@ -716,7 +451,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void SetAdditionalAttributes()
         {
-            m_additionalAttributes = m_items ? m_items.GetFinalAttributes() : new ItemAttributes();
+            m_additionalAttributes = m_items ? m_items.GetFinalAttributes() : new();
         }
 
         /// <summary>
@@ -756,8 +491,6 @@ namespace PLAYERTWO.ARPGProject
             defense = CalculateDefense();
             stunChance = CalculateStunChance();
             stunSpeed = CalculateStunSpeed();
-            accuracy = CalculateAccuracy();
-            evasion = CalculateEvasion();
             health = Mathf.Min(health, maxHealth);
             mana = Mathf.Min(mana, maxMana);
             onRecalculate?.Invoke();
@@ -835,8 +568,6 @@ namespace PLAYERTWO.ARPGProject
 
             m_defeatedEntities.Add(other);
             AddExperience(Game.instance.baseEnemyDefeatExperience * other.stats.level);
-            health += m_additionalAttributes[ItemAttributes.AttributeType.HealthOnKill];
-            mana += m_additionalAttributes[ItemAttributes.AttributeType.ManaOnKill];
         }
 
         protected virtual void Start() => Initialize();

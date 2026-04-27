@@ -128,7 +128,7 @@ namespace PLAYERTWO.ARPGProject
             m_entity.skills.onChanged.AddListener((_) => UpdateSelectedSkill());
             m_entity.skills.onUpdatedEquippedSkills.AddListener((_) => UpdateSkills());
             m_entity.skills.onPerform.AddListener(
-                (skill) => m_currentSkill.StartCoolDown(skill.GetEffectiveCoolDown())
+                (skill) => m_currentSkill.StartCoolDown(skill.data.coolDown)
             );
         }
 

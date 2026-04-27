@@ -10,19 +10,11 @@ namespace PLAYERTWO.ARPGProject
         protected virtual MinMax CalculateDamage()
         {
             var weaponDamage = GetItemsDamage();
-            var effectiveStrength =
-                strength + m_additionalAttributes[ItemAttributes.AttributeType.Strength];
 
             return new MinMax
             {
-                min =
-                    (effectiveStrength / 8)
-                    + weaponDamage.min
-                    + m_additionalAttributes[ItemAttributes.AttributeType.Damage],
-                max =
-                    (effectiveStrength / 4)
-                    + weaponDamage.max
-                    + m_additionalAttributes[ItemAttributes.AttributeType.Damage],
+                min = (strength / 8) + weaponDamage.min + m_additionalAttributes.damage,
+                max = (strength / 4) + weaponDamage.max + m_additionalAttributes.damage
             };
         }
 
@@ -31,14 +23,10 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual MinMax CalculateMagicDamage()
         {
-            var effectiveEnergy =
-                energy + m_additionalAttributes[ItemAttributes.AttributeType.Energy];
-            var flatBonus = m_additionalAttributes[ItemAttributes.AttributeType.MagicDamage];
-
             return new MinMax
             {
-                min = (effectiveEnergy / 4) + flatBonus,
-                max = (effectiveEnergy / 2) + flatBonus,
+                min = energy / 4,
+                max = energy / 2
             };
         }
 
@@ -55,16 +43,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateMaxHealth()
         {
-            var effectiveVitality =
-                vitality + m_additionalAttributes[ItemAttributes.AttributeType.Vitality];
-
-            return (int)(
-                (
-                    level * 10
-                    + effectiveVitality * 2
-                    + m_additionalAttributes[ItemAttributes.AttributeType.Health]
-                ) * m_additionalAttributes.GetHealthMultiplier()
-            );
+            return (int)((level * 10 + vitality * 2 + m_additionalAttributes.health) * m_additionalAttributes.healthMultiplier);
         }
 
         /// <summary>
@@ -72,16 +51,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateMaxMana()
         {
-            var effectiveEnergy =
-                energy + m_additionalAttributes[ItemAttributes.AttributeType.Energy];
-
-            return (int)(
-                (
-                    level * 5
-                    + effectiveEnergy * 2
-                    + m_additionalAttributes[ItemAttributes.AttributeType.Mana]
-                ) * m_additionalAttributes.GetManaMultiplier()
-            );
+            return (int)((level * 5 + energy * 2 + m_additionalAttributes.mana) * m_additionalAttributes.manaMultiplier);
         }
 
         /// <summary>
@@ -89,14 +59,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateAttackSpeed()
         {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-
-            return Mathf.Min(
-                (effectiveDexterity + GetItemsAttackSpeed()) / 10
-                    + m_additionalAttributes[ItemAttributes.AttributeType.AttackSpeed],
-                Game.instance.maxAttackSpeed
-            );
+            return Mathf.Min((dexterity + GetItemsAttackSpeed()) / 10 + m_additionalAttributes.attackSpeed, Game.instance.maxAttackSpeed);
         }
 
         /// <summary>
@@ -104,12 +67,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual float CalculateCriticalChance()
         {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-
-            return (effectiveDexterity / 10 + 20)
-                / 100f
-                * m_additionalAttributes.GetCriticalMultiplier();
+            return (dexterity / 10 + 20) / 100f * m_additionalAttributes.criticalChanceMultiplier;
         }
 
         /// <summary>
@@ -117,36 +75,15 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateDefense()
         {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-
-            return (int)(
-                (
-                    (effectiveDexterity / 4)
-                    + GetItemsDefense()
-                    + m_additionalAttributes[ItemAttributes.AttributeType.Defense]
-                ) * m_additionalAttributes.GetDefenseMultiplier()
-            );
+            return (int)(((dexterity / 4) + GetItemsDefense() + m_additionalAttributes.defense) * m_additionalAttributes.defenseMultiplier);
         }
 
         /// <summary>
-        /// Calculates the chance of blocking attacks and returns it in percentage.
-        /// Returns zero if the entity is not wearing a shield.
+        /// Calculates the chance of blocking attacks.
         /// </summary>
         protected virtual float CalculateChanceToBlock()
         {
-            if (m_items == null || !m_items.IsUsingShield() || m_items.GetLeftHand().IsBroken())
-                return 0;
-
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-            var baseChance = (effectiveDexterity / 20 + 5 + level) / 100f + GetItemsChanceToBlock();
-            var multiplier =
-                1f
-                + m_additionalAttributes[ItemAttributes.AttributeType.ChanceOfBlockingPercent]
-                    / 100f;
-
-            return Mathf.Min(baseChance * multiplier, Game.instance.maxBlockChance);
+            return Mathf.Min((dexterity / 20 + 5 + level) / 100f * GetItemsChanceToBlock(), Game.instance.maxBlockChance);
         }
 
         /// <summary>
@@ -154,14 +91,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateBlockSpeed()
         {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-            var baseSpeed = effectiveDexterity / 5 + 100 + level * 10;
-            var multiplier =
-                1f
-                + m_additionalAttributes[ItemAttributes.AttributeType.BlockRecoveryPercent] / 100f;
-
-            return Mathf.Min((int)(baseSpeed * multiplier), Game.instance.maxBlockSpeed);
+            return Mathf.Min(dexterity / 5 + 100 + level * 10, Game.instance.maxBlockSpeed);
         }
 
         /// <summary>
@@ -169,68 +99,16 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual float CalculateStunChance()
         {
-            var effectiveStrength =
-                strength + m_additionalAttributes[ItemAttributes.AttributeType.Strength];
-            var baseChance = (effectiveStrength / 10 + level) / 100f;
-            var multiplier =
-                1f
-                + m_additionalAttributes[ItemAttributes.AttributeType.ChanceToStunPercent] / 100f;
-
-            return Mathf.Min(baseChance * multiplier, Game.instance.maxStunChance);
+            return Mathf.Min((strength / 10 + level) / 100f, Game.instance.maxStunChance);
         }
 
         /// <summary>
         /// Calculates the stun recover speed which will be used by the entity stun animations.
         /// </summary>
+        /// <returns></returns>
         protected virtual int CalculateStunSpeed()
         {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-            var baseSpeed = effectiveDexterity / 2 + 100 + level * 20;
-            var multiplier =
-                1f
-                + m_additionalAttributes[ItemAttributes.AttributeType.StunRecoveryPercent] / 100f;
-
-            return Mathf.Min((int)(baseSpeed * multiplier), Game.instance.maxStunSpeed);
-        }
-
-        /// <summary>
-        /// Calculates the accuracy rating used in hit chance calculations against evasive targets.
-        /// Scales with dexterity and level, plus a flat base defined in <see cref="Game.accuracyBase"/>.
-        /// Flat <see cref="ItemAttributes.AttributeType.Accuracy"/> is added to the base sum before
-        /// the <see cref="ItemAttributes.AttributeType.AccuracyPercent"/> multiplier is applied.
-        /// </summary>
-        protected virtual int CalculateAccuracy()
-        {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-            var flatBonus = m_additionalAttributes[ItemAttributes.AttributeType.Accuracy];
-            var itemMultiplier =
-                1f + m_additionalAttributes[ItemAttributes.AttributeType.AccuracyPercent] / 100f;
-
-            return Mathf.RoundToInt(
-                (effectiveDexterity * 4 + level * 10 + Game.instance.accuracyBase + flatBonus)
-                    * itemMultiplier
-            );
-        }
-
-        /// <summary>
-        /// Calculates the evasion rating used in hit chance calculations against incoming active attacks.
-        /// Scales with dexterity and level.
-        /// Flat <see cref="ItemAttributes.AttributeType.Evasion"/> is added to the base sum before
-        /// the <see cref="ItemAttributes.AttributeType.EvasionPercent"/> multiplier is applied.
-        /// </summary>
-        protected virtual int CalculateEvasion()
-        {
-            var effectiveDexterity =
-                dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
-            var flatBonus = m_additionalAttributes[ItemAttributes.AttributeType.Evasion];
-            var itemMultiplier =
-                1f + m_additionalAttributes[ItemAttributes.AttributeType.EvasionPercent] / 100f;
-
-            return Mathf.RoundToInt(
-                (effectiveDexterity * 2 + level * 5 + flatBonus) * itemMultiplier
-            );
+            return Mathf.Min(dexterity / 2 + 100 + level * 20, Game.instance.maxStunSpeed);
         }
     }
 }

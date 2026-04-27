@@ -1,7 +1,15 @@
 fileFormatVersion: 2
-guid: 0ae36ae271d476c67a4a288475c86c10
+guid: 073b9a0087acb3d9da4b6cc3ce671018
 DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Documentation/TextMesh
+    Pro User Guide 2016.pdf
+  uploadId: 883356

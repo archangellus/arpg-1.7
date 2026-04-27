@@ -5,8 +5,7 @@ namespace PLAYERTWO.ARPGProject
         /// <summary>
         /// Returns the data of this Item Instance casted to a given type.
         /// </summary>
-        public virtual T GetData<T>()
-            where T : Item => data as T;
+        public virtual T GetData<T>() where T : Item => data as T;
 
         /// <summary>
         /// Returns the data of this Item Instance as an Item Equippable.
@@ -52,16 +51,6 @@ namespace PLAYERTWO.ARPGProject
         /// Returns the data of this Item Instance as an Item Bow.
         /// </summary>
         public virtual ItemBow GetBow() => GetData<ItemBow>();
-
-        /// <summary>
-        /// Returns the data of this Item Instance as an Item Ring.
-        /// </summary>
-        public virtual ItemRing GetRing() => GetData<ItemRing>();
-
-        /// <summary>
-        /// Returns the data of this Item Instance as an Item Amulet.
-        /// </summary>
-        public virtual ItemAmulet GetAmulet() => GetData<ItemAmulet>();
 
         /// <summary>
         /// Returns true if this Item allows stacking.
@@ -112,15 +101,5 @@ namespace PLAYERTWO.ARPGProject
         /// Returns true if this Item is a Bow.
         /// </summary>
         public virtual bool IsBow() => data is ItemBow;
-
-        /// <summary>
-        /// Returns true if this Item is a Ring.
-        /// </summary>
-        public virtual bool IsRing() => data is ItemRing;
-
-        /// <summary>
-        /// Returns true if this Item is an Amulet.
-        /// </summary>
-        public virtual bool IsAmulet() => data is ItemAmulet;
     }
 }

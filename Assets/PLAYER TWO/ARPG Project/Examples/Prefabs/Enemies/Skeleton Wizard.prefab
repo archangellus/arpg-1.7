@@ -242,7 +242,6 @@ GameObject:
   - component: {fileID: 7112130279391419210}
   - component: {fileID: 7112130279391419213}
   - component: {fileID: 7844102119225181033}
-  - component: {fileID: 7564968692625827824}
   - component: {fileID: 7112130279391419211}
   - component: {fileID: 7112130279391419215}
   - component: {fileID: -99698577156403319}
@@ -340,7 +339,6 @@ MonoBehaviour:
   onExperienceChanged:
     m_PersistentCalls:
       m_Calls: []
-  moveSpeed: 3
   level: 1
   strength: 10
   dexterity: 15
@@ -395,6 +393,7 @@ MonoBehaviour:
       m_Calls: []
   entityName: Skeleton Wizard
   targetTags: []
+  moveSpeed: 2.5
   rotationSpeed: 720
   canMoveToCancelAttack: 1
   attackDistance: 1
@@ -467,28 +466,6 @@ MonoBehaviour:
   leftHandItem: {fileID: 0}
   onDamageDecreaseChance: 0.1
   onDamageDecreaseAmount: 1
---- !u!114 &7564968692625827824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7112130279391419063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02000f4d424c16e4d9d21939bb2e673d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  immuneTo: 0
-  onEffectApplied:
-    m_PersistentCalls:
-      m_Calls: []
-  onEffectRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-  onEffectsChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &7112130279391419211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,11 +486,6 @@ MonoBehaviour:
   dualWield: {fileID: 0}
   bow: {fileID: 22100000, guid: 05a1e9b09939e314e90a4471d2f2fa91, type: 2}
   crossbow: {fileID: 22100000, guid: f1b7d4058113ec6478673376b3e63333, type: 2}
-  attackClipName: Attack Combo 1
-  comboBaseClipName: 'Attack Combo '
-  skillClipName: Skill Casting
-  blockClipName: Blocking
-  stunClipName: Stunned
   baseAttackSpeed: 1
   baseBlockSpeed: 1
   baseStunSpeed: 1
@@ -619,7 +591,6 @@ MonoBehaviour:
       m_Calls: []
   maxIntensity: 1
   propertyName: _Emission
-  renderers: []
 --- !u!114 &3461543450965075954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,10 +618,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: 50f6fa39a53d6d343b8790402ce3911c, type: 2}
-  m_state: 1
-  onIconClicked:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!65 &7112130279391419209
 BoxCollider:
   m_ObjectHideFlags: 0

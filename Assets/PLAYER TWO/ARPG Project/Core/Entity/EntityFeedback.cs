@@ -57,44 +57,14 @@ namespace PLAYERTWO.ARPGProject
         {
             m_entity = GetComponent<Entity>();
             m_entity.onDamage.AddListener(OnEntityDamage);
-            m_entity.onImmune.AddListener(OnEntityImmune);
-            m_entity.onMiss.AddListener(OnEntityMiss);
             m_entity.stats.onLevelUp.AddListener(OnLevelUp);
         }
 
-        protected virtual void OnEntityMiss(EntityDamageInfo info)
+        protected virtual void OnEntityDamage(int amount, Vector3 _, bool critical)
         {
-            var origin = transform.position + damageTextOffset;
-            var instance = Instantiate(damageText, origin, Quaternion.identity);
-
-            if (instance.TryGetComponent(out DamageText text))
-            {
-                text.target = transform;
-                text.SetMissText();
-            }
-        }
-
-        protected virtual void OnEntityImmune(EntityDamageInfo info)
-        {
-            var origin = transform.position + damageTextOffset;
-            var instance = Instantiate(damageText, origin, Quaternion.identity);
-
-            if (instance.TryGetComponent(out DamageText text))
-            {
-                text.target = transform;
-                text.SetImmuneText();
-            }
-        }
-
-        protected virtual void OnEntityDamage(EntityDamageInfo info)
-        {
-            InstantiateDamageText(info);
-
-            if (info.damageMode == DamageMode.Passive)
-                return;
-
-            PlayDamageParticle(info.critical);
-            PlayDamageAudio(info.critical);
+            InstantiateDamageText(amount, critical);
+            PlayDamageParticle(critical);
+            PlayDamageAudio(critical);
             FlashDamageColor();
         }
 
@@ -104,7 +74,7 @@ namespace PLAYERTWO.ARPGProject
             levelUpParticle.SafeCall(p => p.Play());
         }
 
-        protected virtual void InstantiateDamageText(EntityDamageInfo info)
+        protected virtual void InstantiateDamageText(int amount, bool critical)
         {
             var origin = transform.position + damageTextOffset;
             var instance = Instantiate(damageText, origin, Quaternion.identity);
@@ -112,7 +82,7 @@ namespace PLAYERTWO.ARPGProject
             if (instance.TryGetComponent(out DamageText text))
             {
                 text.target = transform;
-                text.SetText(info);
+                text.SetText(amount, critical);
             }
         }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2a39aeb95e9ad9e1dbd9b4f4fc4e1a25
+guid: 6f72f98eccfa4b95287e4d3d3888719f
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,3 +7,10 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMP_Bitmap.shader
+  uploadId: 883356

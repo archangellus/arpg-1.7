@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 295778d12ec94266fa7a8113f9e4ccae
+guid: 397e00e0256ee8f9fbcac009bc76f5fb
 timeCreated: 1484172806
-licenseType: Pro
+licenseType: Store
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/Fonts
+    & Materials/LiberationSans SDF - Drop Shadow.mat
+  uploadId: 883356

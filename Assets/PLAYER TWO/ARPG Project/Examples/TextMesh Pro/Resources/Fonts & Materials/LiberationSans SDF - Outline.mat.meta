@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 4760d423989efdab5b0bab947451ce2b
+guid: 6e824980619aa71a1a64dac176c8d6fc
 timeCreated: 1484172856
-licenseType: Pro
+licenseType: Store
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/Fonts
+    & Materials/LiberationSans SDF - Outline.mat
+  uploadId: 883356

@@ -95,28 +95,37 @@ namespace PLAYERTWO.ARPGProject
             gameObject.SetActive(true);
             m_rect.SetAsLastSibling();
             UpdateAll();
-                        FadIn();
+            // >>> PLUGIN_PATCH:ItemRarity::FIND:UpdateAll();|R3_b3ce3af5
+            EventBus.RaiseItemInspectorShown(this, m_item, m_guiItem);
+            // <<< PLUGIN_PATCH:ItemRarity::FIND:UpdateAll();|R3_b3ce3af5
+            FadIn();
         }
 
         /// <summary>
         /// Hides the inspector.
         /// </summary>
         public virtual void Hide()
-        {
+
+                        {
             if (m_item != null)
-                m_item.onChanged -= updateHandler;
-                
-            gameObject.SetActive(false);
+            m_item.onChanged -= updateHandler;
+            // >>> PLUGIN_PATCH:ItemRarity::FIND:m_item.onChanged -= updateHandler;|R5_06d062d9
+            EventBus.RaiseItemInspectorHidden(this, m_item, m_guiItem);
+            // <<< PLUGIN_PATCH:ItemRarity::FIND:m_item.onChanged -= updateHandler;|R5_06d062d9
+                            gameObject.SetActive(false);
         }
 
         protected virtual void UpdateAll()
         {
-                    UpdatePriceText();
+            UpdatePriceText();
             UpdateItemName();
             UpdatePotionDescription();
             UpdateAttributes();
             UpdateAdditionalAttributes();
             UpdateSkillInstruction();
+            // >>> PLUGIN_PATCH:ItemRarity::FIND:UpdateSkillInstruction();|R10_04702db3
+            EventBus.RaiseItemInspectorUpdated(this, m_item, m_guiItem);
+            // <<< PLUGIN_PATCH:ItemRarity::FIND:UpdateSkillInstruction();|R10_04702db3
         }
 
         protected virtual void UpdatePriceText()
@@ -128,31 +137,32 @@ namespace PLAYERTWO.ARPGProject
                 var buying = m_guiItem.onMerchant;
                 var price = buying ? m_item.GetPrice() : m_item.GetSellPrice();
                 var prefix = buying ? "Buy" : "Sell";
-                itemPriceText.text = $"{prefix}:  {price.ToString()}";
+                                itemPriceText.text = $"{prefix}:  {price.ToString()}";
             }
         }
 
         protected virtual void UpdateItemName()
-        {
-            itemName.text = m_item.GetDisplayName();
 
-            if (m_item.IsSkill())
+                {
+            // >>> PLUGIN_PATCH:ItemRarity::FIND:itemName.text = m_item.data.name;|R10_446301c3
+            // __PLUGIN_REPLACE_ORIGINAL:DQo=
+            itemName.text = m_item.GetDisplayName();
+            // <<< PLUGIN_PATCH:ItemRarity::FIND:itemName.text = m_item.data.name;|R10_446301c3
+            itemName.color = regularColor;
+
+            if (m_item.IsSkill() || m_item.GetAttributesCount() > 0)
                 itemName.color = specialColor;
-            else
-                itemName.color = m_item.GetRarityColor(regularColor);
-        }
+                // >>> PLUGIN_PATCH:ItemRarity::FIND:itemName.color = specialColor;|R5_12068846
+                EventBus.RaiseInspectorItemNameUpdated(m_item, itemName);
+                // <<< PLUGIN_PATCH:ItemRarity::FIND:itemName.color = specialColor;|R5_12068846
+                        }
 
         protected virtual void UpdateAttributes()
         {
             attributesContainer.SetActive(m_item.IsEquippable() || m_item.IsSkill());
 
             if (attributesContainer.activeSelf)
-                attributesText.text = m_item.Inspect(
-                    m_entity.stats,
-                    attentionColor,
-                    invalidColor,
-                    specialColor
-                );
+                attributesText.text = m_item.Inspect(m_entity.stats, attentionColor, invalidColor);
         }
 
         protected virtual void UpdatePotionDescription()

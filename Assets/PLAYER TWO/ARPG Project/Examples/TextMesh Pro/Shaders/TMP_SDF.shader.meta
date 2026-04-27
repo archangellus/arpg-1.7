@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 76a3ca1ebb7951bfba2205f546d2701c
+guid: 19814985d48b1b1f7bcd60d55c5fd923
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,3 +7,10 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMP_SDF.shader
+  uploadId: 883356

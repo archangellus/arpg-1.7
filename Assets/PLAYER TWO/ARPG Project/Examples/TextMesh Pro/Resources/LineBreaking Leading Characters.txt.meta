@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 2475e72ba48793023adfa62d922b9ba4
+guid: 593667aa60354e5d98b824b53372abcd
 timeCreated: 1425440388
 licenseType: Store
 TextScriptImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/LineBreaking
+    Leading Characters.txt
+  uploadId: 883356

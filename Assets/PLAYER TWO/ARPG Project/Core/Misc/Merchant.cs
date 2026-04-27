@@ -12,10 +12,8 @@ namespace PLAYERTWO.ARPGProject
             [Tooltip("The scriptable object representing the Item.")]
             public Item data;
 
-            [Tooltip(
-                "The rarity to apply to this item. Leave empty for a plain item with no affixes."
-            )]
-            public ItemRarity rarity;
+            [Tooltip("The amount of additional attributes on this Item.")]
+            public int attributes;
         }
 
         [System.Serializable]
@@ -65,10 +63,12 @@ namespace PLAYERTWO.ARPGProject
                     if (item.data == null)
                         continue;
 
-                    if (item.rarity != null)
-                        inventory.TryAddItem(new ItemInstance(item.data, item.rarity));
+                    if (item.attributes > 0)
+                        inventory.TryAddItem(
+                            new ItemInstance(item.data, true, item.attributes, item.attributes)
+                        );
                     else
-                        inventory.TryAddItem(new ItemInstance(item.data));
+                        inventory.TryAddItem(new ItemInstance(item.data, false));
                 }
             }
 

@@ -10,7 +10,6 @@ namespace PLAYERTWO.ARPGProject
         public int defense;
 
         [Tooltip("The chance to block an attack.")]
-        [Range(0, 100)]
         public int chanceToBlock;
 
         [Header("Transform Settings")]
@@ -32,24 +31,5 @@ namespace PLAYERTWO.ARPGProject
             instance.transform.localRotation *= Quaternion.Euler(armRotation);
             return instance;
         }
-
-        /// <inheritdoc/>
-        public override bool CanEquipInSlot(ItemSlots slot, EntityItemManager items)
-        {
-            if (slot != ItemSlots.LeftHand)
-                return false;
-
-            if (
-                items.IsUsingWeaponRight()
-                && (!items.IsUsingBlade() || items.GetRightBlade().IsTwoHanded())
-            )
-                return false;
-
-            return true;
-        }
-
-        /// <inheritdoc/>
-        public override GameObject InstantiateOn(ItemSlots slot, EntityItemManager items) =>
-            Instantiate(items.leftHandShieldSlot);
     }
 }

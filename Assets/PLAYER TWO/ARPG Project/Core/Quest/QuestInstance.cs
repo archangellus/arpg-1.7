@@ -38,11 +38,6 @@ namespace PLAYERTWO.ARPGProject
         public bool completed => m_state == State.Completed;
 
         /// <summary>
-        /// Returns true if this Quest is in progress.
-        /// </summary>
-        public bool inProgress => m_state == State.InProgress;
-
-        /// <summary>
         /// Returns true if the state of this Quest Instance is ReturnToGiver.
         /// </summary>
         public bool returningToGiver => m_state == State.ReturnToGiver;
@@ -109,7 +104,12 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void AddProgressScene(string scene)
         {
-            if (!inProgress || !data.IsReachScene() || !data.IsDestinationScene(scene))
+            if (
+                completed
+                || m_state != State.InProgress
+                || !data.IsReachScene()
+                || !data.IsDestinationScene(scene)
+            )
                 return;
 
             NextState();
@@ -117,7 +117,12 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void AddProgressKey(string key)
         {
-            if (!inProgress || !data.IsProgress() || !data.IsProgressKey(key))
+            if (
+                completed
+                || m_state != State.InProgress
+                || !data.IsProgress()
+                || !data.IsProgressKey(key)
+            )
                 return;
 
             progress++;
@@ -128,7 +133,7 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void AddProgressTrigger()
         {
-            if (!inProgress || !data.IsTrigger())
+            if (completed || m_state != State.InProgress || !data.IsTrigger())
                 return;
 
             NextState();

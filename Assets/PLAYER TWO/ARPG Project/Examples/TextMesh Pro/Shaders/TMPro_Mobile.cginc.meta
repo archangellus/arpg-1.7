@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 75cf1d0f181e2467a8c35f4fe87e49e4
+guid: 1fea15e77ee172d578af98ed9246e891
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,3 +7,10 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMPro_Mobile.cginc
+  uploadId: 883356

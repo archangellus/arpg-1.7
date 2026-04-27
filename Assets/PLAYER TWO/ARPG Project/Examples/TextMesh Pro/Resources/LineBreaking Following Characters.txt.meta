@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: cd8339d4ba4b0771e805528d996dff66
+guid: 1a0ea60d57e466210a91e6dc080bc9d2
 timeCreated: 1425440388
 licenseType: Store
 TextScriptImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.6.2
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/LineBreaking
+    Following Characters.txt
+  uploadId: 883356

@@ -1,44 +1,52 @@
-using System.Collections.Generic;
-
 namespace PLAYERTWO.ARPGProject
 {
     public class CharacterEquipments
     {
-        public Dictionary<ItemSlots, ItemInstance> initialItems = new();
+        public ItemInstance initialRightHand;
+        public ItemInstance initialLeftHand;
+        public ItemInstance initialHelm;
+        public ItemInstance initialChest;
+        public ItemInstance initialPants;
+        public ItemInstance initialGloves;
+        public ItemInstance initialBoots;
         public ItemInstance[] initialConsumables;
 
-        /// <summary>
-        /// Returns the initial item for the given slot, or null if none was set.
-        /// </summary>
-        public ItemInstance GetInitial(ItemSlots slot) =>
-            initialItems.TryGetValue(slot, out var item) ? item : null;
-
-        /// <summary>
-        /// Returns the current item for the given slot from the Entity Item Manager,
-        /// or the initial item if no manager is assigned.
-        /// </summary>
-        public ItemInstance GetCurrent(ItemSlots slot) =>
-            m_items ? m_items.GetOrInitializeItem(slot) : GetInitial(slot);
-
-        public ItemInstance[] currentConsumables =>
-            m_items ? m_items.GetConsumables() : initialConsumables;
+        public ItemInstance currentRightHand => m_items ? m_items.GetRightHand() : initialRightHand;
+        public ItemInstance currentLeftHand => m_items ? m_items.GetLeftHand() : initialLeftHand;
+        public ItemInstance currentHelm => m_items ? m_items.GetHelm() : initialHelm;
+        public ItemInstance currentChest => m_items ? m_items.GetChest() : initialChest;
+        public ItemInstance currentPants => m_items ? m_items.GetPants() : initialPants;
+        public ItemInstance currentGloves => m_items ? m_items.GetGloves() : initialGloves;
+        public ItemInstance currentBoots => m_items ? m_items.GetBoots() : initialBoots;
+        public ItemInstance[] currentConsumables => m_items ? m_items.GetConsumables() : initialConsumables;
 
         protected EntityItemManager m_items;
 
         public CharacterEquipments(Character data)
         {
-            foreach (var entry in data.initialEquipments.entries)
-                SetInitialItem(entry.slot, entry.item);
-
+            InstantiateItem(data.rightHand, ref initialRightHand);
+            InstantiateItem(data.leftHand, ref initialLeftHand);
+            InstantiateItem(data.helm, ref initialHelm);
+            InstantiateItem(data.chest, ref initialChest);
+            InstantiateItem(data.pants, ref initialPants);
+            InstantiateItem(data.gloves, ref initialGloves);
+            InstantiateItem(data.boots, ref initialBoots);
             InstantiateConsumables(data.initialConsumables, data.maxConsumableSlots);
         }
 
-        public CharacterEquipments(
-            Dictionary<ItemSlots, ItemInstance> initialItems,
-            ItemInstance[] initialConsumables
-        )
+        public CharacterEquipments(ItemInstance initialRightHand,
+            ItemInstance initialLeftHand, ItemInstance initialHelm,
+            ItemInstance initialChest, ItemInstance initialPants,
+            ItemInstance initialGloves, ItemInstance initialBoots,
+            ItemInstance[] initialConsumables)
         {
-            this.initialItems = initialItems;
+            this.initialRightHand = initialRightHand;
+            this.initialLeftHand = initialLeftHand;
+            this.initialHelm = initialHelm;
+            this.initialChest = initialChest;
+            this.initialPants = initialPants;
+            this.initialGloves = initialGloves;
+            this.initialBoots = initialBoots;
             this.initialConsumables = initialConsumables;
         }
 
@@ -49,50 +57,52 @@ namespace PLAYERTWO.ARPGProject
         public virtual void InitializeEquipments(EntityItemManager items)
         {
             m_items = items;
-
-            foreach (ItemSlots slot in System.Enum.GetValues(typeof(ItemSlots)))
-                m_items.TryEquip(GetInitial(slot), slot);
-
+            m_items.TryEquip(initialRightHand, ItemSlots.RightHand);
+            m_items.TryEquip(initialLeftHand, ItemSlots.LeftHand);
+            m_items.TryEquip(initialHelm, ItemSlots.Helm);
+            m_items.TryEquip(initialChest, ItemSlots.Chest);
+            m_items.TryEquip(initialPants, ItemSlots.Pants);
+            m_items.TryEquip(initialGloves, ItemSlots.Gloves);
+            m_items.TryEquip(initialBoots, ItemSlots.Boots);
             m_items.SetConsumables(initialConsumables);
         }
 
-        protected virtual void SetInitialItem(ItemSlots slot, CharacterItem item)
+        protected virtual void InstantiateItem(CharacterItem item, ref ItemInstance reference)
         {
-            if (item.data != null)
-                initialItems[slot] = item.ToItemInstance(true);
+            if (item.data != null) reference = item.ToItemInstance(true);
         }
 
-        protected virtual void InstantiateConsumables(ItemConsumable[] consumables, int maxCapacity)
+        protected virtual void InstantiateConsumables(Item[] consumables, int maxCapacity)
         {
             initialConsumables = new ItemInstance[maxCapacity];
 
             for (int i = 0; i < maxCapacity; i++)
             {
-                if (consumables.Length <= i || !consumables[i])
-                    continue;
+                if (consumables.Length <= i || !consumables[i]) continue;
 
                 initialConsumables[i] = new ItemInstance(consumables[i]);
             }
         }
 
-        public static CharacterEquipments CreateFromSerializer(EquipmentsSerializer serializer)
+        public static CharacterEquipments CreateFromSerializer(EquipmentsSerializer equipments)
         {
-            var initialItems = new Dictionary<ItemSlots, ItemInstance>();
-
-            foreach (ItemSlots slot in System.Enum.GetValues(typeof(ItemSlots)))
-            {
-                var instance = ItemInstance.CreateFromSerializer(serializer.GetItem(slot));
-
-                if (instance != null)
-                    initialItems[slot] = instance;
-            }
-
-            var consumables = new ItemInstance[serializer.consumables.Length];
+            var consumables = new ItemInstance[equipments.consumables.Length];
 
             for (int i = 0; i < consumables.Length; i++)
-                consumables[i] = ItemInstance.CreateFromSerializer(serializer.consumables[i]);
+            {
+                consumables[i] = ItemInstance.CreateFromSerializer(equipments.consumables[i]);
+            }
 
-            return new CharacterEquipments(initialItems, consumables);
+            return new CharacterEquipments(
+                ItemInstance.CreateFromSerializer(equipments.rightHand),
+                ItemInstance.CreateFromSerializer(equipments.leftHand),
+                ItemInstance.CreateFromSerializer(equipments.helm),
+                ItemInstance.CreateFromSerializer(equipments.chest),
+                ItemInstance.CreateFromSerializer(equipments.pants),
+                ItemInstance.CreateFromSerializer(equipments.gloves),
+                ItemInstance.CreateFromSerializer(equipments.boots),
+                consumables
+            );
         }
     }
 }

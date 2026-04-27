@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
@@ -6,45 +5,31 @@ namespace PLAYERTWO.ARPGProject
     [System.Serializable]
     public class EquipmentsSerializer
     {
-        [System.Serializable]
-        public class EquipmentEntry
-        {
-            public ItemSlots slot;
-            public ItemSerializer item;
-
-            public EquipmentEntry(ItemSlots slot, ItemSerializer item)
-            {
-                this.slot = slot;
-                this.item = item;
-            }
-        }
-
-        public List<EquipmentEntry> items = new();
+        public ItemSerializer rightHand;
+        public ItemSerializer leftHand;
+        public ItemSerializer helm;
+        public ItemSerializer chest;
+        public ItemSerializer pants;
+        public ItemSerializer gloves;
+        public ItemSerializer boots;
         public ItemSerializer[] consumables;
 
         public EquipmentsSerializer(CharacterEquipments equipments)
         {
-            foreach (ItemSlots slot in System.Enum.GetValues(typeof(ItemSlots)))
-            {
-                var instance = equipments.GetCurrent(slot);
-
-                if (instance != null)
-                    items.Add(new EquipmentEntry(slot, new ItemSerializer(instance)));
-            }
-
+            SerializeItem(equipments.currentRightHand, ref rightHand);
+            SerializeItem(equipments.currentLeftHand, ref leftHand);
+            SerializeItem(equipments.currentHelm, ref helm);
+            SerializeItem(equipments.currentChest, ref chest);
+            SerializeItem(equipments.currentPants, ref pants);
+            SerializeItem(equipments.currentGloves, ref gloves);
+            SerializeItem(equipments.currentBoots, ref boots);
             SerializeConsumables(equipments.currentConsumables);
         }
 
-        /// <summary>
-        /// Returns the serialized item for the given slot, or null if not found.
-        /// </summary>
-        public ItemSerializer GetItem(ItemSlots slot)
+        protected virtual void SerializeItem(ItemInstance instance, ref ItemSerializer item)
         {
-            foreach (var entry in items)
-                if (entry.slot == slot)
-                    return entry.item;
-
-            return null;
+            if (instance != null)
+                item = new ItemSerializer(instance);
         }
 
         protected virtual void SerializeConsumables(ItemInstance[] consumables)
@@ -53,8 +38,7 @@ namespace PLAYERTWO.ARPGProject
 
             for (int i = 0; i < this.consumables.Length; i++)
             {
-                if (consumables[i] == null)
-                    continue;
+                if (consumables[i] == null) continue;
 
                 this.consumables[i] = new ItemSerializer(consumables[i]);
             }
