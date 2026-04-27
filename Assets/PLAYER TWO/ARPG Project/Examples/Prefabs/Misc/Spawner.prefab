@@ -121,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7859327497766132128}
   - component: {fileID: 7859327497766132134}
+  - component: {fileID: 8545928780779700543}
   - component: {fileID: 8704984902107768508}
   - component: {fileID: 7859327497766132133}
   - component: {fileID: 7859327497766132139}
@@ -193,6 +194,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onHitPointsChanged:
+    m_PersistentCalls:
+      m_Calls: []
   hitPoints: 500
   maxHitRate: 0.25
   triggerCollider: {fileID: 0}
@@ -202,6 +206,21 @@ MonoBehaviour:
   crackedObject: {fileID: 6392319885049010148}
   hitAudio: {fileID: 8300000, guid: ab4bbed2c27b5fb40bf6b136295ffd9e, type: 3}
   breakingAudio: {fileID: 8300000, guid: 6e788d59c80e54c4f9bf8d834b7b5b13, type: 3}
+--- !u!114 &8545928780779700543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7859327497766132129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd465b0204889c34e978307e8a4deac5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barType: 0
+  displayName: Spawner
+  offset: {x: 0, y: 50}
 --- !u!114 &8704984902107768508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +235,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: 3eccedbfd47feb8448edc2b7705f970c, type: 2}
   m_state: 0
+  onIconClicked:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7859327497766132133
 MonoBehaviour:
   m_ObjectHideFlags: 0

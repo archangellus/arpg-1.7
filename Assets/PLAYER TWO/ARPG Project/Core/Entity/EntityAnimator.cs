@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -61,6 +62,20 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("Base attack speed multiplier. Increase to make attack animations faster.")]
         public float baseAttackSpeed = 1;
 
+        [Range(0f, 1f)]
+        [Tooltip(
+            "The normalized exit time of the attack animation states in the animator controller. "
+                + "Set this to match the transition exit time so the attack state ends in sync with the animation."
+        )]
+        public float attackAnimationExitTime = 1f;
+
+        [Range(0f, 1f)]
+        [Tooltip(
+            "The normalized exit time of the skill animation state in the animator controller. "
+                + "Set this to match the transition exit time so the skill state ends in sync with the animation."
+        )]
+        public float skillAnimationExitTime = 1f;
+
         [Tooltip("Base block speed multiplier. Increase to make block animation faster.")]
         public float baseBlockSpeed = 1;
 
@@ -106,9 +121,11 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void InitializeTriggers()
         {
             m_entity.onAttack.AddListener(TriggerAttack);
-            m_entity.onMagicAttack.AddListener(() => m_animator.SetTrigger(m_onMagicAttackHash));
-            m_entity.onDie.AddListener(() => m_animator.SetTrigger(m_onDieHash));
-            m_entity.onBlock.AddListener(() => m_animator.SetTrigger(m_onBlockHash));
+            m_entity.onMagicAttack.AddListener(
+                () => StartCoroutine(TriggerNextFrame(m_onMagicAttackHash))
+            );
+            m_entity.onDie.AddListener(TriggerDying);
+            m_entity.onBlock.AddListener(_ => m_animator.SetTrigger(m_onBlockHash));
             m_entity.onStunned.AddListener(() => m_animator.SetTrigger(m_onStunnedHash));
         }
 
@@ -134,7 +151,11 @@ namespace PLAYERTWO.ARPGProject
                     UpdateSkillOverride(m_entity.skills.current);
                 });
 
-            m_entity.skills.onChanged.AddListener(UpdateSkillOverride);
+            m_entity.skills.onChanged.AddListener(skill =>
+            {
+                if (!m_entity.states.IsCurrent<UseSkillEntityState>())
+                    UpdateSkillOverride(skill);
+            });
             m_entity.onRevive.AddListener(ResetStateMachine);
         }
 
@@ -248,12 +269,15 @@ namespace PLAYERTWO.ARPGProject
             baseStunSpeed + m_entity.stats.GetStunAnimationSpeed();
 
         /// <summary>
-        /// Returns the length of the current attack animation clip.
+        /// Returns the length of the current attack animation clip up to the configured exit time,
+        /// accounting for the current attack speed.
         /// </summary>
         public virtual float GetAttackAnimationLength()
         {
             var comboId = m_entity.comboIndex + 1;
-            return m_overrides[comboBaseClipName + comboId].length / GetAttackSpeed();
+            return m_overrides[comboBaseClipName + comboId].length
+                * attackAnimationExitTime
+                / GetAttackSpeed();
         }
 
         /// <summary>
@@ -263,10 +287,11 @@ namespace PLAYERTWO.ARPGProject
             m_overrides[blockClipName].length / GetBlockSpeed();
 
         /// <summary>
-        /// Returns the length of the current skill animation clip.
+        /// Returns the length of the current skill animation clip up to the configured exit time,
+        /// accounting for the current attack speed.
         /// </summary>
         public virtual float GetSkillAnimationLength() =>
-            m_overrides[skillClipName].length / GetAttackSpeed();
+            m_overrides[skillClipName].length * skillAnimationExitTime / GetAttackSpeed();
 
         /// <summary>
         /// Returns the length of the current stun animation.
@@ -321,12 +346,29 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
+        /// Resets any pending stun or block triggers and fires the dying trigger on the next frame,
+        /// ensuring it is not blocked by an in-progress stun or block transition.
+        /// </summary>
+        protected virtual void TriggerDying()
+        {
+            m_animator.ResetTrigger(m_onStunnedHash);
+            m_animator.ResetTrigger(m_onBlockHash);
+            StartCoroutine(TriggerNextFrame(m_onDieHash));
+        }
+
+        /// <summary>
         /// Triggers the attack animation and sets the combo index.
         /// </summary>
         protected virtual void TriggerAttack()
         {
-            m_animator.SetTrigger(m_onAttackHash);
             m_animator.SetInteger(m_comboIndexHash, m_entity.comboIndex);
+            StartCoroutine(TriggerNextFrame(m_onAttackHash));
+        }
+
+        protected IEnumerator TriggerNextFrame(int hash)
+        {
+            yield return null;
+            m_animator.SetTrigger(hash);
         }
 
         protected virtual void Start()

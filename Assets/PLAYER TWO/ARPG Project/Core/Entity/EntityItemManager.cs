@@ -107,7 +107,11 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void InitializeCallbacks()
         {
-            entity.onDamage.AddListener((amount, origin, critical) => ApplyDamage());
+            entity.onDamage.AddListener(info =>
+            {
+                if (info.damageMode == DamageMode.Active)
+                    ApplyDamage();
+            });
         }
 
         protected virtual void InitializeItems()
@@ -205,55 +209,12 @@ namespace PLAYERTWO.ARPGProject
             if (item == null || !item.IsEquippable())
                 return false;
 
-            if (entity.stats.level < item.GetEquippable().requiredLevel)
-                return false;
-            if (entity.stats.strength < item.GetEquippable().requiredStrength)
-                return false;
-            if (entity.stats.dexterity < item.GetEquippable().requiredDexterity)
+            var equippable = item.GetEquippable();
+
+            if (!equippable.MeetsRequirements(entity))
                 return false;
 
-            if (item.IsArmor() && item.GetArmor().slot != slot)
-                return false;
-            if (item.IsWeapon() && slot != ItemSlots.RightHand && slot != ItemSlots.LeftHand)
-                return false;
-
-            if (item.IsShield())
-            {
-                if (slot != ItemSlots.LeftHand)
-                    return false;
-
-                if (IsUsingWeaponRight())
-                {
-                    if (!IsUsingBlade() || GetRightBlade().IsTwoHanded())
-                        return false;
-                }
-            }
-
-            if (item.IsBlade())
-            {
-                if (item.GetBlade().IsTwoHanded())
-                {
-                    if (slot != ItemSlots.RightHand)
-                        return false;
-                    if (IsUsingWeaponLeft() || IsUsingShield())
-                        return false;
-                }
-                else if (slot == ItemSlots.LeftHand)
-                {
-                    if (!IsUsingBlade() || GetRightBlade().IsTwoHanded())
-                        return false;
-                }
-            }
-
-            if (item.IsBow())
-            {
-                if (slot != ItemSlots.RightHand)
-                    return false;
-                if (IsUsingWeaponLeft() || IsUsingShield())
-                    return false;
-            }
-
-            return true;
+            return equippable.CanEquipInSlot(slot, this);
         }
 
         /// <summary>
@@ -489,21 +450,9 @@ namespace PLAYERTWO.ARPGProject
         /// <returns>The instance of the newly instantiated Game Object.</returns>
         protected virtual GameObject InstantiateItem(Item item, ItemSlots slot)
         {
-            GameObject instance = null;
-
-            if (item is ItemBlade blade)
-            {
-                if (slot == ItemSlots.RightHand)
-                    instance = blade.InstantiateRightHand(rightHandSlot);
-                else if (slot == ItemSlots.LeftHand)
-                    instance = blade.InstantiateLeftHand(leftHandSlot);
-            }
-            else if (item is ItemBow bow)
-                instance = bow.Instantiate(rightHandSlot, leftHandSlot);
-            else if (item is ItemShield)
-                instance = item.Instantiate(leftHandShieldSlot);
-
-            return instance;
+            if (item is ItemEquippable equippable)
+                return equippable.InstantiateOn(slot, this);
+            return null;
         }
 
         /// <summary>
@@ -553,30 +502,31 @@ namespace PLAYERTWO.ARPGProject
             if (!IsUsingWeaponRight())
                 return 0;
 
-            var total = GetRightWeapon().attackSpeed;
+            var total = GetRightHand().GetEffectiveAttackSpeed();
 
             if (IsUsingWeaponLeft())
-                total += (int)(GetLeftWeapon().attackSpeed * 0.5f);
+                total += (int)(GetLeftHand().GetEffectiveAttackSpeed() * 0.5f);
 
             return total;
         }
 
         /// <summary>
-        /// Returns the chance to block an attack from the shield. If no shield
-        /// is equipped, it always returns zero.
+        /// Returns the chance to block an attack from the shield in a percentage value.
+        /// If the Entity is not equipping a shield or the shield is broken, it returns zero.
         /// </summary>
         public virtual float GetChanceToBlock()
         {
             if (!IsUsingShield() || GetLeftHand().IsBroken())
                 return 0;
 
-            return GetShield().chanceToBlock / 100f;
+            return GetLeftHand().GetEffectiveChanceToBlock();
         }
 
         /// <summary>
         /// Returns the accumulated points from all additional attributes (the 'blue' attributes).
         /// </summary>
-        public virtual ItemFinalAttributes GetFinalAttributes() => new(m_items.Values.ToArray());
+        public virtual ItemAttributes GetFinalAttributes() =>
+            ItemAttributes.Accumulate(m_items.Values.ToArray());
 
         /// <summary>
         /// Instantiates, calculates the damage, and configure the projectile form the current weapon.
@@ -586,14 +536,14 @@ namespace PLAYERTWO.ARPGProject
             if (!IsUsingBow())
                 return null;
 
-            var damage = entity.stats.GetDamage(out var critical);
+            var weaponLayers = entity.stats.GetWeaponDamageLayers(out var critical);
             var projectile = Instantiate(
                 GetBow().projectile,
                 projectileOrigin.position,
                 projectileOrigin.rotation
             );
 
-            projectile.SetDamage(entity, damage, critical, entity.targetTags);
+            projectile.SetDamage(entity, weaponLayers, critical, entity.targetTags);
             return projectile;
         }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -17,9 +17,6 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The angle of the Camera.")]
         public float angle = 45f;
 
-        [Tooltip("The initial rotation of the Camera around the target in degrees.")]
-        public float initialRotation;
-
         [Tooltip("The minimum distance the Camera can reach from the target.")]
         public float minDistance = 5f;
 
@@ -32,9 +29,6 @@ namespace PLAYERTWO.ARPGProject
 
         [Tooltip("A multiplier value to speed up the rotation scroll speed.")]
         public float rotationScrollMultiplier = 1500f;
-        // >>> PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
-                private System.Action<object> __mouseRotateHandler;
-        // <<< PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
 
         [Tooltip("The time in seconds it takes for the scroll to reach its target value.")]
         public float scrollSmoothTime = 0.1f;
@@ -45,28 +39,11 @@ namespace PLAYERTWO.ARPGProject
         protected float m_targetRotation;
         protected float m_distanceVelocity;
         protected float m_rotationVelocity;
-        protected float m_previousInitialRotation;
 
         protected bool m_scrollModifier;
         protected bool m_pointerOverUi;
 
         protected InputAction m_scrollAction;
-        // >>> PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
-                public void EventMouseCameraRotateDelta()
-                {
-                    __mouseRotateHandler = payload =>
-                    {
-                        if (payload is float dx) m_targetRotation += dx;
-                    };
-                    EventBus.Subscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);
-                }
-
-                protected virtual void OnDestroy()
-                {
-                    if (__mouseRotateHandler != null)
-                        EventBus.Unsubscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);
-                }
-        // <<< PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
         protected InputAction m_scrollModifierAction;
 
         protected Entity m_entity;
@@ -114,7 +91,7 @@ namespace PLAYERTWO.ARPGProject
         {
             HandleValueSmoothness();
             HandleTransform();
-                }
+        }
 
         protected virtual void HandlePointer() =>
             m_pointerOverUi = EventSystem.current.IsPointerOverGameObject();
@@ -138,26 +115,12 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
-                /// Resets the Camera to its initial rotation and distance.
+        /// Resets the Camera to its initial rotation and distance.
         /// </summary>
         public virtual void Reset()
         {
-            m_rotation = m_targetRotation = initialRotation;
+            m_rotation = m_targetRotation = 0;
             m_distance = m_targetDistance = maxDistance;
-            m_previousInitialRotation = initialRotation;
-        }
-
-        protected virtual void OnValidate()
-        {
-            if (!Application.isPlaying)
-                return;
-
-            if (Mathf.Approximately(m_previousInitialRotation, initialRotation))
-                return;
-
-
-            m_rotation = m_targetRotation = initialRotation;
-            m_previousInitialRotation = initialRotation;
         }
 
         protected virtual void Start()
@@ -165,9 +128,6 @@ namespace PLAYERTWO.ARPGProject
             InitializeEntity();
             InitializeActions();
             InitializeActionsCallbacks();
-            // >>> PLUGIN_PATCH:MouseCameraRotate::L149_C0_81fb7b1a
-            EventMouseCameraRotateDelta();
-            // <<< PLUGIN_PATCH:MouseCameraRotate::L149_C0_81fb7b1a
             Reset();
         }
 

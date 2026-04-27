@@ -90,7 +90,6 @@ namespace PLAYERTWO.ARPGProject
             availablePointsText.text = m_availablePoints.ToString();
         }
 
-
         /// <summary>
         /// Applies all distributed points to the Player's Stats Manager.
         /// </summary>

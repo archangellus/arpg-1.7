@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -12,20 +12,21 @@ namespace PLAYERTWO.ARPGProject
         public UnityEvent onMagicAttack;
         public UnityEvent<EntityAttackType> onPerformAttack;
         public UnityEvent onTargetSet;
-        public UnityEvent<int, Vector3, bool> onDamage;
-        public UnityEvent onBlock;
+        public UnityEvent<EntityDamageInfo> onDamage;
+        public UnityEvent<EntityDamageInfo> onBlock;
+        public UnityEvent<EntityDamageInfo> onImmune;
+        public UnityEvent<EntityDamageInfo> onMiss;
         public UnityEvent onStunned;
         public UnityEvent onDie;
         public UnityEvent onRevive;
+        public UnityEvent onIncrementCombo;
+        public UnityEvent<bool> onHighlightChanged;
 
         [Tooltip("The name of the Entity. This will be shown in the health bar.")]
         public string entityName = "Entity";
 
         [Tooltip("The tags of Game Objects that this Entity identifies as potential targets.")]
         public List<string> targetTags;
-
-        [Tooltip("The maximum speed this Entity will use to move around.")]
-        public float moveSpeed = 6f;
 
         [Tooltip("The rotation in degrees per second the Entity will rotate to face directions.")]
         public float rotationSpeed = 720f;
@@ -44,44 +45,40 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The reference to the Hitbox used to perform melee attacks.")]
         public EntityHitbox hitbox;
 
-        [Header("Auto Collection")]
-        [Tooltip(
-            "If true, this Entity will automatically try to collect an item when touching it."
-        )]
-        public bool autoCollectItems;
-
-        [Tooltip("The time in seconds between each auto collection try.")]
-        public float autoCollectCoolDown = 0.1f;
-        
         protected Collider[] m_colliders;
         protected CharacterController m_controller;
         protected Rigidbody m_rigidbody;
         protected EntityAnimator m_animator;
         protected EntityStatsManager m_stats;
+        protected EntityEffectManager m_effects;
+        protected Highlighter m_highlighter;
 
-        protected float m_lastHitTime;
-        protected float m_lastAutoCollectTime;
+        protected float m_targetRadius;
+
+        protected EntityDamageHandler m_damageHandler;
+
         protected float m_lastAttackTime;
         protected float m_lastComboTime;
 
         protected int m_waypointsSize;
         protected int m_currentWaypoint = -1;
         protected NavMeshPath m_path;
-        // >>> PLUGIN_PATCH:ItemGoldGather::FIND:protected List<Entity> m_damageFrom = new List<Entity>();|R10_86e12f8e
-        protected float m_lastMovementTime;
-        // <<< PLUGIN_PATCH:ItemGoldGather::FIND:protected List<Entity> m_damageFrom = new List<Entity>();|R10_86e12f8e
         protected Vector3[] m_waypoints = new Vector3[k_waypointsSize];
-        // >>> PLUGIN_PATCH:ItemGoldGather::FIND:public Vector3 initialPosition { get; protected set; }|R5_e28f1507
-        public float lastMovementTime => m_lastMovementTime;
-        // <<< PLUGIN_PATCH:ItemGoldGather::FIND:public Vector3 initialPosition { get; protected set; }|R5_e28f1507
-
-        protected List<Entity> m_damageFrom = new List<Entity>();
 
         public EntityStateMachine states { get; protected set; }
         public EntitySkillManager skills { get; protected set; }
         public EntityInputs inputs { get; protected set; }
         public EntityItemManager items { get; protected set; }
         public EntityInventory inventory { get; protected set; }
+
+        public EntityEffectManager effects
+        {
+            get
+            {
+                InitializeEffects();
+                return m_effects;
+            }
+        }
 
         /// <summary>
         /// List of entities summoned by this one.
@@ -140,7 +137,7 @@ namespace PLAYERTWO.ARPGProject
         {
             get { return new Vector3(0, velocity.y, 0); }
             set { velocity = new Vector3(velocity.x, value.y, velocity.z); }
-                }
+        }
 
         public Vector3 lookDirection { get; set; }
         public Vector3 initialPosition { get; protected set; }
@@ -157,7 +154,6 @@ namespace PLAYERTWO.ARPGProject
 
         protected const float k_initialRadius = 0.25f;
         protected const float k_minDistanceToMove = 0.25f;
-        protected const float k_maxHitRate = 0.15f;
         protected const int k_waypointsSize = 256;
 
         /// <summary>
@@ -171,6 +167,11 @@ namespace PLAYERTWO.ARPGProject
         public bool isDead => stats.health == 0;
 
         /// <summary>
+        /// Returns true if the Entity is currently highlighted by the cursor.
+        /// </summary>
+        public bool isHighlighted { get; protected set; }
+
+        /// <summary>
         /// Returns true if the Entity is performing an attack.
         /// </summary>
         public bool isAttacking =>
@@ -180,6 +181,11 @@ namespace PLAYERTWO.ARPGProject
         /// Returns true if the Entity is in the blocking state.
         /// </summary>
         public bool isBlocking => states.IsCurrent<BlockEntityState>();
+
+        /// <summary>
+        /// Returns true if the Entity has any lateral movement.
+        /// </summary>
+        public bool isWalking => lateralVelocity.sqrMagnitude > 0;
 
         /// <summary>
         /// Returns true if the Entity is in the stunned state.
@@ -268,6 +274,37 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void InitializeAnimator() => m_animator = GetComponent<EntityAnimator>();
 
+        protected virtual void InitializeEffects()
+        {
+            if (m_effects != null)
+                return;
+
+            m_effects = GetComponent<EntityEffectManager>();
+        }
+
+        protected virtual void InitializeHighlighter()
+        {
+            if (TryGetComponent(out m_highlighter))
+                m_highlighter.onSetHighlight.AddListener(OnHighlightChanged);
+        }
+
+        protected virtual void InitializeDamageHandler()
+        {
+            if (!TryGetComponent(out m_damageHandler))
+                m_damageHandler = gameObject.AddComponent<EntityDamageHandler>();
+        }
+
+        protected virtual void OnHighlightChanged(bool value)
+        {
+            isHighlighted = value;
+            onHighlightChanged.Invoke(value);
+        }
+
+        /// <summary>
+        /// Returns the effective move speed after applying any active buff or debuff modifiers.
+        /// </summary>
+        public virtual float GetCurrentMoveSpeed() => stats.effectiveMoveSpeed;
+
         /// <summary>
         /// Moves the Entity to a specific position and rotation in the world space.
         /// </summary>
@@ -332,6 +369,13 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
+        /// Returns true if the given world-space position is in front of the Entity.
+        /// </summary>
+        /// <param name="sourcePosition">The world-space position to check.</param>
+        public virtual bool IsSourceInFront(Vector3 sourcePosition) =>
+            Vector3.Dot(transform.forward, GetDirectionTo(sourcePosition)) > 0;
+
+        /// <summary>
         /// Returns a vector towards the current target without considering its Y position.
         /// </summary>
         public virtual Vector3 GetDirectionToTarget()
@@ -357,10 +401,18 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
-        /// Returns true if the Entity is close enough to attack the assigned target based on
-        /// the current attack distance (evaluated by the current skill and equipped weapon).
+        /// Returns the cached XZ radius of the current target, used to offset the attack distance
+        /// so that the Entity attacks from the target's surface rather than its center.
         /// </summary>
-        public virtual bool IsCloseToAttackTarget() => GetDistanceToTarget() <= GetAttackDistance();
+        public virtual float GetTargetRadius() => m_targetRadius;
+
+        /// <summary>
+        /// Returns true if the Entity is close enough to attack the assigned target based on
+        /// the current attack distance (evaluated by the current skill and equipped weapon)
+        /// plus the target's XZ radius, so that larger targets can be attacked from their surface.
+        /// </summary>
+        public virtual bool IsCloseToAttackTarget() =>
+            GetDistanceToTarget() <= GetAttackDistance() + GetTargetRadius();
 
         /// <summary>
         /// Returns true if the Entity can perform the next combo attack based on the current time.
@@ -378,31 +430,13 @@ namespace PLAYERTWO.ARPGProject
             if (m_currentWaypoint < 0)
                 return;
 
-            if (m_currentWaypoint + 1 >= m_waypointsSize)
-            {
-                m_currentWaypoint = -1;
-                lateralVelocity = Vector3.zero;
-                return;
-            }
-
             var waypoint = m_waypoints[m_currentWaypoint + 1];
             var point = new Vector3(waypoint.x, position.y, waypoint.z);
-            var offset = point - position;
-            var direction = new Vector3(offset.x, 0f, offset.z);
+            var direction = point - position;
             var distance = direction.magnitude;
 
-            if (distance > 0.0001f)
-            {
-                // Clamp speed so we don't overshoot corners and oscillate around
-                // the destination on uneven terrain.
-                var maxSpeed = distance / Mathf.Max(Time.deltaTime, 0.0001f);
-                var clampedSpeed = Mathf.Min(moveSpeed, maxSpeed);
-                lateralVelocity = direction.normalized * clampedSpeed;
-            }
-            else
-            {
-                lateralVelocity = Vector3.zero;
-            }
+            direction = direction.normalized;
+            lateralVelocity = direction * GetCurrentMoveSpeed();
 
             if (distance <= 0.1f)
             {
@@ -490,8 +524,28 @@ namespace PLAYERTWO.ARPGProject
             else
                 targetEntity = null;
 
+            m_targetRadius = CalculateTargetRadius(target);
+
             this.target = target;
             onTargetSet.Invoke();
+        }
+
+        /// <summary>
+        /// Calculates and returns the XZ radius of a given target Transform.
+        /// For Entity targets, uses the CharacterController radius.
+        /// For other targets (e.g. Destructible objects), uses the largest XZ extent of their Collider bounds.
+        /// Returns zero if no suitable collider is found.
+        /// </summary>
+        /// <param name="target">The target Transform to calculate the radius for.</param>
+        protected virtual float CalculateTargetRadius(Transform target)
+        {
+            if (targetEntity != null)
+                return targetEntity.controller.radius;
+
+            if (target && target.TryGetComponent(out Collider targetCollider))
+                return Mathf.Max(targetCollider.bounds.extents.x, targetCollider.bounds.extents.z);
+
+            return 0f;
         }
 
         /// <summary>
@@ -510,9 +564,7 @@ namespace PLAYERTWO.ARPGProject
         /// <param name="direction">The direction you want the Entity to face.</param>
         public virtual void FaceTo(Vector3 direction)
         {
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.0001f)
+            if (direction.sqrMagnitude > 0)
             {
                 var delta = rotationSpeed * Time.deltaTime;
                 var target = Quaternion.LookRotation(direction, Vector3.up);
@@ -552,7 +604,9 @@ namespace PLAYERTWO.ARPGProject
             {
                 if (!isAttacking && skills.CanUseSkill())
                 {
-                    skillDuration = m_animator.GetAttackAnimationLength();
+                    skills.LockPerformingInstance();
+                    m_animator.UpdateSkillOverride(skills.current);
+                    skillDuration = m_animator.GetSkillAnimationLength();
                     states.ChangeTo<UseSkillEntityState>();
                 }
             }
@@ -584,12 +638,12 @@ namespace PLAYERTWO.ARPGProject
             }
             else
             {
-                var damage = stats.GetDamage(out var critical);
+                var weaponLayers = stats.GetWeaponDamageLayers(out var critical);
 
                 if (!items || !items.IsUsingBlade())
                     attackType = EntityAttackType.Melee;
 
-                hitbox.SetDamage(damage, critical);
+                hitbox.SetDamage(weaponLayers, critical);
                 hitbox.Toggle();
             }
 
@@ -610,6 +664,8 @@ namespace PLAYERTWO.ARPGProject
 
             if (comboIndex >= stats.maxCombos)
                 CancelCombo();
+
+            onIncrementCombo.Invoke();
         }
 
         /// <summary>
@@ -652,7 +708,7 @@ namespace PLAYERTWO.ARPGProject
         public virtual void Die()
         {
             stats.health = 0;
-            NotifyDefeat();
+            m_damageHandler.NotifyDefeat();
             SetCollidersEnabled(false);
             states.ChangeTo<IdleEntityState>();
             onDie?.Invoke();
@@ -670,48 +726,25 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
-        /// Applies damage to this Entity. This method considers the defense calculated
-        /// from the current Entity Stats.
+        /// Applies damage to this Entity by delegating to <see cref="EntityDamageHandler.Process"/>.
+        /// Blocking, defense reduction, and stun are each gated by the corresponding flags in
+        /// <see cref="EntityDamageInfo"/>. If the hit lands, any effect carried by the info is
+        /// applied via the effect manager.
         /// </summary>
         /// <param name="other">The Entity that performed the attack.</param>
-        /// <param name="amount">The amount of damage.</param>
-        /// <param name="critical">Notification if the damage is critical.</param>
-        public virtual void Damage(Entity other, int amount, bool critical)
-        {
-            if (isDead || Time.time <= m_lastHitTime + k_maxHitRate)
-                return;
+        /// <param name="info">The damage information, including amount, critical flag, and optional effect.</param>
+        public virtual void Damage(Entity other, EntityDamageInfo info) =>
+            m_damageHandler.Process(other, info);
 
-            if (stats && Random.value <= stats.chanceToBlock && !isAttacking)
-            {
-                Block(other);
-                return;
-            }
-
-            var total = Mathf.Max(1, amount - (int)(stats.defense / 2f));
-            stats.health -= total;
-            m_lastHitTime = Time.time;
-
-            if (!m_damageFrom.Contains(other))
-                m_damageFrom.Add(other);
-
-            onDamage?.Invoke(total, other.position, critical);
-            //Debug.Log(stats.chanceToBlock);
-
-            if (stats.health == 0)
-                Die();
-            else if (other.stats && Random.value <= other.stats.stunChance)
-                Stun();
-        }
-
-        protected virtual void Block(Entity other)
+        public virtual void Block(Entity other, EntityDamageInfo info)
         {
             blockDuration = m_animator.GetBlockAnimationLength();
             lookDirection = GetDirectionTo(other.position);
             states.ChangeTo<BlockEntityState>();
-            onBlock.Invoke();
+            onBlock.Invoke(info);
         }
 
-        protected virtual void Stun()
+        public virtual void Stun()
         {
             if (stats && stats.immuneToStun)
                 return;
@@ -719,23 +752,6 @@ namespace PLAYERTWO.ARPGProject
             stunDuration = m_animator.GetStunAnimationLength();
             states.ChangeTo<StunnedEntityState>();
             onStunned.Invoke();
-        }
-
-        protected virtual void NotifyDefeat()
-        {
-            foreach (var entity in m_damageFrom)
-            {
-                if (!entity)
-                    continue;
-
-                if (entity.IsSummoned() && entity.TryGetComponent(out EntityAI aI))
-                {
-                    aI.leader.stats.OnDefeatEntity(this);
-                    continue;
-                }
-
-                entity.stats.OnDefeatEntity(this);
-            }
         }
 
         /// <summary>
@@ -785,21 +801,6 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        protected virtual void HandleAutoCollect(Collider other)
-        {
-            if (
-                !autoCollectItems
-                || !other.IsCollectible()
-                || Time.time < m_lastAutoCollectTime + autoCollectCoolDown
-            )
-                return;
-
-            if (other.TryGetComponent<Interactive>(out var interactive))
-                interactive.Interact(this);
-
-            m_lastAutoCollectTime = Time.time;
-        }
-
         protected virtual void Awake()
         {
             InitializeController();
@@ -813,6 +814,9 @@ namespace PLAYERTWO.ARPGProject
             InitializePath();
             InitializeColliders();
             InitializeAnimator();
+            InitializeEffects();
+            InitializeHighlighter();
+            InitializeDamageHandler();
         }
 
         protected virtual void Update()
@@ -827,7 +831,6 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void OnTriggerStay(Collider other)
         {
             HandleInteractive(other);
-            HandleAutoCollect(other);
         }
     }
 }

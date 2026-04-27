@@ -13,6 +13,8 @@ namespace PLAYERTWO.ARPGProject
         public UnityEvent<Skill[]> onUpdatedEquippedSkills;
         public UnityEvent<Skill> onChanged;
         public UnityEvent<SkillInstance> onPerform;
+        public UnityEvent onManaConsumed;
+        public UnityEvent onHealthConsumed;
 
         [Tooltip("List of available Skills.")]
         public List<Skill> skills;
@@ -62,6 +64,12 @@ namespace PLAYERTWO.ARPGProject
         /// The Skill instance of the current selected Skill.
         /// </summary>
         public SkillInstance currentInstance { get; protected set; }
+
+        /// <summary>
+        /// The Skill instance locked in at the start of the current cast.
+        /// Used during <see cref="PerformSkill"/> so mid-cast skill switches don't affect the ongoing cast.
+        /// </summary>
+        public SkillInstance performingInstance { get; protected set; }
 
         /// <summary>
         /// The list of equipped Skills.
@@ -122,7 +130,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public virtual void PerformSkill()
         {
-            if (!CanUseSkill())
+            if (performingInstance == null)
                 return;
 
             ConsumeMana();
@@ -130,18 +138,23 @@ namespace PLAYERTWO.ARPGProject
             HandleHealing();
             Cast();
 
-            if (IsAttack() && current.AsAttack().useMeleeHitbox)
+            if (performingInstance.data is SkillAttack attack && attack.useMeleeHitbox)
             {
                 var skillDamage = m_entity.stats.GetSkillDamage(
-                    m_entity.skills.current,
+                    performingInstance.data,
                     out var skillCritical
                 );
-                m_entity.hitbox.SetDamage(skillDamage, skillCritical);
+                var skillLayers = new List<DamageLayer>
+                {
+                    new DamageLayer(attack.damageType, skillDamage),
+                };
+                m_entity.hitbox.SetDamage(skillLayers, skillCritical);
+                m_entity.hitbox.SetTargetEffect(attack.targetEffects, attack.targetEffectChance);
                 m_entity.hitbox.Toggle();
             }
 
-            currentInstance.Perform();
-            onPerform.Invoke(currentInstance);
+            performingInstance.Perform();
+            onPerform.Invoke(performingInstance);
         }
 
         /// <summary>
@@ -149,9 +162,13 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void ConsumeMana()
         {
-            if (current.useMana)
+            if (performingInstance.data.useMana)
             {
-                m_entity.stats.mana = Mathf.Max(0, m_entity.stats.mana - current.manaCost);
+                m_entity.stats.mana = Mathf.Max(
+                    0,
+                    m_entity.stats.mana - performingInstance.data.manaCost
+                );
+                onManaConsumed?.Invoke();
             }
         }
 
@@ -160,9 +177,13 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void ConsumeBlood()
         {
-            if (current.useBlood)
+            if (performingInstance.data.useBlood)
             {
-                m_entity.stats.health = Mathf.Max(1, m_entity.stats.health - current.bloodCost);
+                m_entity.stats.health = Mathf.Max(
+                    1,
+                    m_entity.stats.health - performingInstance.data.bloodCost
+                );
+                onHealthConsumed?.Invoke();
             }
         }
 
@@ -171,9 +192,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void HandleHealing()
         {
-            if (current.useHealing)
+            if (performingInstance.data.useHealing)
             {
-                m_entity.stats.health += current.healingAmount;
+                m_entity.stats.health += performingInstance.data.healingAmount;
             }
         }
 
@@ -182,11 +203,11 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual GameObject Cast()
         {
-            if (!current)
+            if (performingInstance?.data == null)
                 return null;
 
             var spacePoint = GetCastOrigin();
-            return current.Cast(m_entity, spacePoint.position, spacePoint.rotation);
+            return performingInstance.data.Cast(m_entity, spacePoint.position, spacePoint.rotation);
         }
 
         /// <summary>
@@ -293,6 +314,12 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
+        /// Locks the current selected skill instance as the performing instance,
+        /// so it remains unchanged during the cast even if the player switches skills.
+        /// </summary>
+        public virtual void LockPerformingInstance() => performingInstance = currentInstance;
+
+        /// <summary>
         /// Returns an array of the equipped Skills.
         /// </summary>
         public virtual Skill[] GetEquippedSkills() => equipped.Select(e => e?.data).ToArray();
@@ -311,7 +338,7 @@ namespace PLAYERTWO.ARPGProject
             if (m_instancesCache.TryGetValue(skill, out var instance))
                 return instance;
 
-            instance = new SkillInstance(skill);
+            instance = new SkillInstance(skill, m_entity.stats);
             m_instancesCache[skill] = instance;
             return instance;
         }
@@ -324,7 +351,7 @@ namespace PLAYERTWO.ARPGProject
             var position = transform.position;
             var rotation = transform.rotation;
 
-            switch (current.castingOrigin)
+            switch (performingInstance.data.castingOrigin)
             {
                 default:
                 case Skill.CastingOrigin.Center:

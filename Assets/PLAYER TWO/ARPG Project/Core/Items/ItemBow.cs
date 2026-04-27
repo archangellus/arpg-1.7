@@ -5,10 +5,16 @@ namespace PLAYERTWO.ARPGProject
     [CreateAssetMenu(fileName = "New Shield", menuName = "PLAYER TWO/ARPG Project/Item/Bow")]
     public class ItemBow : ItemWeapon
     {
-        public enum Type { Bow, Crossbow }
+        public enum Type
+        {
+            Bow,
+            Crossbow,
+        }
 
         [Header("Bow Settings")]
-        [Tooltip("The type of the Bow. Regular bow is equipped on the left hand slot. Crossbows are equipped on the right hand slot.")]
+        [Tooltip(
+            "The type of the Bow. Regular bow is equipped on the left hand slot. Crossbows are equipped on the right hand slot."
+        )]
         public Type type;
 
         [Tooltip("The prefab of the projectile the Bow shoots.")]
@@ -49,5 +55,19 @@ namespace PLAYERTWO.ARPGProject
             instance.transform.localRotation *= Quaternion.Euler(handRotation);
             return instance;
         }
+
+        /// <inheritdoc/>
+        public override bool CanEquipInSlot(ItemSlots slot, EntityItemManager items)
+        {
+            if (slot != ItemSlots.RightHand)
+                return false;
+            if (items.IsUsingWeaponLeft() || items.IsUsingShield())
+                return false;
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public override GameObject InstantiateOn(ItemSlots slot, EntityItemManager items) =>
+            Instantiate(items.rightHandSlot, items.leftHandSlot);
     }
 }

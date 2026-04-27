@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: Chest LVL 3
   m_EditorClassIdentifier: 
   lootChance: 1
-  loopCount: 8
+  loopCount: 15
   randomPosition: 1
   randomPositionMaxRadius: 3
   randomPositionMinRadius: 1.5
-  groundOffset: 0.1
-  generateAttributes: 1
-  minAttributes: 4
-  maxAttributes: 0
+  rarityLevels:
+  - rarity: {fileID: 11400000, guid: 1ac92e692017a89428f1c658b6f2938a, type: 2}
+    chance: 1
   items:
   - {fileID: 11400000, guid: a9d3393a671f7c441a74af4a81c00896, type: 2}
   - {fileID: 11400000, guid: 7de6cdd817a59a0418b75bf32982c2a3, type: 2}
@@ -33,7 +32,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee2abf50e21d4c940bd7ca25b12b9194, type: 2}
   - {fileID: 11400000, guid: 77840b5ddf0cd2b4f8d2c802c8e4b660, type: 2}
   - {fileID: 11400000, guid: f22f499c2ce172c49a19b59020c71cb7, type: 2}
-  moneyChance: 0.4
+  - {fileID: 11400000, guid: c0bb8a4bc05930948b5916e6f56f71c0, type: 2}
+  - {fileID: 11400000, guid: 00cc9f3ad8f99334494e1009dc3bd50d, type: 2}
+  moneyChance: 0.2
   minMoneyAmount: 800
   maxMoneyAmount: 2500
-  multiplyByEntityLevel: 0

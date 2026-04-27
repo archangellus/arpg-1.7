@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -200,10 +200,6 @@ namespace PLAYERTWO.ARPGProject
         {
             if (!CanInsertItem(item, row, column))
                 return false;
-                // >>> PLUGIN_PATCH:InventoryDualSort::L199_C12_63c49ce5
-                if (items.ContainsKey(item))
-                return false;
-                // <<< PLUGIN_PATCH:InventoryDualSort::L199_C12_63c49ce5
 
             items.Add(item, new(row, column));
 
@@ -212,15 +208,11 @@ namespace PLAYERTWO.ARPGProject
                 for (int j = column; j < column + item.columns; j++)
                 {
                     m_grid[i, j] = item;
-                    // >>> PLUGIN_PATCH:ItemRarity::FIND:onItemInserted?.Invoke(item, new(row, column));|R10_5a950bd6
-                    EventBus.RaiseInventoryItemAdded(item, this);
-                    // <<< PLUGIN_PATCH:ItemRarity::FIND:onItemInserted?.Invoke(item, new(row, column));|R10_5a950bd6
-                    
                 }
             }
 
             onItemInserted?.Invoke(item, new(row, column));
-                        return true;
+            return true;
         }
 
         /// <summary>

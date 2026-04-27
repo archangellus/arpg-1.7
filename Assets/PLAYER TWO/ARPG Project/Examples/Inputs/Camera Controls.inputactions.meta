@@ -12,10 +12,3 @@ ScriptedImporter:
   wrapperCodePath: 
   wrapperClassName: 
   wrapperCodeNamespace: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Inputs/Camera Controls.inputactions
-  uploadId: 883356

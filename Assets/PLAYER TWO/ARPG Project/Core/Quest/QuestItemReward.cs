@@ -8,18 +8,20 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The scriptable object of the Item.")]
         public Item data;
 
-        [Tooltip("The amount of additional attributes the Item will have.")]
-        public int attributes;
+        [Tooltip(
+            "The rarity to apply to the reward item. Leave empty for a plain item with no affixes."
+        )]
+        public ItemRarity rarity;
 
         /// <summary>
-        /// Returns a new Item Instance based on this object's attributes.
+        /// Returns a new Item Instance based on this object's rarity.
         /// </summary>
         public ItemInstance CreateItemInstance()
         {
-            if (attributes > 0)
-                return new ItemInstance(data, true, attributes, attributes);
+            if (rarity != null)
+                return new ItemInstance(data, rarity);
 
-            return new ItemInstance(data, false);
+            return new ItemInstance(data);
         }
     }
 }

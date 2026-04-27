@@ -16,7 +16,7 @@ namespace PLAYERTWO.ARPGProject
             var moveDirection = entity.inputs.GetMoveDirection();
 
             if (moveDirection.sqrMagnitude > 0)
-                entity.lateralVelocity = moveDirection * entity.moveSpeed;
+                entity.lateralVelocity = moveDirection * entity.GetCurrentMoveSpeed();
             else
                 entity.states.ChangeTo<IdleEntityState>();
         }

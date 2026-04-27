@@ -37,28 +37,54 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The damage multiplier applied to critical hits.")]
         public float criticalMultiplier = 1.25f;
 
+        [Min(1f)]
+        [Tooltip(
+            "The constant used in the hyperbolic defense mitigation formula: "
+                + "damage = incoming × C / (defense + C). "
+                + "At defense = C the entity takes 50% damage. Lower values make defense stronger sooner; "
+                + "higher values extend the curve and require more defense for the same mitigation."
+        )]
+        public float defenseConstant = 100f;
+
         [Tooltip("The maximum attack speed the stats can reach.")]
         public int maxAttackSpeed = 1000;
 
         [Tooltip("The maximum chance of an entity to block an attack.")]
+        [Range(0, 1f)]
         public float maxBlockChance = 0.75f;
 
         [Tooltip("The maximum block speed (block recover) the stats can reach.")]
         public int maxBlockSpeed = 1000;
 
         [Tooltip("The maximum chance of an entity to stun another.")]
+        [Range(0, 1f)]
         public float maxStunChance = 0.75f;
 
         [Tooltip("The maximum stun speed (stun recover) the stats can reach.")]
         public int maxStunSpeed = 1000;
 
+        [Header("Miss Settings")]
+        [Tooltip(
+            "If false, all attacks always hit — disables the accuracy vs evasion system globally."
+        )]
+        public bool canMiss = true;
+
+        [Tooltip("Flat base added to every entity's accuracy rating.")]
+        public int accuracyBase = 300;
+
+        [Tooltip("Additional evasion multiplier per level the defender is above the attacker.")]
+        [Range(0f, 0.5f)]
+        public float evasionLevelPenaltyFactor = 0.1f;
+
+        [Tooltip("Minimum hit chance — guarantees attacks are never truly impossible.")]
+        [Range(0.01f, 0.5f)]
+        public float minHitChance = 0.05f;
+
+        [Tooltip("Maximum hit chance — a perfect build can never guarantee every hit.")]
+        [Range(0.5f, 1f)]
+        public float maxHitChance = 0.95f;
+
         [Header("Item Attributes Settings")]
-        [Tooltip("The maximum chance of an item have additional attributes")]
-        public float maxAttributeChance = 0.8f;
-
-        [Tooltip("The minimum chance of an item have additional attributes")]
-        public float minAttributeChance = 0.1f;
-
         [Tooltip("The additional price an item will have per attribute")]
         public int pricePerAttribute = 500;
 

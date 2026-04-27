@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 714677181b4f39440a248d8ae62fba51, type: 3}
+  m_Name: Frost Blast
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1722290085, guid: 7d8586c7058307748950cfd89867fa20, type: 3}
+  sound: {fileID: 0}
+  coolDown: 5
+  castObject: {fileID: 7379953848252409152, guid: 8fd46ec7815bff7458953abf42155859, type: 3}
+  castingOrigin: 2
+  requireTarget: 1
+  faceInterestDirection: 1
+  useRegularAttackClip: 0
+  overrideClip: {fileID: 0}
+  useMana: 1
+  manaCost: 25
+  useBlood: 0
+  bloodCost: 0
+  useHealing: 0
+  healingAmount: 0
+  selfEffects: []
+  selfEffectChance: 1
+  targetEffects:
+  - {fileID: 11400000, guid: 5fe1d1c9f3443194db24d0447a210ece, type: 2}
+  targetEffectChance: 0.45
+  useMeleeHitbox: 0
+  minAttackDistance: 3
+  requiredWeapon: 0
+  damageMode: 1
+  damageType: 2
+  minDamage: 4
+  maxDamage: 8

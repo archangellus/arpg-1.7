@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Healing
   m_EditorClassIdentifier: 
   icon: {fileID: 2123711708, guid: 7d8586c7058307748950cfd89867fa20, type: 3}
-  sound: {fileID: 0}
+  sound: {fileID: 8300000, guid: 5c1a269eebcc62e45a78edb5f7894756, type: 3}
   coolDown: 10
   castObject: {fileID: 1112473011492276456, guid: b4b51d2f8857f1a4ea71aae95673f7a2, type: 3}
   castingOrigin: 2
@@ -27,3 +27,7 @@ MonoBehaviour:
   bloodCost: 0
   useHealing: 1
   healingAmount: 100
+  selfEffect: {fileID: 0}
+  selfEffectChance: 1
+  targetEffect: {fileID: 0}
+  targetEffectChance: 1

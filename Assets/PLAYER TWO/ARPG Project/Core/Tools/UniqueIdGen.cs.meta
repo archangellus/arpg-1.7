@@ -1,9 +1,2 @@
 fileFormatVersion: 2
 guid: c121a6f5af2ab84458e23a54487a4032
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Tools/UniqueIdGen.cs
-  uploadId: 883356

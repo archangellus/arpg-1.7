@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -99,15 +99,7 @@ namespace PLAYERTWO.ARPGProject
             m_inventory.onInventoryCleared += Clear;
 
             if (autoSortButton)
-                // >>> PLUGIN_PATCH:InventoryDualSort::L103_C16_677e2bde
-                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgIGF1dG9Tb3J0QnV0dG9uLm9uQ2xpY2suQWRkTGlzdGVuZXIoKCkgPT4gbV9pbnZlbnRvcnkuU29ydCgpKTsNCg==
-                            {
-                                autoSortButton.onClick.AddListener(() => m_inventory.Sort());
-                                autoSortButton.onClick.AddListener(() =>
-                                EventBus.RaiseInventoryAutoSortRequested(m_inventory)
-                                );
-                            }
-                // <<< PLUGIN_PATCH:InventoryDualSort::L103_C16_677e2bde
+                autoSortButton.onClick.AddListener(() => m_inventory.Sort());
         }
 
         /// <summary>

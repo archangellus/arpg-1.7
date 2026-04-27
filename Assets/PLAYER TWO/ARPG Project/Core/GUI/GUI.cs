@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -145,29 +145,7 @@ namespace PLAYERTWO.ARPGProject
         {
             if (!selected || !canDropItems)
                 return;
-                // >>> PLUGIN_PATCH:ArcDrop::FIND:return;|R2_974f70e6
-                            var selectedItem = selected;
-                            var dropHandled = EventBus.RaiseArcDropRequested(
-                                this,
-                                selectedItem,
-                                m_entity,
-                                () =>
-                                {
-                                    if (selectedItem)
-                                        Destroy(selectedItem.gameObject);
 
-                                    if (selected == selectedItem)
-                                        selected = null;
-
-                                    m_dropTime = Time.time;
-                                },
-                                SafeDeselect
-                            );
-
-                            if (dropHandled)
-                                return;
-                // <<< PLUGIN_PATCH:ArcDrop::FIND:return;|R2_974f70e6
-                
             if (Level.instance.TryInstantiateItemDropAtMousePosition(selected.item))
             {
                 Destroy(selected.gameObject);

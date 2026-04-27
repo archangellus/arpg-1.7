@@ -1,16 +1,8 @@
 fileFormatVersion: 2
-guid: 47e571669b971521c9dafb4685b1217c
+guid: 8f586378b4e144a9851e7b34d9b748ee
 timeCreated: 1484171803
-licenseType: Store
+licenseType: Pro
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/Fonts
-    & Materials/LiberationSans SDF.asset
-  uploadId: 883356

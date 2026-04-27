@@ -1,16 +1,8 @@
 fileFormatVersion: 2
-guid: 0391a2b1d573f22898db16b16adaefc4
+guid: c41005c129ba4d66911b75229fd70b45
 timeCreated: 1480316912
-licenseType: Store
+licenseType: Pro
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/Sprite
-    Assets/EmojiOne.asset
-  uploadId: 883356

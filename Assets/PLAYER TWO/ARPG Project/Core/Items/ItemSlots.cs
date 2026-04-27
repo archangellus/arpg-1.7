@@ -8,6 +8,9 @@ namespace PLAYERTWO.ARPGProject
         Chest,
         Pants,
         Gloves,
-        Boots
+        Boots,
+        RingA,
+        RingB,
+        Amulet,
     }
 }

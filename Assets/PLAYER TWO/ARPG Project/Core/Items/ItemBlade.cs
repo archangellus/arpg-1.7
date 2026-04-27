@@ -5,24 +5,36 @@ namespace PLAYERTWO.ARPGProject
     [CreateAssetMenu(fileName = "New Weapon", menuName = "PLAYER TWO/ARPG Project/Item/Blade")]
     public class ItemBlade : ItemWeapon
     {
-        public enum Type { OneHand, TwoHand }
+        public enum Type
+        {
+            OneHand,
+            TwoHand,
+        }
 
         [Header("Blade Settings")]
         [Tooltip("The handing type of the Blade.")]
         public Type type;
 
         [Header("Right Hand Settings")]
-        [Tooltip("The offset position in local space applied to the prefab on the Entity's right hand.")]
+        [Tooltip(
+            "The offset position in local space applied to the prefab on the Entity's right hand."
+        )]
         public Vector3 rightHandPosition;
 
-        [Tooltip("The offset rotation in local space applied to the prefab on the Entity's right hand.")]
+        [Tooltip(
+            "The offset rotation in local space applied to the prefab on the Entity's right hand."
+        )]
         public Vector3 rightHandRotation;
 
         [Header("Left Hand Settings")]
-        [Tooltip("The offset position in local space applied to the prefab on the Entity's left hand.")]
+        [Tooltip(
+            "The offset position in local space applied to the prefab on the Entity's left hand."
+        )]
         public Vector3 leftHandPosition;
 
-        [Tooltip("The offset rotation in local space applied to the prefab on the Entity's left hand.")]
+        [Tooltip(
+            "The offset rotation in local space applied to the prefab on the Entity's left hand."
+        )]
         public Vector3 leftHandRotation;
 
         /// <summary>
@@ -59,6 +71,38 @@ namespace PLAYERTWO.ARPGProject
             instance.transform.localPosition += leftHandPosition;
             instance.transform.localRotation *= Quaternion.Euler(leftHandRotation);
             return instance;
+        }
+
+        /// <inheritdoc/>
+        public override bool CanEquipInSlot(ItemSlots slot, EntityItemManager items)
+        {
+            if (slot != ItemSlots.RightHand && slot != ItemSlots.LeftHand)
+                return false;
+
+            if (IsTwoHanded())
+            {
+                if (slot != ItemSlots.RightHand)
+                    return false;
+                if (items.IsUsingWeaponLeft() || items.IsUsingShield())
+                    return false;
+            }
+            else if (slot == ItemSlots.LeftHand)
+            {
+                if (!items.IsUsingBlade() || items.GetRightBlade().IsTwoHanded())
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public override GameObject InstantiateOn(ItemSlots slot, EntityItemManager items)
+        {
+            if (slot == ItemSlots.RightHand)
+                return InstantiateRightHand(items.rightHandSlot);
+            if (slot == ItemSlots.LeftHand)
+                return InstantiateLeftHand(items.leftHandSlot);
+            return null;
         }
     }
 }

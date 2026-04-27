@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Quest Available Marker
   m_EditorClassIdentifier: 
   iconPrefab: {fileID: 4507652264240251055, guid: 8772042b03e04774b97cac6bb7f17380, type: 3}
-  sprite: {fileID: 21300000, guid: 7de05df0ee0d43e698aeb792c5eea35a, type: 3}
+  sprite: {fileID: 170607816, guid: 63332be31f914414fa8ecaff472604d7, type: 3}
   description: Available Quest
   color: {r: 1, g: 1, b: 1, a: 1}
   colorInactive: {r: 0.5, g: 0.5, b: 0.5, a: 1}

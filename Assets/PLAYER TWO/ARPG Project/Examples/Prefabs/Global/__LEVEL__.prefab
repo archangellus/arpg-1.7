@@ -55,9 +55,12 @@ MonoBehaviour:
   interactives: []
   gameObjects: []
   droppedItems: []
+  droppedMoney: []
   dropGroundLayer:
     serializedVersion: 2
     m_Bits: 128
+  trackLoot: -1
+  lootLimit: 50
 --- !u!114 &4021032297278676760
 MonoBehaviour:
   m_ObjectHideFlags: 0

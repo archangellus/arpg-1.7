@@ -11,9 +11,6 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("A reference to the GUI Stats Manager.")]
         public GUIStatsManager stats;
 
-        [Tooltip("Optional UI element to enable when the player has available stat points.")]
-        public GameObject pointsAvailableElement;
-
         [Tooltip("A reference to the GUI Player Inventory.")]
         public GUIWindow inventoryWindow;
 
@@ -52,8 +49,6 @@ namespace PLAYERTWO.ARPGProject
         public AudioClip closeClip;
 
         protected GameAudio m_audio => GameAudio.instance;
-
-        protected Entity m_entity;
 
         /// <summary>
         /// Returns the reference to the GUI Player Inventory.
@@ -102,8 +97,6 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void Start()
         {
             var windows = GetComponentsInChildren<GUIWindow>(true);
-            InitializeEntity();
-            InitializePointsUi();
 
             if (!m_audio)
                 return;
@@ -113,26 +106,6 @@ namespace PLAYERTWO.ARPGProject
                 window.onOpen.AddListener(() => m_audio.PlayUiEffect(openClip));
                 window.onClose.AddListener(() => m_audio.PlayUiEffect(closeClip));
             }
-        }
-
-        protected virtual void InitializeEntity() => m_entity = Level.instance.player;
-
-        protected virtual void InitializePointsUi()
-        {
-            if (!m_entity || !m_entity.stats)
-                return;
-
-            m_entity.stats.onLevelUp.AddListener(UpdatePointsAvailableElement);
-            m_entity.stats.onRecalculate.AddListener(UpdatePointsAvailableElement);
-            UpdatePointsAvailableElement();
-        }
-
-        protected virtual void UpdatePointsAvailableElement()
-        {
-            if (!pointsAvailableElement || !m_entity || !m_entity.stats)
-                return;
-
-            pointsAvailableElement.SetActive(m_entity.stats.availablePoints > 0);
         }
     }
 }

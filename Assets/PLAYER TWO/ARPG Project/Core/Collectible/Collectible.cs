@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace PLAYERTWO.ARPGProject
@@ -7,24 +8,35 @@ namespace PLAYERTWO.ARPGProject
     public abstract class Collectible : Interactive
     {
         [Header("GUI Name Settings")]
-        [Tooltip("The GUI Collectible prefab that represents this Collectible name on the GUI.")]
-        public GUICollectibleName guiName;
-
         [Tooltip("The color of the text on the GUI Collectible.")]
         public Color nameColor = Color.white;
 
         public UnityEvent onCollect;
 
+        /// <summary>
+        /// All Collectibles currently active in the scene. Populated on Start, cleared on OnDestroy.
+        /// </summary>
+        public static readonly List<Collectible> all = new();
+
         protected virtual void InitializeCanvas()
         {
-            var gui = Instantiate(guiName);
-            // >>> PLUGIN_PATCH:MouseOverCollectible::L19_C12_8e804517
-            EventBus.RaiseCollectibleGUINameInstantiated(this, gui);
-            // <<< PLUGIN_PATCH:MouseOverCollectible::L19_C12_8e804517
-            gui.SetCollectible(this, nameColor);
+            if (GUICollectibles.instance)
+                GUICollectibles.instance.Add(this);
         }
 
         protected override void InitializeTag() => tag = GameTags.Collectible;
+
+        /// <summary>
+        /// Marks this Collectible as being gathered: disables interaction and hides the GUI label.
+        /// Called by auto-gathering systems before moving the item toward the Entity.
+        /// </summary>
+        public virtual void StartGathering()
+        {
+            interactive = false;
+
+            if (GUICollectibles.instance)
+                GUICollectibles.instance.Hide(this);
+        }
 
         /// <summary>
         /// Collects this Collectible.
@@ -33,6 +45,10 @@ namespace PLAYERTWO.ARPGProject
         public virtual void Collect(object other)
         {
             onCollect.Invoke();
+
+            if (GUICollectibles.instance)
+                GUICollectibles.instance.Remove(this);
+
             Destroy(gameObject);
         }
 
@@ -47,12 +63,24 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public abstract string GetName();
 
+        /// <summary>
+        /// Returns the color used to display this Collectible's name label.
+        /// Defaults to <see cref="nameColor"/>; subclasses can override to drive color from data.
+        /// </summary>
+        public virtual Color GetNameColor() => nameColor;
+
         protected abstract bool TryCollect(Inventory inventory);
 
         protected override void Start()
         {
             base.Start();
+            all.Add(this);
             InitializeCanvas();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            all.Remove(this);
         }
     }
 }

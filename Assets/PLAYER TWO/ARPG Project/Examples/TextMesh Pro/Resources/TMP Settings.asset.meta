@@ -1,15 +1,8 @@
 fileFormatVersion: 2
-guid: ea71239f401378fd1b15a7836997ce3a
+guid: 3f5b5dff67a942289a9defa416b206f3
 timeCreated: 1436653997
-licenseType: Store
+licenseType: Pro
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Resources/TMP Settings.asset
-  uploadId: 883356

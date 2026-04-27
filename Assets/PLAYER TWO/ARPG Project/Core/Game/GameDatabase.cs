@@ -13,6 +13,12 @@ namespace PLAYERTWO.ARPGProject
         public List<Item> items => gameData.items;
         public List<Skill> skills => gameData.skills;
         public List<Quest> quests => gameData.quests;
+        public List<ItemRarity> itemRarities => gameData.itemRarities;
+
+        public EntityEffect bleedEffect => gameData.bleedEffect;
+        public EntityEffect burnEffect => gameData.burnEffect;
+        public EntityEffect freezeEffect => gameData.freezeEffect;
+        public EntityEffect poisonEffect => gameData.poisonEffect;
 
         /// <summary>
         /// Returns the index of a given element on a list of a given type.
@@ -31,6 +37,8 @@ namespace PLAYERTWO.ARPGProject
                 return skills.IndexOf(skill);
             else if (element is Quest quest)
                 return quests.IndexOf(quest);
+            else if (element is ItemRarity itemRarity)
+                return itemRarities.IndexOf(itemRarity);
 
             return -1;
         }
@@ -53,6 +61,8 @@ namespace PLAYERTWO.ARPGProject
                 return skills[id] as T;
             else if (type == typeof(Quest) && quests.IsIndexValid(id))
                 return quests[id] as T;
+            else if (type == typeof(ItemRarity) && itemRarities.IsIndexValid(id))
+                return itemRarities[id] as T;
 
             return default;
         }

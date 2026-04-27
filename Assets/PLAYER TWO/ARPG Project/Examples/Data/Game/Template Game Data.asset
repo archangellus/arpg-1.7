@@ -47,6 +47,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4cb46060deb33ae4aa017fdadc88eeae, type: 2}
   - {fileID: 11400000, guid: f22f499c2ce172c49a19b59020c71cb7, type: 2}
   - {fileID: 11400000, guid: 5cf83e0ed05e81641bdc02abc92de27f, type: 2}
+  - {fileID: 11400000, guid: 8a91eeb7cb11a614da5772f971f818c7, type: 2}
+  - {fileID: 11400000, guid: 7ac2c1132a04dfe4d879615f9b7c031b, type: 2}
+  - {fileID: 11400000, guid: 0c2f941aed0b85c43b53b817210fa0dc, type: 2}
+  - {fileID: 11400000, guid: c0bb8a4bc05930948b5916e6f56f71c0, type: 2}
+  - {fileID: 11400000, guid: 00cc9f3ad8f99334494e1009dc3bd50d, type: 2}
   skills:
   - {fileID: 11400000, guid: 19d43b816a0912f449f2b9441140e15e, type: 2}
   - {fileID: 11400000, guid: 7d6a3fca69013b5449bdee3714e114c0, type: 2}
@@ -56,12 +61,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4470ff40a61ee934ebf6ad37a7eb3aec, type: 2}
   - {fileID: 11400000, guid: e403768c6915d0e4195d688e223450e7, type: 2}
   - {fileID: 11400000, guid: e9d58a59bb9acca4b8981cffd3fe1922, type: 2}
-  - {fileID: 11400000, guid: 337a2e606a7fa5842aabe1e9857ea678, type: 2}
+  - {fileID: 11400000, guid: 125d600768e6fa3409c823b858cb6837, type: 2}
+  - {fileID: 11400000, guid: cbf56d43ee2acf54aa16d8cb19b33931, type: 2}
+  - {fileID: 11400000, guid: 0107d0b9917c2e3469cae3cd32dec9a8, type: 2}
   quests:
   - {fileID: 11400000, guid: 6d71c4c0e355cc84a9b7ffa082860dd7, type: 2}
   - {fileID: 11400000, guid: 7a25f4387e11fbc4698fd47d7830d567, type: 2}
   - {fileID: 11400000, guid: 66d5ae9094d9e0d48b44e9aa82c185a3, type: 2}
   - {fileID: 11400000, guid: cc727055113dae444b4fa17a7262e47d, type: 2}
-  - {fileID: 11400000, guid: 2e1422a5567978f3e978bc97e3a6f2db, type: 2}
-  - {fileID: 11400000, guid: b7954da7112eb01a1ac817e056441a89, type: 2}
-  - {fileID: 11400000, guid: 34c0d3392dd38e6b3be6a10a2d5458bd, type: 2}
+  itemRarities:
+  - {fileID: 11400000, guid: 0b3d8c905d7bc8744af58be156689884, type: 2}
+  - {fileID: 11400000, guid: 6bf6e707f6cea034d89284b322c6b883, type: 2}
+  - {fileID: 11400000, guid: 1ac92e692017a89428f1c658b6f2938a, type: 2}
+  bleedEffect: {fileID: 11400000, guid: 624f03aab50e6ea4f986b298bb1f82d6, type: 2}
+  burnEffect: {fileID: 11400000, guid: 2be121a573cf78f47b3a8bb4d0e94625, type: 2}
+  freezeEffect: {fileID: 11400000, guid: 5fe1d1c9f3443194db24d0447a210ece, type: 2}
+  poisonEffect: {fileID: 11400000, guid: d4dd61611fa450048b3d4e020f1d21b0, type: 2}

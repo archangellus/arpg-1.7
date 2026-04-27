@@ -2,7 +2,10 @@ using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
 {
-    [CreateAssetMenu(fileName = "New Character", menuName = "PLAYER TWO/ARPG Project/Character/Character")]
+    [CreateAssetMenu(
+        fileName = "New Character",
+        menuName = "PLAYER TWO/ARPG Project/Character/Character"
+    )]
     public class Character : ScriptableObject
     {
         [Header("General Settings")]
@@ -29,26 +32,8 @@ namespace PLAYERTWO.ARPGProject
         public int energy = 10;
 
         [Header("Initial Equipments")]
-        [Tooltip("The initial Item equipped on the right hand slot.")]
-        public CharacterItem rightHand;
-
-        [Tooltip("The initial Item equipped on the left hand slot.")]
-        public CharacterItem leftHand;
-
-        [Tooltip("The initial Item equipped on the helm slot.")]
-        public CharacterItem helm;
-
-        [Tooltip("The initial Item equipped on the chest slot.")]
-        public CharacterItem chest;
-
-        [Tooltip("The initial Item equipped on the pants slot.")]
-        public CharacterItem pants;
-
-        [Tooltip("The initial Item equipped on the gloves slot.")]
-        public CharacterItem gloves;
-
-        [Tooltip("The initial Item equipped on the boots slot.")]
-        public CharacterItem boots;
+        [Tooltip("The list of items equipped on each slot when this Character is created.")]
+        public CharacterEquipmentList initialEquipments = new();
 
         [Header("Initial Consumables")]
         [Tooltip("The maximum amount of available consumable slots.")]
@@ -58,7 +43,9 @@ namespace PLAYERTWO.ARPGProject
         public ItemConsumable[] initialConsumables;
 
         [Header("Initial Inventory")]
-        [Tooltip("The initial amount of money available on the Inventory when the Character is created.")]
+        [Tooltip(
+            "The initial amount of money available on the Inventory when the Character is created."
+        )]
         public int initialMoney;
 
         [Tooltip("The initial items on the Inventory when the Character is created.")]

@@ -21,6 +21,9 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("Prefab for the summoned entity health bar.")]
         public GUIHealthBar summonHealthBarPrefab;
 
+        [Tooltip("Prefab for the destructible object health bar.")]
+        public GUIHealthBar destructibleHealthBarPrefab;
+
         protected CanvasGroup m_canvasGroup;
         protected List<GUIHealthBar> m_healthBars = new();
 
@@ -77,6 +80,19 @@ namespace PLAYERTWO.ARPGProject
                 return Instantiate(enemyHealthBarPrefab, transform);
             else if (entity.IsSummoned() && summonHealthBarPrefab != null)
                 return Instantiate(summonHealthBarPrefab, transform);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Instantiates a health bar for a destructible object.
+        /// </summary>
+        /// <param name="destructible">The destructible to create a health bar for.</param>
+        /// <returns>The instantiated health bar.</returns>
+        public GUIHealthBar InstantiateHealthBar(Destructible destructible)
+        {
+            if (destructibleHealthBarPrefab != null)
+                return Instantiate(destructibleHealthBarPrefab, transform);
 
             return null;
         }

@@ -2,12 +2,24 @@ using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
 {
-    [CreateAssetMenu(fileName = "New Skill Attack", menuName = "PLAYER TWO/ARPG Project/Skills/Skill Attack")]
+    [CreateAssetMenu(
+        fileName = "New Skill Attack",
+        menuName = "PLAYER TWO/ARPG Project/Skills/Skill Attack"
+    )]
     public class SkillAttack : Skill
     {
-        public enum DamageMode { Regular, Magic }
+        public enum DamageMode
+        {
+            Regular,
+            Magic,
+        }
 
-        public enum RequiredWeapon { None, Blade, Bow }
+        public enum RequiredWeapon
+        {
+            None,
+            Blade,
+            Bow,
+        }
 
         [Header("Attack Settings")]
         [Tooltip("If true, the Skill will active the regular melee hitbox when casted.")]
@@ -22,6 +34,9 @@ namespace PLAYERTWO.ARPGProject
         [Header("Damage Settings")]
         [Tooltip("The damage mode of this Skill.")]
         public DamageMode damageMode = DamageMode.Magic;
+
+        [Tooltip("The elemental damage type of this Skill.")]
+        public DamageType damageType = DamageType.Normal;
 
         [Tooltip("The minimum damage this Skill can cause.")]
         public int minDamage;

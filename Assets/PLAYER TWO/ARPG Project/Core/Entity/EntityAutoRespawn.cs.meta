@@ -1,9 +1,2 @@
 fileFormatVersion: 2
 guid: 64b05de348b495a4ab4653cfb259471a
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityAutoRespawn.cs
-  uploadId: 883356

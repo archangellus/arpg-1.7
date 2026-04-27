@@ -17,10 +17,11 @@ MonoBehaviour:
   randomPosition: 0
   randomPositionMaxRadius: 3
   randomPositionMinRadius: 1.5
-  groundOffset: 0.1
-  generateAttributes: 1
-  minAttributes: 0
-  maxAttributes: 0
+  rarityLevels:
+  - rarity: {fileID: 11400000, guid: 6bf6e707f6cea034d89284b322c6b883, type: 2}
+    chance: 0.25
+  - rarity: {fileID: 11400000, guid: 1ac92e692017a89428f1c658b6f2938a, type: 2}
+    chance: 0.5
   items:
   - {fileID: 11400000, guid: a9d3393a671f7c441a74af4a81c00896, type: 2}
   - {fileID: 11400000, guid: c9657b84acffdd6449a57c1dc5833fab, type: 2}
@@ -34,4 +35,3 @@ MonoBehaviour:
   moneyChance: 0.5
   minMoneyAmount: 500
   maxMoneyAmount: 2500
-  multiplyByEntityLevel: 0

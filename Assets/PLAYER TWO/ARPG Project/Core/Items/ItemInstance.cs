@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
 {
@@ -29,6 +30,22 @@ namespace PLAYERTWO.ARPGProject
         /// The additional attributes of this Item Instance.
         /// </summary>
         public ItemAttributes attributes;
+
+        /// <summary>
+        /// The index of the rarity tier in the Game Database's item rarities list.
+        /// A value of -1 means no rarity (plain item with no affixes).
+        /// </summary>
+        public int rarityId = -1;
+
+        /// <summary>
+        /// Indices of selected prefix affixes from the item's affix scope.
+        /// </summary>
+        public List<int> prefixIndices;
+
+        /// <summary>
+        /// Indices of selected suffix affixes from the item's affix scope.
+        /// </summary>
+        public List<int> suffixIndices;
 
         protected int m_stack;
 
@@ -63,19 +80,37 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public int columns => data.columns;
 
-        public ItemInstance(
-            Item data,
-            bool generateAttributes = true,
-            int minAttributes = 0,
-            int maxAttributes = 0
-        )
+        /// <summary>
+        /// Creates an Item Instance with no affixes.
+        /// </summary>
+        public ItemInstance(Item data)
         {
             SetDefaultData(data);
-
-            if (generateAttributes)
-                GenerateAdditionalAttributes(minAttributes, maxAttributes);
         }
 
+        /// <summary>
+        /// Creates an Item Instance and rolls affixes based on a rarity level from the Game Database.
+        /// </summary>
+        public ItemInstance(Item data, int rarityId)
+        {
+            SetDefaultData(data);
+            GenerateAttributesFromRarity(rarityId);
+        }
+
+        /// <summary>
+        /// Creates an Item Instance and rolls affixes based on a direct ItemRarity reference.
+        /// </summary>
+        public ItemInstance(Item data, ItemRarity rarity)
+        {
+            SetDefaultData(data);
+            var id = GameDatabase.instance.itemRarities.IndexOf(rarity);
+            if (id >= 0)
+                GenerateAttributesFromRarity(id);
+        }
+
+        /// <summary>
+        /// Creates an Item Instance with pre-existing attributes and default durability.
+        /// </summary>
         public ItemInstance(Item data, ItemAttributes attributes)
         {
             this.data = data;
@@ -88,22 +123,37 @@ namespace PLAYERTWO.ARPGProject
                 stack = 1;
         }
 
-        public ItemInstance(Item data, int durability, int stack, bool generateAttributes = true)
-        {
-            this.data = data;
-            this.durability = durability;
-            this.stack = stack;
-
-            if (generateAttributes)
-                GenerateAdditionalAttributes();
-        }
-
+        /// <summary>
+        /// Creates an Item Instance with pre-existing attributes and explicit durability and stack.
+        /// </summary>
         public ItemInstance(Item data, ItemAttributes attributes, int durability, int stack)
         {
             this.data = data;
             this.attributes = attributes;
             this.durability = durability;
             this.stack = stack;
+        }
+
+        /// <summary>
+        /// Creates an Item Instance from fully explicit save data.
+        /// </summary>
+        public ItemInstance(
+            Item data,
+            ItemAttributes attributes,
+            int durability,
+            int stack,
+            int rarityId,
+            List<int> prefixIndices,
+            List<int> suffixIndices
+        )
+        {
+            this.data = data;
+            this.attributes = attributes;
+            this.durability = durability;
+            this.stack = stack;
+            this.rarityId = rarityId;
+            this.prefixIndices = prefixIndices;
+            this.suffixIndices = suffixIndices;
         }
 
         /// <summary>
@@ -188,7 +238,7 @@ namespace PLAYERTWO.ARPGProject
             if (!IsEquippable())
                 return false;
 
-            return durability <= GetEquippable().maxDurability / 2f;
+            return durability <= GetEffectiveMaxDurability() / 2f;
         }
 
         /// <summary>
@@ -202,6 +252,12 @@ namespace PLAYERTWO.ARPGProject
         public virtual bool UseAttributes() => ContainAttributes() && !IsBroken();
 
         /// <summary>
+        /// Returns the value of the given attribute type, or 0 if attributes are not active.
+        /// </summary>
+        public virtual int GetAttribute(ItemAttributes.AttributeType type) =>
+            UseAttributes() ? attributes[type] : 0;
+
+        /// <summary>
         /// Reduces the durability of this Item Instance by a given amount.
         /// </summary>
         /// <param name="amount">The amount of points to decrease from the durability.</param>
@@ -210,7 +266,7 @@ namespace PLAYERTWO.ARPGProject
             if (!IsEquippable())
                 return;
 
-            var maxDurability = GetEquippable().maxDurability;
+            var maxDurability = GetEffectiveMaxDurability();
             durability = Mathf.Clamp(durability - amount, 0, maxDurability);
 
             if (durability <= 0)
@@ -228,8 +284,10 @@ namespace PLAYERTWO.ARPGProject
             if (!IsWeapon() || IsBroken())
                 return MinMax.Zero;
 
-            var minDamage = GetWeapon().minDamage;
-            var maxDamage = GetWeapon().maxDamage;
+            var rarity = GetRarity();
+            var damageBonus = rarity != null ? rarity.bonusDamage : 0;
+            var minDamage = GetWeapon().minDamage + damageBonus;
+            var maxDamage = GetWeapon().maxDamage + damageBonus;
 
             if (IsAboutToBreak())
                 return new((int)(minDamage / 2f), (int)(maxDamage / 2f));
@@ -246,12 +304,14 @@ namespace PLAYERTWO.ARPGProject
             if (IsBroken())
                 return 0;
 
+            var rarity = GetRarity();
+            var defenseBonus = rarity != null ? rarity.bonusDefense : 0;
             var defense = 0;
 
             if (IsArmor())
-                defense = GetArmor().defense;
+                defense = GetArmor().defense + defenseBonus;
             else if (IsShield())
-                defense = GetShield().defense;
+                defense = GetShield().defense + defenseBonus;
 
             return IsAboutToBreak() ? (int)(defense / 2f) : defense;
         }
@@ -264,7 +324,7 @@ namespace PLAYERTWO.ARPGProject
             if (!IsEquippable())
                 return;
 
-            durability = GetEquippable().maxDurability;
+            durability = GetEffectiveMaxDurability();
             onChanged?.Invoke();
         }
 
@@ -276,37 +336,106 @@ namespace PLAYERTWO.ARPGProject
             if (!IsEquippable())
                 return 1;
 
-            return durability / (float)GetEquippable().maxDurability;
-        }
-
-        protected virtual void SetDefaultData(Item data)
-        {
-            this.data = data;
-
-            if (IsEquippable())
-                durability = GetEquippable().maxDurability;
-
-            if (IsStackable())
-                stack = 1;
+            return durability / (float)GetEffectiveMaxDurability();
         }
 
         /// <summary>
-        /// Randomly generates additional attributes for this Item Instance if it's a equipment.
+        /// Returns the display name of this Item Instance, incorporating affix naming rules.
+        /// In <see cref="ItemRarity.AffixesMode.Paired"/> mode, a prefix appears before the item name and a
+        /// suffix appears after as "of [name]". In <see cref="ItemRarity.AffixesMode.Layered"/> mode, the
+        /// rarity display name is prepended instead (e.g. "Rare Iron Sword").
         /// </summary>
-        /// <param name="minAttributes">The minimum amount of additional attributes.</param>
-        /// <param name="maxAttributes">The maximum amount of additional attributes.</param>
-        protected virtual void GenerateAdditionalAttributes(
-            int minAttributes = 0,
-            int maxAttributes = 0
-        )
+        public virtual string GetDisplayName()
+        {
+            var db = GameDatabase.instance;
+
+            if (rarityId < 0 || !db.itemRarities.IsIndexValid(rarityId))
+                return data.name;
+
+            var rarity = db.itemRarities[rarityId];
+
+            if (rarity.affixesMode == ItemRarity.AffixesMode.Layered)
+                return $"{rarity.displayName} {data.name}";
+
+            var affixes = rarity.affixes;
+
+            if (affixes == null)
+                return data.name;
+
+            var prefix =
+                prefixIndices?.Count > 0 && affixes.prefixes.IsIndexValid(prefixIndices[0])
+                    ? $"{affixes.prefixes[prefixIndices[0]].name} "
+                    : "";
+            var suffix =
+                suffixIndices?.Count > 0 && affixes.suffixes.IsIndexValid(suffixIndices[0])
+                    ? $" {affixes.suffixes[suffixIndices[0]].name}"
+                    : "";
+
+            return $"{prefix}{data.name}{suffix}".Trim();
+        }
+
+        /// <summary>
+        /// Returns the rarity color for this Item Instance, or the fallback color if no rarity is set.
+        /// </summary>
+        /// <param name="fallback">The color to use when no rarity is assigned.</param>
+        public virtual Color GetRarityColor(Color fallback)
+        {
+            var db = GameDatabase.instance;
+
+            if (rarityId >= 0 && db.itemRarities.IsIndexValid(rarityId))
+                return db.itemRarities[rarityId].color;
+
+            return fallback;
+        }
+
+        /// <summary>
+        /// Returns the Item Rarity for this Item Instance, or null if no rarity is assigned.
+        /// </summary>
+        public virtual ItemRarity GetRarity()
+        {
+            var db = GameDatabase.instance;
+
+            if (rarityId >= 0 && db.itemRarities.IsIndexValid(rarityId))
+                return db.itemRarities[rarityId];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the effective maximum durability, including any flat bonus from the item's rarity.
+        /// </summary>
+        public virtual int GetEffectiveMaxDurability()
         {
             if (!IsEquippable())
-                return;
+                return 0;
 
-            if (IsWeapon())
-                attributes = new WeaponAttributes(minAttributes, maxAttributes);
-            else if (IsArmor() || IsShield())
-                attributes = new ArmorAttributes(minAttributes, maxAttributes);
+            var rarity = GetRarity();
+            return GetEquippable().maxDurability + (rarity != null ? rarity.bonusMaxDurability : 0);
+        }
+
+        /// <summary>
+        /// Returns the effective attack speed of this weapon, including any flat bonus from the item's rarity.
+        /// </summary>
+        public virtual int GetEffectiveAttackSpeed()
+        {
+            if (!IsWeapon())
+                return 0;
+
+            var rarity = GetRarity();
+            return GetWeapon().attackSpeed + (rarity != null ? rarity.bonusAttackSpeed : 0);
+        }
+
+        /// <summary>
+        /// Returns the effective chance to block as a 0–1 value, including any flat bonus from the item's rarity.
+        /// </summary>
+        public virtual float GetEffectiveChanceToBlock()
+        {
+            if (!IsShield())
+                return 0;
+
+            var rarity = GetRarity();
+            return (GetShield().chanceToBlock + (rarity != null ? rarity.bonusChanceToBlock : 0))
+                / 100f;
         }
 
         /// <summary>
@@ -315,7 +444,7 @@ namespace PLAYERTWO.ARPGProject
         public virtual int GetSellPrice() => (int)(GetPrice() / 2f);
 
         /// <summary>
-        /// Returns the price of this Item Instance. If it's a stack, the price is multiplier
+        /// Returns the price of this Item Instance. If it's a stack, the price is multiplied
         /// by the stack size. The durability rate of the Item Instance is multiplied by its final price.
         /// </summary>
         public virtual int GetPrice()
@@ -362,34 +491,76 @@ namespace PLAYERTWO.ARPGProject
         /// <param name="stats">The Entity Stats to compare against.</param>
         /// <param name="warning">The color of warning texts.</param>
         /// <param name="error">The color of the error texts.</param>
-        public virtual string Inspect(EntityStatsManager stats, Color warning, Color error)
+        /// <param name="special">The color used for values boosted by rarity.</param>
+        public virtual string Inspect(
+            EntityStatsManager stats,
+            Color warning,
+            Color error,
+            Color special
+        )
         {
             var text = "";
+            var rarity = GetRarity();
 
             if (IsArmor())
-                text += $"Defense: {GetArmor().defense}";
+            {
+                var defense = GetArmor().defense + (rarity != null ? rarity.bonusDefense : 0);
+                var defenseStr =
+                    rarity != null && rarity.bonusDefense > 0
+                        ? $"{defense}".WithColor(special)
+                        : $"{defense}";
+                text += $"Defense: {defenseStr}";
+            }
             else if (IsShield())
             {
-                text += $"Defense: {GetShield().defense}";
-                text += $"\nChance To Block: {GetShield().chanceToBlock}%";
+                var defense = GetShield().defense + (rarity != null ? rarity.bonusDefense : 0);
+                var chanceToBlock =
+                    GetShield().chanceToBlock + (rarity != null ? rarity.bonusChanceToBlock : 0);
+                var defenseStr =
+                    rarity != null && rarity.bonusDefense > 0
+                        ? $"{defense}".WithColor(special)
+                        : $"{defense}";
+                var chanceToBlockStr =
+                    rarity != null && rarity.bonusChanceToBlock > 0
+                        ? $"{chanceToBlock}%".WithColor(special)
+                        : $"{chanceToBlock}%";
+                text += $"Defense: {defenseStr}";
+                text += $"\nChance To Block: {chanceToBlockStr}";
             }
             else if (IsWeapon())
             {
-                text += $"Damage: {GetWeapon().minDamage} ~ {GetWeapon().maxDamage}";
-                text += $"\nAttack Speed: {GetWeapon().attackSpeed}";
+                var damageBonus = rarity != null ? rarity.bonusDamage : 0;
+                var minDamage = GetWeapon().minDamage + damageBonus;
+                var maxDamage = GetWeapon().maxDamage + damageBonus;
+                var attackSpeed =
+                    GetWeapon().attackSpeed + (rarity != null ? rarity.bonusAttackSpeed : 0);
+                var damageStr =
+                    damageBonus > 0
+                        ? $"{minDamage} ~ {maxDamage}".WithColor(special)
+                        : $"{minDamage} ~ {maxDamage}";
+                var attackSpeedStr =
+                    rarity != null && rarity.bonusAttackSpeed > 0
+                        ? $"{attackSpeed}".WithColor(special)
+                        : $"{attackSpeed}";
+                text += $"Damage: {damageStr}";
+                text += $"\nAttack Speed: {attackSpeedStr}";
             }
 
             if (IsEquippable())
             {
                 var lineBreak = text.Length > 0 ? "\n" : "";
-                var attr = $"Durability: {durability} of {GetEquippable().maxDurability}";
+                var maxDurability = GetEffectiveMaxDurability();
+                var durabilityValues = $"{durability} of {maxDurability}";
+                var hasSpecialDurability = rarity != null && rarity.bonusMaxDurability > 0;
 
                 if (IsAboutToBreak())
-                    text += lineBreak + attr.WithColor(warning);
+                    text += lineBreak + $"Durability: {durabilityValues}".WithColor(warning);
                 else if (IsBroken())
-                    text += lineBreak + attr.WithColor(error);
+                    text += lineBreak + $"Durability: {durabilityValues}".WithColor(error);
+                else if (hasSpecialDurability)
+                    text += lineBreak + $"Durability: {durabilityValues.WithColor(special)}";
                 else
-                    text += lineBreak + attr;
+                    text += lineBreak + $"Durability: {durabilityValues}";
             }
 
             if (GetRequiredLevel() > 1)
@@ -431,6 +602,97 @@ namespace PLAYERTWO.ARPGProject
             return text;
         }
 
+        protected virtual void SetDefaultData(Item data)
+        {
+            this.data = data;
+
+            if (IsEquippable())
+                durability = GetEquippable().maxDurability;
+
+            if (IsStackable())
+                stack = 1;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="ItemAffixes.AffixScope"/> flag that corresponds to this item's type.
+        /// For armor, the specific slot (Helm, Chest, Pants, Gloves, Boots) is returned.
+        /// Returns <see cref="ItemAffixes.AffixScope.None"/> when the item type has no affix scope.
+        /// </summary>
+        protected virtual ItemAffixes.AffixScope GetItemAffixScope()
+        {
+            if (IsBlade())
+                return ItemAffixes.AffixScope.Blade;
+            if (IsBow())
+                return ItemAffixes.AffixScope.Bow;
+            if (IsArmor())
+                return GetArmor().slot switch
+                {
+                    ItemSlots.Helm => ItemAffixes.AffixScope.Helm,
+                    ItemSlots.Chest => ItemAffixes.AffixScope.Chest,
+                    ItemSlots.Pants => ItemAffixes.AffixScope.Pants,
+                    ItemSlots.Gloves => ItemAffixes.AffixScope.Gloves,
+                    ItemSlots.Boots => ItemAffixes.AffixScope.Boots,
+                    _ => ItemAffixes.AffixScope.None,
+                };
+            if (IsShield())
+                return ItemAffixes.AffixScope.Shield;
+            if (IsRing())
+                return ItemAffixes.AffixScope.Ring;
+            if (IsAmulet())
+                return ItemAffixes.AffixScope.Amulet;
+
+            return ItemAffixes.AffixScope.None;
+        }
+
+        /// <summary>
+        /// Randomly generates additional attributes for this Item Instance based on a rarity level.
+        /// The affix selection strategy is determined by the rarity's <see cref="ItemRarity.AffixesMode"/>.
+        /// Logs a warning and skips generation if the rarity level is out of bounds.
+        /// </summary>
+        protected virtual void GenerateAttributesFromRarity(int level)
+        {
+            if (!IsEquippable())
+                return;
+
+            var db = GameDatabase.instance;
+
+            if (!db.itemRarities.IsIndexValid(level))
+            {
+                Debug.LogWarning(
+                    $"ItemInstance: rarityId {level} is out of bounds in the Game Database. "
+                        + "No attributes will be generated."
+                );
+                return;
+            }
+
+            var rarity = db.itemRarities[level];
+
+            if (rarity.affixes == null)
+                return;
+
+            var itemScope = GetItemAffixScope();
+            rarity.RollAffixIndices(
+                itemScope,
+                out var rolledPrefixIndices,
+                out var rolledSuffixIndices
+            );
+
+            if (rolledPrefixIndices.Count == 0 && rolledSuffixIndices.Count == 0)
+                return;
+
+            rarityId = level;
+            durability = GetEffectiveMaxDurability();
+            attributes = new ItemAttributes();
+            prefixIndices = rolledPrefixIndices;
+            suffixIndices = rolledSuffixIndices;
+
+            foreach (var i in prefixIndices)
+                attributes.Apply(rarity.affixes.prefixes[i], rarity.valueWeight);
+
+            foreach (var i in suffixIndices)
+                attributes.Apply(rarity.affixes.suffixes[i], rarity.valueWeight);
+        }
+
         /// <summary>
         /// Returns a new Item Instance from the Item Serializer.
         /// </summary>
@@ -442,15 +704,20 @@ namespace PLAYERTWO.ARPGProject
 
             var item = GameDatabase.instance.FindElementById<Item>(serializer.itemId);
             var attributes = ItemAttributes.CreateFromSerializer(serializer.attributes);
+            var prefixIndices =
+                serializer.prefixIndices != null ? new List<int>(serializer.prefixIndices) : null;
+            var suffixIndices =
+                serializer.suffixIndices != null ? new List<int>(serializer.suffixIndices) : null;
 
-                                                // >>> PLUGIN_PATCH:ItemRarity::FIND:return new ItemInstance(item, attributes, serializer.durability, serializer.stack);|R3_369cbfed
-                                                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIG5ldyBJdGVtSW5zdGFuY2UoaXRlbSwgYXR0cmlidXRlcywgc2VyaWFsaXplci5kdXJhYmlsaXR5LCBzZXJpYWxpemVyLnN0YWNrKTsNCg==
-                                                var instance = new ItemInstance(item, attributes, serializer.durability, serializer.stack);
-                                                instance.rarityId = serializer.rarityId;
-                                                if (!string.IsNullOrEmpty(instance.rarityId))instance.MarkRarityApplied(instance.rarityId);
-                                                if (!string.IsNullOrEmpty(serializer.generatedName))instance.SetGeneratedName(serializer.generatedName);
-                                                return instance;
-                                                // <<< PLUGIN_PATCH:ItemRarity::FIND:return new ItemInstance(item, attributes, serializer.durability, serializer.stack);|R3_369cbfed
+            return new ItemInstance(
+                item,
+                attributes,
+                serializer.durability,
+                serializer.stack,
+                serializer.rarityId,
+                prefixIndices,
+                suffixIndices
+            );
         }
     }
 }

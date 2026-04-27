@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
 {
@@ -44,15 +44,11 @@ namespace PLAYERTWO.ARPGProject
 
             Instantiate(this.item.data.prefab, position, rotation, transform);
             PlayClip(dropRegularClip, dropArmorClip, dropWeaponClip);
-            // >>> PLUGIN_PATCH:ItemRarity::FIND:PlayClip(dropRegularClip, dropArmorClip, dropWeaponClip);|R5_d9beebf8
-            EventBus.RaiseRarityItemSet(this);
-            // <<< PLUGIN_PATCH:ItemRarity::FIND:PlayClip(dropRegularClip, dropArmorClip, dropWeaponClip);|R5_d9beebf8
-                                }
+        }
 
-                                // >>> PLUGIN_PATCH:ItemRarity::FIND:public override string GetName() => item.data.name;|R5_69827081
-                                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwdWJsaWMgb3ZlcnJpZGUgc3RyaW5nIEdldE5hbWUoKSA9PiBpdGVtLmRhdGEubmFtZTsNCg==
-                                public override string GetName() => item.GetDisplayName();
-                                // <<< PLUGIN_PATCH:ItemRarity::FIND:public override string GetName() => item.data.name;|R5_69827081
+        public override string GetName() => item.GetDisplayName();
+
+        public override Color GetNameColor() => item.GetRarityColor(nameColor);
 
         protected override bool TryCollect(Inventory inventory)
         {

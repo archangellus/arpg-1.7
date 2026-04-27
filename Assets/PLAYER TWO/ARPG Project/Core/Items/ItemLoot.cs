@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
@@ -33,7 +33,6 @@ namespace PLAYERTWO.ARPGProject
         protected const float k_lootLoopDelay = 0.1f;
 
         protected Game m_game => Game.instance;
-        protected CollectibleMoney m_moneyPrefab => m_game.collectibleMoneyPrefab;
 
         /// <summary>
         /// Gets the loot items from the stats.
@@ -79,27 +78,65 @@ namespace PLAYERTWO.ARPGProject
                 return;
 
             var index = Random.Range(0, lootItems.Length);
-            var item = new ItemInstance(
-                lootItems[index],
-                stats.generateAttributes,
-                stats.minAttributes,
-                stats.maxAttributes
-            );
-                                                // >>> PLUGIN_PATCH:ItemRarity::FIND:Level.instance.InstantiateItemDrop(item, position);|R10_ad8f9644
-                                                // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTGV2ZWwuaW5zdGFuY2UuSW5zdGFudGlhdGVJdGVtRHJvcChpdGVtLCBwb3NpdGlvbik7DQo=
-                                                EventBus.RaiseItemLootInstantiated(item);
-                                                Level.instance.InstantiateItemDrop(item, position);
-                                                // <<< PLUGIN_PATCH:ItemRarity::FIND:Level.instance.InstantiateItemDrop(item, position);|R10_ad8f9644
+            var rolledRarity = RollRarity();
+            var item =
+                rolledRarity >= 0
+                    ? new ItemInstance(lootItems[index], rolledRarity)
+                    : new ItemInstance(lootItems[index]);
+
+            Level.instance.InstantiateItemDrop(item, position);
+        }
+
+        /// <summary>
+        /// Rolls a rarity level from the stats rarity list.
+        /// Entries are evaluated in order; the first roll that passes wins.
+        /// Returns -1 if no entry passes or if the list is empty.
+        /// </summary>
+        protected virtual int RollRarity()
+        {
+            if (stats.rarityLevels == null || stats.rarityLevels.Count == 0)
+                return -1;
+
+            var db = GameDatabase.instance;
+
+            foreach (var entry in stats.rarityLevels)
+            {
+                if (Random.value <= entry.chance)
+                {
+                    if (entry.rarity == null)
+                    {
+                        Debug.LogWarning(
+                            $"ItemLoot on '{name}': a rarity entry has no ItemRarity assigned. "
+                                + "No attributes will be generated."
+                        );
+                        return -1;
+                    }
+
+                    var rarityId = db.itemRarities.IndexOf(entry.rarity);
+
+                    if (rarityId < 0)
+                    {
+                        Debug.LogWarning(
+                            $"ItemLoot on '{name}': ItemRarity '{entry.rarity.name}' was not found "
+                                + "in the Game Database. No attributes will be generated."
+                        );
+                        return -1;
+                    }
+
+                    return rarityId;
+                }
+            }
+
+            return -1;
         }
 
         protected virtual void InstantiateMoney(Vector3 position)
         {
             var level = m_entity ? m_entity.stats.level : 1;
-            var money = Instantiate(m_moneyPrefab, position, Quaternion.identity);
             var baseAmount = Random.Range(stats.minMoneyAmount, stats.maxMoneyAmount);
             var multiplier = 1 + (level - 1) * m_game.enemyLootMoneyIncreaseRate;
             var finalAmount = Mathf.RoundToInt(baseAmount * multiplier);
-            money.amount = finalAmount;
+            Level.instance.InstantiateMoneyDrop(finalAmount, position);
         }
 
         protected virtual Vector3 GetLootOrigin()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Quest In Progress Marker
   m_EditorClassIdentifier: 
   iconPrefab: {fileID: 4507652264240251055, guid: 8772042b03e04774b97cac6bb7f17380, type: 3}
-  sprite: {fileID: 21300000, guid: 8dab4d47fe4fb80749abfee892ad617c, type: 3}
+  sprite: {fileID: 727465037, guid: 63332be31f914414fa8ecaff472604d7, type: 3}
   description: Quest In Progress
   color: {r: 1, g: 1, b: 1, a: 1}
   colorInactive: {r: 0.5, g: 0.5, b: 0.5, a: 1}

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 793353acc498a36b89812bdd6fdec500
+guid: cf81c85f95fe47e1a27f6ae460cf182c
 ShaderImporter:
   externalObjects: {}
   defaultTextures: []
@@ -7,10 +7,3 @@ ShaderImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 251134
-  packageName: ARPG Project
-  packageVersion: 1.6.2
-  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/TextMesh Pro/Shaders/TMP_Sprite.shader
-  uploadId: 883356

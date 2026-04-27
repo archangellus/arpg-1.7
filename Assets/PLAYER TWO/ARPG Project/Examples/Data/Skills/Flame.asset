@@ -27,9 +27,15 @@ MonoBehaviour:
   bloodCost: 0
   useHealing: 0
   healingAmount: 0
+  selfEffects: []
+  selfEffectChance: 1
+  targetEffects:
+  - {fileID: 11400000, guid: 2be121a573cf78f47b3a8bb4d0e94625, type: 2}
+  targetEffectChance: 0.45
   useMeleeHitbox: 0
   minAttackDistance: 10
   requiredWeapon: 0
   damageMode: 1
+  damageType: 1
   minDamage: 1
   maxDamage: 2

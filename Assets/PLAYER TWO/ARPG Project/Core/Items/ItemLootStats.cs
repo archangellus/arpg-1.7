@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
@@ -8,6 +9,20 @@ namespace PLAYERTWO.ARPGProject
     )]
     public class ItemLootStats : ScriptableObject
     {
+        [System.Serializable]
+        public class RarityChance
+        {
+            [Tooltip("The rarity to apply to this loot drop.")]
+            public ItemRarity rarity;
+
+            [Range(0, 1)]
+            [Tooltip(
+                "The chance for this rarity level to be selected. "
+                    + "Entries are evaluated in order; the first roll that passes wins."
+            )]
+            public float chance;
+        }
+
         [Header("Loot Settings")]
         [Range(0, 1)]
         [Tooltip("The chance of looting anything.")]
@@ -26,17 +41,13 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The minimum distance from the loot center to instantiate the loot.")]
         public float randomPositionMinRadius = 1.5f;
 
-        [Header("Attribute Settings")]
+        [Header("Rarity Settings")]
         [Tooltip(
-            "If true, the Loot System will generate additional attributes for the items looted."
+            "List of possible rarity levels and their drop chances. "
+                + "Evaluated in order; the first roll that passes determines the item's rarity. "
+                + "If no entry passes, the item drops with no affixes."
         )]
-        public bool generateAttributes = true;
-
-        [Tooltip("The minimum amount of attributes.")]
-        public int minAttributes;
-
-        [Tooltip("The maximum amount of attributes.")]
-        public int maxAttributes;
+        public List<RarityChance> rarityLevels;
 
         [Space(10)]
         [Tooltip("A list of items that can be looted.")]

@@ -43,7 +43,8 @@ namespace PLAYERTWO.ARPGProject
         /// <param name="skill">The Skill you want inspect.</param>
         public virtual void Show(Skill skill)
         {
-            if (!skill || gameObject.activeSelf) return;
+            if (!skill || gameObject.activeSelf)
+                return;
 
             m_skill = skill;
             gameObject.SetActive(true);
@@ -56,7 +57,8 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public virtual void Hide()
         {
-            if (!gameObject.activeSelf) return;
+            if (!gameObject.activeSelf)
+                return;
 
             gameObject.SetActive(false);
         }
@@ -94,7 +96,8 @@ namespace PLAYERTWO.ARPGProject
             damageMode.gameObject.SetActive(m_skill.IsAttack());
 
             if (damage.gameObject.activeSelf)
-                damage.text = $"Damage: {m_skill.AsAttack().minDamage} ~ {m_skill.AsAttack().maxDamage}";
+                damage.text =
+                    $"Damage: {m_skill.AsAttack().minDamage} ~ {m_skill.AsAttack().maxDamage}";
 
             if (damageMode.gameObject.activeSelf)
                 damageMode.text = $"Damage Mode: {m_skill.AsAttack().damageMode.ToString()}";
@@ -102,10 +105,52 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void UpdateEffect()
         {
-            effectDescription.gameObject.SetActive(m_skill.useHealing);
+            var hasSelfEffects = m_skill.selfEffects != null && m_skill.selfEffects.Length > 0;
+            var hasTargetEffects =
+                m_skill.targetEffects != null && m_skill.targetEffects.Length > 0;
+            var hasEffect = m_skill.useHealing || hasSelfEffects || hasTargetEffects;
+            effectDescription.gameObject.SetActive(hasEffect);
 
-            if (effectDescription.gameObject.activeSelf)
-                effectDescription.text = $"Increases Health by {m_skill.healingAmount}";
+            if (!effectDescription.gameObject.activeSelf)
+                return;
+
+            var lines = new System.Text.StringBuilder();
+
+            if (m_skill.useHealing)
+                lines.AppendLine($"Increases Health by {m_skill.healingAmount}");
+
+            if (hasSelfEffects)
+                foreach (var effect in m_skill.selfEffects)
+                    lines.AppendLine(FormatEffectLine("self", effect, m_skill.selfEffectChance));
+
+            if (hasTargetEffects)
+                foreach (var effect in m_skill.targetEffects)
+                    lines.AppendLine(
+                        FormatEffectLine("target", effect, m_skill.targetEffectChance)
+                    );
+
+            effectDescription.text = lines.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// Formats a single effect line.
+        /// Debuffs use "Causes &lt;name&gt; to &lt;scope&gt;" at 100% chance,
+        /// or "X% chance of causing &lt;name&gt; to &lt;scope&gt;" otherwise.
+        /// Buffs display the full modifier list, prefixed with "X% chance of applying effects:"
+        /// when the chance is below 100%.
+        /// </summary>
+        protected virtual string FormatEffectLine(string scope, EntityEffect effect, float chance)
+        {
+            if (effect is EntityDebuff)
+                return chance < 1f
+                    ? $"{Mathf.RoundToInt(chance * 100)}% chance of causing {effect.effectName} to {scope}"
+                    : $"Causes {effect.effectName} to {scope}";
+
+            var modifiers = effect.GetModifiersText();
+
+            return chance < 1f
+                ? $"{Mathf.RoundToInt(chance * 100)}% chance of applying effects:\n{modifiers}"
+                : modifiers;
         }
 
         protected virtual void Start()

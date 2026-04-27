@@ -94,7 +94,12 @@ namespace PLAYERTWO.ARPGProject
                     if (m_renderTexture != null)
                         m_renderTexture.Release();
 
-                    m_renderTexture = new RenderTexture(resolution, resolution, 0, RenderTextureFormat.ARGB32);
+                    m_renderTexture = new RenderTexture(
+                        resolution,
+                        resolution,
+                        0,
+                        RenderTextureFormat.ARGB32
+                    );
                 }
 
                 return m_renderTexture;
@@ -307,5 +312,4 @@ namespace PLAYERTWO.ARPGProject
             }
         }
     }
-    
 }
