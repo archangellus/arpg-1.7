@@ -16,9 +16,14 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The enemy key that matches the progress key of the Quest.")]
         public string enemyKey;
 
+        [Tooltip("Delay in seconds before disabling this enemy when no matching active quest is found.")]
+        [Min(0f)]
+        public float disableDelay;
+
         protected Entity m_entity;
         protected QuestsManager m_quests;
         protected Coroutine m_initializeRoutine;
+        protected Coroutine m_disableRoutine;
         protected Collider[] m_colliders;
         protected bool m_waitingForQuestState;
 
@@ -62,13 +67,53 @@ namespace PLAYERTWO.ARPGProject
                 return;
 
             ApplyPreInitializationLock(false);
-            gameObject.SetActive(false);
+
+            var shouldBeActive = false;
 
             foreach (var quest in Game.instance.quests.list)
             {
                 if (quest.IsProgressKey(enemyKey) && !quest.completed)
-                    gameObject.SetActive(true);
+                {
+                    shouldBeActive = true;
+                    break;
+                }
             }
+
+            if (shouldBeActive)
+            {
+                if (m_disableRoutine != null)
+                {
+                    StopCoroutine(m_disableRoutine);
+                    m_disableRoutine = null;
+                }
+
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                TryDisableEnemy();
+            }
+        }
+
+        protected virtual void TryDisableEnemy()
+        {
+            if (disableDelay <= 0f)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            if (m_disableRoutine != null)
+                StopCoroutine(m_disableRoutine);
+
+            m_disableRoutine = StartCoroutine(DisableEnemyAfterDelay());
+        }
+
+        protected virtual IEnumerator DisableEnemyAfterDelay()
+        {
+            yield return new WaitForSeconds(disableDelay);
+            gameObject.SetActive(false);
+            m_disableRoutine = null;
         }
 
         protected virtual void ApplyPreInitializationLock(bool value)
@@ -114,6 +159,9 @@ namespace PLAYERTWO.ARPGProject
         {
             if (m_initializeRoutine != null)
                 StopCoroutine(m_initializeRoutine);
+
+            if (m_disableRoutine != null)
+                StopCoroutine(m_disableRoutine);
 
             RemoveCallbacks();
         }
