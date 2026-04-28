@@ -121,9 +121,7 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void InitializeTriggers()
         {
             m_entity.onAttack.AddListener(TriggerAttack);
-            m_entity.onMagicAttack.AddListener(
-                () => StartCoroutine(TriggerNextFrame(m_onMagicAttackHash))
-            );
+            m_entity.onMagicAttack.AddListener(() => TriggerNextFrameSafe(m_onMagicAttackHash));
             m_entity.onDie.AddListener(TriggerDying);
             m_entity.onBlock.AddListener(_ => m_animator.SetTrigger(m_onBlockHash));
             m_entity.onStunned.AddListener(() => m_animator.SetTrigger(m_onStunnedHash));
@@ -353,7 +351,7 @@ namespace PLAYERTWO.ARPGProject
         {
             m_animator.ResetTrigger(m_onStunnedHash);
             m_animator.ResetTrigger(m_onBlockHash);
-            StartCoroutine(TriggerNextFrame(m_onDieHash));
+            TriggerNextFrameSafe(m_onDieHash);
         }
 
         /// <summary>
@@ -362,7 +360,18 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void TriggerAttack()
         {
             m_animator.SetInteger(m_comboIndexHash, m_entity.comboIndex);
-            StartCoroutine(TriggerNextFrame(m_onAttackHash));
+            TriggerNextFrameSafe(m_onAttackHash);
+        }
+
+        protected virtual void TriggerNextFrameSafe(int hash)
+        {
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+            {
+                m_animator.SetTrigger(hash);
+                return;
+            }
+
+            StartCoroutine(TriggerNextFrame(hash));
         }
 
         protected IEnumerator TriggerNextFrame(int hash)
