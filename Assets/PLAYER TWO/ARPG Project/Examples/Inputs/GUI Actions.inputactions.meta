@@ -12,3 +12,10 @@ ScriptedImporter:
   wrapperCodePath: 
   wrapperClassName: 
   wrapperCodeNamespace: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Inputs/GUI Actions.inputactions
+  uploadId: 907338

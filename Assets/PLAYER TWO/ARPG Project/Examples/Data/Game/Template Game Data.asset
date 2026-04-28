@@ -69,6 +69,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7a25f4387e11fbc4698fd47d7830d567, type: 2}
   - {fileID: 11400000, guid: 66d5ae9094d9e0d48b44e9aa82c185a3, type: 2}
   - {fileID: 11400000, guid: cc727055113dae444b4fa17a7262e47d, type: 2}
+  - {fileID: 11400000, guid: 34c0d3392dd38e6b3be6a10a2d5458bd, type: 2}
+  - {fileID: 11400000, guid: 2e1422a5567978f3e978bc97e3a6f2db, type: 2}
+  - {fileID: 11400000, guid: b7954da7112eb01a1ac817e056441a89, type: 2}
+  - {fileID: 11400000, guid: 1fc74ae13dc1ae6489ef148f85e6ce6f, type: 2}
   itemRarities:
   - {fileID: 11400000, guid: 0b3d8c905d7bc8744af58be156689884, type: 2}
   - {fileID: 11400000, guid: 6bf6e707f6cea034d89284b322c6b883, type: 2}

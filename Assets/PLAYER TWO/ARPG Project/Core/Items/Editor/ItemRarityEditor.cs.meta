@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: a1e8b3b0b78ce5f449ab3733bee4f469
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Items/Editor/ItemRarityEditor.cs
+  uploadId: 907338

@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: be0c20bd9607ff96b806c9791f034bc5
+guid: 14921207c5bc802a894c003282390be5
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Plate Armor/Plate
+    Chest.asset
+  uploadId: 907338

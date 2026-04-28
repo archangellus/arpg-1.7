@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: bc4bea2ae7c1b34b0991da6f11f78805
+guid: 6f7e29da79d28ea608a33e4c49bee7a6
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
+    Boots.asset
+  uploadId: 907338

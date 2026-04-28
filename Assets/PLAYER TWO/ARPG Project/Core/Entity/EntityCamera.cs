@@ -17,6 +17,9 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The angle of the Camera.")]
         public float angle = 45f;
 
+        [Tooltip("The initial rotation of the Camera around the target in degrees.")]
+        public float initialRotation;
+
         [Tooltip("The minimum distance the Camera can reach from the target.")]
         public float minDistance = 5f;
 
@@ -29,21 +32,18 @@ namespace PLAYERTWO.ARPGProject
 
         [Tooltip("A multiplier value to speed up the rotation scroll speed.")]
         public float rotationScrollMultiplier = 1500f;
-
-        [Tooltip("The time in seconds it takes for the scroll to reach its target value.")]
-        public float scrollSmoothTime = 0.1f;
         // >>> PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
                 private System.Action<object> __mouseRotateHandler;
         // <<< PLUGIN_PATCH:MouseCameraRotate::L34_C0_d4605c31
+
+        [Tooltip("The time in seconds it takes for the scroll to reach its target value.")]
+        public float scrollSmoothTime = 0.1f;
 
         protected float m_distance;
         protected float m_rotation;
         protected float m_targetDistance;
         protected float m_targetRotation;
         protected float m_distanceVelocity;
-        protected float m_rotationVelocity;
-
-        protected bool m_scrollModifier;
         // >>> PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
                 public void EventMouseCameraRotateDelta()
                 {
@@ -60,6 +60,10 @@ namespace PLAYERTWO.ARPGProject
                         EventBus.Unsubscribe(EventBus.MouseCameraRotateDelta, __mouseRotateHandler);
                 }
         // <<< PLUGIN_PATCH:MouseCameraRotate::L100_C0_9b378115
+        protected float m_rotationVelocity;
+        protected float m_previousInitialRotation;
+
+        protected bool m_scrollModifier;
         protected bool m_pointerOverUi;
 
         protected InputAction m_scrollAction;
@@ -138,8 +142,21 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public virtual void Reset()
         {
-            m_rotation = m_targetRotation = 0;
+            m_rotation = m_targetRotation = initialRotation;
             m_distance = m_targetDistance = maxDistance;
+            m_previousInitialRotation = initialRotation;
+        }
+
+        protected virtual void OnValidate()
+        {
+            if (!Application.isPlaying)
+                return;
+
+            if (Mathf.Approximately(m_previousInitialRotation, initialRotation))
+                return;
+
+            m_rotation = m_targetRotation = initialRotation;
+            m_previousInitialRotation = initialRotation;
         }
 
         protected virtual void Start()

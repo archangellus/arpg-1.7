@@ -19,6 +19,8 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
         public string watchedStateName;
         [Tooltip("1 = replace after one full playthrough of the watched state.")]
         public float replaceAfterNormalizedTime = 1f;
+        [Tooltip("Additional delay in seconds after the watched animation threshold is reached before replacing.")]
+        [Min(0f)] public float replaceDelaySeconds = 0f;
 
         [Header("Replacement")]
         [Tooltip("Can be a prefab or an existing disabled scene object.")]
@@ -40,6 +42,7 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
         public bool destroySpawnedVfxWhenStateEnds = true;
 
         [NonSerialized] public bool hasReplaced;
+        [NonSerialized] internal bool replacementQueued;
         [NonSerialized] internal int watchedStateHash;
 
         [NonSerialized] internal GameObject runtimeVfxInstance;
@@ -79,9 +82,13 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
 
                 HandleWatchedStateVfx(entry, isWatchedStatePlaying);
 
-                if (isWatchedStatePlaying && stateInfo.normalizedTime >= entry.replaceAfterNormalizedTime)
+
+                if (!entry.replacementQueued &&
+                    isWatchedStatePlaying &&
+                    stateInfo.normalizedTime >= entry.replaceAfterNormalizedTime)
+
                 {
-                    ReplaceCharacter(entry);
+                    QueueReplacement(entry);
                 }
             }
             else
@@ -116,6 +123,36 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
                 : Animator.StringToHash(entry.watchedStateName);
         }
     }
+
+        private void QueueReplacement(CharacterSwapEntry entry)
+    {
+        if (entry == null || entry.hasReplaced || entry.replacementQueued)
+            return;
+
+        entry.replacementQueued = true;
+
+        if (entry.replaceDelaySeconds <= 0f)
+        {
+            ReplaceCharacter(entry);
+            return;
+        }
+
+        StartCoroutine(ReplaceCharacterRoutine(entry));
+    }
+
+    private System.Collections.IEnumerator ReplaceCharacterRoutine(CharacterSwapEntry entry)
+    {
+        if (entry == null)
+            yield break;
+
+        yield return new WaitForSeconds(entry.replaceDelaySeconds);
+
+        if (entry == null || entry.hasReplaced)
+            yield break;
+
+        ReplaceCharacter(entry);
+    }
+
 
     private bool TryGetWatchedStateInfo(CharacterSwapEntry entry, out Animator anim, out AnimatorStateInfo stateInfo)
     {
@@ -339,11 +376,17 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
     private void ReplaceCharacter(CharacterSwapEntry entry)
     {
         if (entry.currentCharacter == null || entry.replacementCharacter == null)
+        {
+            entry.replacementQueued = false;
             return;
+        }
+
 
         if (entry.replacementCharacter == entry.currentCharacter)
         {
             Debug.LogWarning($"[{nameof(ReplaceCharacterWhenAnimationEnds)}] Replacement character cannot be the same as the current character.", this);
+            
+           entry.replacementQueued = false;
             return;
         }
 
@@ -370,7 +413,7 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
         }
 
         entry.hasReplaced = true;
-
+        entry.replacementQueued = false;
         if (entry.disableOriginalInsteadOfDestroy)
             entry.currentCharacter.SetActive(false);
         else
@@ -412,6 +455,7 @@ public class ReplaceCharacterWhenAnimationEnds : MonoBehaviour
                 continue;
 
             entry.hasReplaced = false;
+            entry.replacementQueued = false;
             entry.runtimeWasWatchedStatePlayingLastFrame = false;
             entry.runtimeVfxTriggeredThisState = false;
         }

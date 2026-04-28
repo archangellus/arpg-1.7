@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 8e8017d79e25278acaa0c991deb43f30
+guid: 2becde0ecdf38e7eeafb464a3297561e
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
+    Pants.asset
+  uploadId: 907338

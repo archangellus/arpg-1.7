@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 9888e8ef2962b0a66bee57fde266163e
+guid: af261ed0c184beb6d806b01275dac6e2
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Plate Armor/Plate
+    Helm.asset
+  uploadId: 907338

@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 72197578f55b3ebeaa05c157f69df766
+guid: a7c19e05567064b77b30aa6ad7e751b3
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
+    Chest.asset
+  uploadId: 907338

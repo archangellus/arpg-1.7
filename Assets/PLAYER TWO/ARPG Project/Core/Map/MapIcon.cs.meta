@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 8fd23ec60a5dbab49a6ed90d6bc8220b
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapIcon.cs
+  uploadId: 907338

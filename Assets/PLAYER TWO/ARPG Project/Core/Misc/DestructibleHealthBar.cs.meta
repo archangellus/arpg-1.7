@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: bd465b0204889c34e978307e8a4deac5
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Misc/DestructibleHealthBar.cs
+  uploadId: 907338

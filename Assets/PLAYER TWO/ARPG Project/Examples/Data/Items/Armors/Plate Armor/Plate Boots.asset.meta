@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 3353036f604dfeccd9869d538e1ececa
+guid: 3e3a37f6e0763c9c79a29d84e4eefb28
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Plate Armor/Plate
+    Boots.asset
+  uploadId: 907338

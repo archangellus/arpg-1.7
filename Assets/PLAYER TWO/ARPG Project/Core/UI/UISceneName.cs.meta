@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 9b7729a90ae9ac34792b67231a72092d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/UI/UISceneName.cs
+  uploadId: 907338

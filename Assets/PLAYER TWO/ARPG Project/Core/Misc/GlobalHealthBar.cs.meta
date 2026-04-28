@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: aef3692d8c5b548429f0a5fc5f6e09a9
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Misc/GlobalHealthBar.cs
+  uploadId: 907338

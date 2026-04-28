@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 421bb2f2c6caeb242bfd2081cc70810e
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/GUI/GUIHealthBar.cs
+  uploadId: 907338

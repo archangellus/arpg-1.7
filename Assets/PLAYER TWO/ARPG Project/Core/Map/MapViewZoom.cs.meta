@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 82efd33d43c8ac742bd8b10305f54c57
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapViewZoom.cs
+  uploadId: 907338

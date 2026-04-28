@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 8a42dc6a0f6538444a1a16dfb48c4388
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapMarkerType.cs
+  uploadId: 907338

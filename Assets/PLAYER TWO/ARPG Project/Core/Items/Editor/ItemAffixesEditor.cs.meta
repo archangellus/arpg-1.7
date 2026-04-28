@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 6abc9bced4112d5479ab65bb847f72a5
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Items/Editor/ItemAffixesEditor.cs
+  uploadId: 907338

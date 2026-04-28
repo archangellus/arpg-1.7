@@ -6,7 +6,7 @@ namespace HighlightPlus {
     public class HighlightTriggerEditor : UnityEditor.Editor {
 
         SerializedProperty highlightOnHover, triggerMode, raycastCamera, raycastSource, raycastLayerMask;
-        SerializedProperty minDistance, maxDistance, respectUI, volumeLayerMask;
+        SerializedProperty minDistance, maxDistance, respectUI, volumeLayerMask, additionalColliders, additionalColliders2D;
         SerializedProperty selectOnClick, selectedProfile, selectedAndHighlightedProfile, singleSelection, toggleOnClick, keepSelection;
         HighlightTrigger trigger;
 
@@ -20,6 +20,8 @@ namespace HighlightPlus {
             maxDistance = serializedObject.FindProperty("maxDistance");
             respectUI = serializedObject.FindProperty("respectUI");
             volumeLayerMask = serializedObject.FindProperty("volumeLayerMask");
+            additionalColliders = serializedObject.FindProperty("additionalColliders");
+            additionalColliders2D = serializedObject.FindProperty("additionalColliders2D");
             selectOnClick = serializedObject.FindProperty("selectOnClick");
             selectedProfile = serializedObject.FindProperty("selectedProfile");
             selectedAndHighlightedProfile = serializedObject.FindProperty("selectedAndHighlightedProfile");
@@ -58,6 +60,8 @@ namespace HighlightPlus {
                     EditorGUILayout.PropertyField(raycastLayerMask);
                     EditorGUILayout.PropertyField(minDistance);
                     EditorGUILayout.PropertyField(maxDistance);
+                    EditorGUILayout.PropertyField(additionalColliders, true);
+                    EditorGUILayout.PropertyField(additionalColliders2D, true);
                     EditorGUI.indentLevel--;
                     break;
                 case TriggerMode.Volume:

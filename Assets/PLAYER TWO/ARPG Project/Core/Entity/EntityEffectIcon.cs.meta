@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 8a47f9a1ab077484fbfb5731f59d6126
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityEffectIcon.cs
+  uploadId: 907338

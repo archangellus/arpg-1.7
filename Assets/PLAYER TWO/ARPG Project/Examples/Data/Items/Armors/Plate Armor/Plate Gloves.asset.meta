@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 416ac719a60f2930ba658777dc3d6ba8
+guid: e92d2a72d1fa413c3a79516ead176ec3
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Plate Armor/Plate
+    Gloves.asset
+  uploadId: 907338

@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: e1234ffbf06d36d4e992930fdd507089
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Console/ConsoleAction.cs
+  uploadId: 907338

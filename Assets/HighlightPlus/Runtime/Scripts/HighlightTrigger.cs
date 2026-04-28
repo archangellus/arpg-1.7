@@ -41,6 +41,10 @@ namespace HighlightPlus {
         [Tooltip("Blocks interaction if pointer is over an UI element")]
         public bool respectUI = true;
         public LayerMask volumeLayerMask;
+        [Tooltip("Optional colliders that should be included in raycast checks even if they are outside this object hierarchy.")]
+        public Collider[] additionalColliders;
+        [Tooltip("Optional 2D colliders that should be included in raycast checks even if they are outside this object hierarchy.")]
+        public Collider2D[] additionalColliders2D;
 
         const int MAX_RAYCAST_HITS = 100;
 
@@ -98,8 +102,9 @@ namespace HighlightPlus {
         void UpdateTriggers() {
             currentTriggerMode = triggerMode;
             if (currentTriggerMode == TriggerMode.RaycastOnThisObjectAndChildren) {
-                colliders = GetComponentsInChildren<Collider>();
-                colliders2D = GetComponentsInChildren<Collider2D>();
+                colliders = CombineColliders(GetComponentsInChildren<Collider>(), additionalColliders);
+                colliders2D = CombineColliders2D(GetComponentsInChildren<Collider2D>(), additionalColliders2D);
+
                 if (hits == null || hits.Length != MAX_RAYCAST_HITS) {
                     hits = new RaycastHit[MAX_RAYCAST_HITS];
                 }
@@ -113,6 +118,42 @@ namespace HighlightPlus {
                     }
                 }
             }
+        }
+
+        static Collider[] CombineColliders(Collider[] autoColliders, Collider[] extraColliders) {
+            if (extraColliders == null || extraColliders.Length == 0) return autoColliders;
+            List<Collider> result = new List<Collider>(autoColliders.Length + extraColliders.Length);
+            for (int k = 0; k < autoColliders.Length; k++) {
+                Collider c = autoColliders[k];
+                if (c != null) {
+                    result.Add(c);
+                }
+            }
+            for (int k = 0; k < extraColliders.Length; k++) {
+                Collider c = extraColliders[k];
+                if (c != null && !result.Contains(c)) {
+                    result.Add(c);
+                }
+            }
+            return result.ToArray();
+        }
+
+        static Collider2D[] CombineColliders2D(Collider2D[] autoColliders, Collider2D[] extraColliders) {
+            if (extraColliders == null || extraColliders.Length == 0) return autoColliders;
+            List<Collider2D> result = new List<Collider2D>(autoColliders.Length + extraColliders.Length);
+            for (int k = 0; k < autoColliders.Length; k++) {
+                Collider2D c = autoColliders[k];
+                if (c != null) {
+                    result.Add(c);
+                }
+            }
+            for (int k = 0; k < extraColliders.Length; k++) {
+                Collider2D c = extraColliders[k];
+                if (c != null && !result.Contains(c)) {
+                    result.Add(c);
+                }
+            }
+            return result.ToArray();
         }
 
 

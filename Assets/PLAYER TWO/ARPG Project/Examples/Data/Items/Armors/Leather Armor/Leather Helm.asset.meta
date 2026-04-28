@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: 6fa700c2c23efcaa99adb8fe58f19825
+guid: 2f184e01c9f0e77fc93b35ed7de2234d
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
+    Helm.asset
+  uploadId: 907338

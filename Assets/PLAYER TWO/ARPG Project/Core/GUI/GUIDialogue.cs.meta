@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 6ab066a06fbbae44e8ae6a78c222923e
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/GUI/GUIDialogue.cs
+  uploadId: 907338

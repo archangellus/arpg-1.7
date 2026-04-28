@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 7811d2bb07346214f87519b638c36961
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Items/Editor/ItemAffixAttributeEntryDrawer.cs
+  uploadId: 907338

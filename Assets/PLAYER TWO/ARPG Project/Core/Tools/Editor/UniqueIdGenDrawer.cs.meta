@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: c8327ceb2cc1dfb4bb1775ea58cff3c9
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Tools/Editor/UniqueIdGenDrawer.cs
+  uploadId: 907338

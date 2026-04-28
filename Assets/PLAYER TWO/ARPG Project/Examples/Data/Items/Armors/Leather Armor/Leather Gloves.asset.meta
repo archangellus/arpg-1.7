@@ -1,8 +1,16 @@
 fileFormatVersion: 2
-guid: e22aa9d5f8da52ba1852f2c3a873304a
+guid: 9afb7032389e138698ee67e9c6d800e0
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
+    Gloves.asset
+  uploadId: 907338

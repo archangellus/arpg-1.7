@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 2f399d9fc7f9f8b46a2389b27cbe2224
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Character/Editor/CharacterEquipmentListDrawer.cs
+  uploadId: 907338

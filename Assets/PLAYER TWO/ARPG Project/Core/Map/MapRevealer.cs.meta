@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: f6c3aa8d3172deb44be3071f5ffb89d4
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Map/MapRevealer.cs
+  uploadId: 907338

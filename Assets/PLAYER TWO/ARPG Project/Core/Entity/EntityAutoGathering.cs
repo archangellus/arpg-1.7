@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace PLAYERTWO.ARPGProject
 {
-    [RequireComponent(typeof(Entity))]
     [AddComponentMenu("PLAYER TWO/ARPG Project/Entity/Entity Auto Gathering")]
     public class EntityAutoGathering : MonoBehaviour
     {
@@ -37,7 +36,10 @@ namespace PLAYERTWO.ARPGProject
         )]
         public float moveDuration = 0.2f;
 
-        protected Entity m_entity;
+        /// <summary>
+        /// The Entity this component gathers collectibles for. Auto-assigned on Start if present on the same GameObject.
+        /// </summary>
+        public Entity entity { get; set; }
 
         protected Dictionary<Collectible, float> m_pendingCollectibles = new();
         protected Dictionary<
@@ -50,13 +52,22 @@ namespace PLAYERTWO.ARPGProject
         protected List<Collectible> m_toPromote = new();
         protected List<Collectible> m_toCollect = new();
 
+        protected virtual void InitializeEntity()
+        {
+            TryGetComponent(out Entity found);
+            entity = found;
+        }
+
         protected virtual void Start()
         {
-            m_entity = GetComponent<Entity>();
+            InitializeEntity();
         }
 
         protected virtual void FixedUpdate()
         {
+            if (!entity)
+                return;
+
             ScanForCollectibles();
             ProcessPendingCollectibles();
             ProcessMovingCollectibles();
@@ -141,7 +152,7 @@ namespace PLAYERTWO.ARPGProject
                 var t = (Time.time - data.startTime) / moveDuration;
                 collectible.transform.position = Vector3.Lerp(
                     data.startPosition,
-                    m_entity.position,
+                    entity.position,
                     t
                 );
 
@@ -154,7 +165,7 @@ namespace PLAYERTWO.ARPGProject
                 if (collectible != null)
                 {
                     collectible.interactive = true;
-                    collectible.Interact(m_entity);
+                    collectible.Interact(entity);
                 }
 
                 m_movingCollectibles.Remove(collectible);
@@ -194,7 +205,7 @@ namespace PLAYERTWO.ARPGProject
 
             if (collectible is CollectibleItem collectibleItem && collectibleItem.item != null)
             {
-                var inventory = m_entity.inventory.instance;
+                var inventory = entity.inventory.instance;
                 var item = collectibleItem.item;
 
                 if (item.IsStackable())

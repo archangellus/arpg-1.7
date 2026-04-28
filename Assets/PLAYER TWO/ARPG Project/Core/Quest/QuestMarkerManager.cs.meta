@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: b7c6fe76ff2629b4c937afdfc68ea265
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Quest/QuestMarkerManager.cs
+  uploadId: 907338

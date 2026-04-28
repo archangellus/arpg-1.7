@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: a1ae37ebccf20154c8422a62ff556794
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.0
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityHealthBar.cs
+  uploadId: 907338
