@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PLAYERTWO.ARPGProject
 {
@@ -22,12 +23,44 @@ namespace PLAYERTWO.ARPGProject
         [SerializeField] private bool forceNewModelY = false;
         [SerializeField] private float forcedNewModelLocalY = 0f;
 
+        [Header("Standalone Enemy Duplicates")]
+        [SerializeField] private bool createStandaloneDuplicates = false;
+        [SerializeField] private int duplicateCount = 0;
+        [SerializeField] private string duplicateNamePrefix = "Enemy Copy";
+        [SerializeField] private float duplicateMinRadius = 2f;
+        [SerializeField] private float duplicateMaxRadius = 6f;
+        [SerializeField] private float duplicateMinSpacing = 2f;
+        [SerializeField] private int duplicatePlacementAttempts = 100;
+
+        [Header("Duplicate Spawn Collision")]
+        [SerializeField] private bool avoidSpawnCollisionLayers = false;
+        [SerializeField] private LayerMask blockedSpawnLayers = 0;
+        [SerializeField] private float spawnCollisionCheckRadius = 1f;
+        [SerializeField] private float spawnCollisionCheckYOffset = 0.5f;
+        [SerializeField] private QueryTriggerInteraction spawnCollisionTriggerInteraction = QueryTriggerInteraction.Ignore;
+
+        [Header("Scene Gizmo Preview")]
+        [SerializeField] private float duplicateRangeGizmoYOffset = 0f;
+
         [MenuItem(k_menuPath)]
         public static void Open() => GetWindow<EnemyModelReplacerWindow>("Enemy Model Replacer");
+
+        private void OnEnable()
+        {
+            SceneView.duringSceneGui -= DrawRangeGizmosInScene;
+            SceneView.duringSceneGui += DrawRangeGizmosInScene;
+        }
+
+        private void OnDisable()
+        {
+            SceneView.duringSceneGui -= DrawRangeGizmosInScene;
+        }
 
         private void OnGUI()
         {
             EditorGUILayout.HelpBox("Drag an enemy and a new model prefab, then click Replace Model & Rebind.", MessageType.Info);
+
+            EditorGUI.BeginChangeCheck();
 
             enemyRoot = (GameObject)EditorGUILayout.ObjectField("Enemy Root", enemyRoot, typeof(GameObject), true);
             newModelPrefab = (GameObject)EditorGUILayout.ObjectField("New Model", newModelPrefab, typeof(GameObject), false);
@@ -45,10 +78,104 @@ namespace PLAYERTWO.ARPGProject
                 forcedNewModelLocalY = EditorGUILayout.FloatField("Forced Local Y", forcedNewModelLocalY);
             }
 
+            EditorGUILayout.Space(6);
+            EditorGUILayout.LabelField("Standalone Enemy Duplicates", EditorStyles.boldLabel);
+
+            createStandaloneDuplicates = EditorGUILayout.Toggle("Create Duplicates", createStandaloneDuplicates);
+
+            using (new EditorGUI.DisabledScope(!createStandaloneDuplicates))
+            {
+                duplicateCount = Mathf.Max(0, EditorGUILayout.IntField("Duplicate Count", duplicateCount));
+                duplicateNamePrefix = EditorGUILayout.TextField("Duplicate Enemy Name Prefix", duplicateNamePrefix);
+                duplicateMinRadius = Mathf.Max(0f, EditorGUILayout.FloatField("Min Range From Enemy Root", duplicateMinRadius));
+                duplicateMaxRadius = Mathf.Max(duplicateMinRadius, EditorGUILayout.FloatField("Max Range From Enemy Root", duplicateMaxRadius));
+                duplicateMinSpacing = Mathf.Max(0f, EditorGUILayout.FloatField("Space Between Duplicates", duplicateMinSpacing));
+                duplicatePlacementAttempts = Mathf.Max(1, EditorGUILayout.IntField("Placement Attempts", duplicatePlacementAttempts));
+
+                EditorGUILayout.Space(4);
+                EditorGUILayout.LabelField("Spawn Collision", EditorStyles.boldLabel);
+                avoidSpawnCollisionLayers = EditorGUILayout.Toggle("Avoid Layers", avoidSpawnCollisionLayers);
+
+                using (new EditorGUI.DisabledScope(!avoidSpawnCollisionLayers))
+                {
+                    blockedSpawnLayers = LayerMaskField("Blocked Spawn Layers", blockedSpawnLayers);
+                    spawnCollisionCheckRadius = Mathf.Max(0.01f, EditorGUILayout.FloatField("Collision Check Radius", spawnCollisionCheckRadius));
+                    spawnCollisionCheckYOffset = EditorGUILayout.FloatField("Collision Check Y Offset", spawnCollisionCheckYOffset);
+                    spawnCollisionTriggerInteraction = (QueryTriggerInteraction)EditorGUILayout.EnumPopup("Trigger Colliders", spawnCollisionTriggerInteraction);
+                }
+
+                EditorGUILayout.HelpBox("After the selected Enemy Root is converted and rebound, the whole converted enemy object is duplicated as standalone scene objects with no parent. Enemy Root is only used as the center position for random placement. Enable layer avoidance to reject spawn points that overlap colliders on selected layers.", MessageType.None);
+            }
+
+            EditorGUILayout.Space(6);
+            EditorGUILayout.LabelField("Scene Gizmo Preview", EditorStyles.boldLabel);
+            duplicateRangeGizmoYOffset = EditorGUILayout.FloatField("Gizmo Y Offset", duplicateRangeGizmoYOffset);
+
+            using (new EditorGUI.DisabledScope(enemyRoot == null))
+            {
+                if (GUILayout.Button("Reset Gizmo Y Offset"))
+                    duplicateRangeGizmoYOffset = 0f;
+            }
+
+            if (EditorGUI.EndChangeCheck())
+                SceneView.RepaintAll();
+
             using (new EditorGUI.DisabledScope(enemyRoot == null || newModelPrefab == null))
             {
                 if (GUILayout.Button("Replace Model & Rebind", GUILayout.Height(32)))
                     ReplaceModel();
+            }
+        }
+
+        private void DrawRangeGizmosInScene(SceneView sceneView)
+        {
+            if (enemyRoot == null || !createStandaloneDuplicates)
+                return;
+
+            var center = enemyRoot.transform.position + Vector3.up * duplicateRangeGizmoYOffset;
+            var minRadius = Mathf.Max(0f, duplicateMinRadius);
+            var maxRadius = Mathf.Max(minRadius, duplicateMaxRadius);
+            var previousColor = Handles.color;
+            var previousZTest = Handles.zTest;
+
+            try
+            {
+                Handles.zTest = UnityEngine.Rendering.CompareFunction.LessEqual;
+
+                Handles.color = new Color(0.1f, 0.65f, 1f, 0.18f);
+                Handles.DrawSolidDisc(center, Vector3.up, maxRadius);
+
+                if (minRadius > 0f)
+                {
+                    Handles.color = new Color(1f, 0.75f, 0.15f, 0.18f);
+                    Handles.DrawSolidDisc(center, Vector3.up, minRadius);
+                }
+
+                Handles.color = new Color(0.1f, 0.65f, 1f, 0.95f);
+                Handles.DrawWireDisc(center, Vector3.up, maxRadius);
+
+                if (minRadius > 0f)
+                {
+                    Handles.color = new Color(1f, 0.75f, 0.15f, 0.95f);
+                    Handles.DrawWireDisc(center, Vector3.up, minRadius);
+                }
+
+                Handles.color = Color.white;
+
+                var labelOffset = Vector3.forward * Mathf.Max(1f, maxRadius) + Vector3.up * 0.5f;
+                var layerAvoidanceText = avoidSpawnCollisionLayers
+                    ? $"\nAvoid Layers: On | Check Radius: {Mathf.Max(0.01f, spawnCollisionCheckRadius):0.##}"
+                    : "\nAvoid Layers: Off";
+
+                Handles.Label(
+                    center + labelOffset,
+                    $"Duplicate Range\nMin: {minRadius:0.##} | Max: {maxRadius:0.##}\nSpacing: {Mathf.Max(0f, duplicateMinSpacing):0.##}\nGizmo Y Offset: {duplicateRangeGizmoYOffset:0.##}{layerAvoidanceText}",
+                    EditorStyles.boldLabel);
+            }
+            finally
+            {
+                Handles.color = previousColor;
+                Handles.zTest = previousZTest;
             }
         }
 
@@ -62,8 +189,7 @@ namespace PLAYERTWO.ARPGProject
             var previousModel = modelContainer.childCount > 0 ? modelContainer.GetChild(0).gameObject : null;
             var previousModelLocalPosition = previousModel ? previousModel.transform.localPosition : Vector3.zero;
 
-            var instance = (GameObject)PrefabUtility.InstantiatePrefab(newModelPrefab);
-            if (!instance) instance = Instantiate(newModelPrefab);
+            var instance = InstantiatePrefabInScene(newModelPrefab, enemyRoot.scene);
 
             Undo.RegisterCreatedObjectUndo(instance, "Create New Enemy Model");
             instance.name = newModelPrefab.name;
@@ -94,10 +220,157 @@ namespace PLAYERTWO.ARPGProject
             if (PrefabUtility.IsPartOfPrefabInstance(enemyRoot))
                 PrefabUtility.RecordPrefabInstancePropertyModifications(enemyRoot);
 
+            var createdDuplicates = 0;
+            if (createStandaloneDuplicates && duplicateCount > 0)
+                createdDuplicates = CreateStandaloneEnemyDuplicates(rootTransform);
+
             EditorSceneManager.MarkSceneDirty(enemyRoot.scene);
             Undo.CollapseUndoOperations(group);
 
-            Debug.Log($"[EnemyModelReplacer] Model replaced and references rebound for '{enemyRoot.name}'.", enemyRoot);
+            Debug.Log($"[EnemyModelReplacer] Model replaced and references rebound for '{enemyRoot.name}'. Standalone converted enemy duplicates created: {createdDuplicates}.", enemyRoot);
+        }
+
+        private int CreateStandaloneEnemyDuplicates(Transform sourceRoot)
+        {
+            var created = 0;
+            var acceptedPositions = new List<Vector3>();
+            var center = sourceRoot.position;
+
+            for (var i = 0; i < duplicateCount; i++)
+            {
+                if (!TryGetRandomDuplicatePosition(center, acceptedPositions, out var duplicatePosition))
+                {
+                    Debug.LogWarning($"[EnemyModelReplacer] Could only place {created} of {duplicateCount} converted enemy duplicates. Increase the range, lower spacing, raise placement attempts, lower the collision radius, or adjust the blocked spawn layers.", enemyRoot);
+                    break;
+                }
+
+                var duplicate = InstantiateConvertedEnemyCopy(enemyRoot, enemyRoot.scene);
+                Undo.RegisterCreatedObjectUndo(duplicate, "Create Duplicate Converted Enemy");
+
+                duplicate.name = BuildDuplicateName(i);
+                duplicate.transform.SetParent(null, true);
+                duplicate.transform.position = duplicatePosition;
+                duplicate.transform.rotation = sourceRoot.rotation;
+                duplicate.transform.localScale = sourceRoot.lossyScale;
+
+                EditorUtility.SetDirty(duplicate);
+                if (PrefabUtility.IsPartOfPrefabInstance(duplicate))
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(duplicate);
+
+                acceptedPositions.Add(duplicatePosition);
+                created++;
+            }
+
+            return created;
+        }
+
+        private bool TryGetRandomDuplicatePosition(Vector3 center, List<Vector3> acceptedPositions, out Vector3 position)
+        {
+            for (var attempt = 0; attempt < duplicatePlacementAttempts; attempt++)
+            {
+                var distance = UnityEngine.Random.Range(duplicateMinRadius, duplicateMaxRadius);
+                var angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                var candidate = new Vector3(
+                    center.x + Mathf.Cos(angle) * distance,
+                    center.y,
+                    center.z + Mathf.Sin(angle) * distance);
+
+                if (HasEnoughSpace(candidate, acceptedPositions) && !IsBlockedBySpawnLayers(candidate))
+                {
+                    position = candidate;
+                    return true;
+                }
+            }
+
+            position = center;
+            return false;
+        }
+
+        private bool HasEnoughSpace(Vector3 candidate, List<Vector3> acceptedPositions)
+        {
+            foreach (var accepted in acceptedPositions)
+            {
+                var candidateXZ = new Vector2(candidate.x, candidate.z);
+                var acceptedXZ = new Vector2(accepted.x, accepted.z);
+
+                if (Vector2.Distance(candidateXZ, acceptedXZ) < duplicateMinSpacing)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool IsBlockedBySpawnLayers(Vector3 candidate)
+        {
+            if (!avoidSpawnCollisionLayers || blockedSpawnLayers.value == 0)
+                return false;
+
+            var checkCenter = candidate + Vector3.up * spawnCollisionCheckYOffset;
+            return Physics.CheckSphere(
+                checkCenter,
+                Mathf.Max(0.01f, spawnCollisionCheckRadius),
+                blockedSpawnLayers,
+                spawnCollisionTriggerInteraction);
+        }
+
+        private static LayerMask LayerMaskField(string label, LayerMask selected)
+        {
+            var layers = InternalEditorUtility.layers;
+            var compactMask = 0;
+
+            for (var i = 0; i < layers.Length; i++)
+            {
+                var layer = LayerMask.NameToLayer(layers[i]);
+                if (layer >= 0 && (selected.value & (1 << layer)) != 0)
+                    compactMask |= 1 << i;
+            }
+
+            compactMask = EditorGUILayout.MaskField(label, compactMask, layers);
+
+            var layerMask = 0;
+            for (var i = 0; i < layers.Length; i++)
+            {
+                if ((compactMask & (1 << i)) == 0)
+                    continue;
+
+                var layer = LayerMask.NameToLayer(layers[i]);
+                if (layer >= 0)
+                    layerMask |= 1 << layer;
+            }
+
+            selected.value = layerMask;
+            return selected;
+        }
+
+        private string BuildDuplicateName(int index)
+        {
+            var baseName = string.IsNullOrWhiteSpace(duplicateNamePrefix)
+                ? enemyRoot.name
+                : duplicateNamePrefix.Trim();
+
+            return $"{baseName}_{index + 1:00}";
+        }
+
+        private static GameObject InstantiateConvertedEnemyCopy(GameObject source, Scene targetScene)
+        {
+            var duplicate = UnityEngine.Object.Instantiate(source);
+
+            if (targetScene.IsValid() && duplicate.scene != targetScene)
+                SceneManager.MoveGameObjectToScene(duplicate, targetScene);
+
+            return duplicate;
+        }
+
+        private static GameObject InstantiatePrefabInScene(GameObject prefab, Scene targetScene)
+        {
+            var instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            if (instance == null)
+                instance = UnityEngine.Object.Instantiate(prefab);
+
+            if (targetScene.IsValid() && instance.scene != targetScene)
+                SceneManager.MoveGameObjectToScene(instance, targetScene);
+
+            return instance;
         }
 
         private static void CopyAnimatorControllerKeepingAvatar(GameObject previousModel, GameObject newModel)
