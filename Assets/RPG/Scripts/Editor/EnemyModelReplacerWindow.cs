@@ -404,7 +404,7 @@ namespace PLAYERTWO.ARPGProject
             var components = source.GetComponents<Component>();
             foreach (var component in components)
             {
-                if (component == null || component is Transform || component is Animator)
+                if (ShouldSkipModelCopyComponent(component))
                     continue;
 
                 var type = component.GetType();
@@ -424,6 +424,23 @@ namespace PLAYERTWO.ARPGProject
                         ComponentUtility.PasteComponentValues(added);
                 }
             }
+        }
+
+        private static bool ShouldSkipModelCopyComponent(Component component)
+        {
+            if (component == null)
+                return true;
+
+            // Keep the imported model's own render setup intact.
+            // Copying these from the old model can overwrite the new mesh, materials, bones,
+            // and rootBone references. Once the old model is deleted, those copied bone
+            // references become Missing and the new SkinnedMeshRenderer can disappear.
+            return component is Transform
+                || component is Animator
+                || component is Renderer
+                || component is MeshFilter
+                || component is LODGroup
+                || component is Cloth;
         }
 
         private static void RebindModelReferences(GameObject root, Transform modelRoot)
