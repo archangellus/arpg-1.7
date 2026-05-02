@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b2e331faddd1b15afb5ff52f38ca16, type: 3}
+  m_Name: SkeletonKnightModel Replacer Profile
+  m_EditorClassIdentifier: Assembly-CSharp::PLAYERTWO.ARPGProject.EnemyModelReplacerProfile
+  enemyRootGlobalId: GlobalObjectId_V1-2-901db14def5a65cfb83e0fbb833bffcf-2214114482141136195-1198342283
+  newModelPrefabGlobalId: GlobalObjectId_V1-1-24482ef7632aa6042b45735370df80ec-1005806008958709862-0
+  windowScrollPosition: {x: 0, y: 0}
+  selectedTab: 4
+  previewYaw: 173.99959
+  modelContainerName: Model
+  autoApplyToChildren: 1
+  removePreviousModel: 1
+  forceNewModelY: 1
+  forcedNewModelLocalY: -1
+  createAnimatorOverrideController: 1
+  animatorOverrideControllerName: SkeletonKnight Animator Override
+  animatorOverrideControllerFolder: Assets/ANSTUDIO/EnemyModelReplacer/Animator Override
+    Controllers/
+  animatorOverrideMirrorSourceGlobalId: GlobalObjectId_V1-3-c7d7ba97e565a4543908af9b412e919e-22100000-0
+  animatorOverrideClipFields:
+  - originalClipName: Attack Combo 1
+    originalClipGlobalId: GlobalObjectId_V1-3-01c647c22e41921419a9b538ad3c79c2-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-296ae54b2730a0c48a789662e411c44f-7400000-0
+  - originalClipName: Attack Combo 2
+    originalClipGlobalId: GlobalObjectId_V1-3-47ede99e5c22e484980800755c4eb29a-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-a56f932cdffb1ba4687898ae748b7a58-7400000-0
+  - originalClipName: Attack Combo 3
+    originalClipGlobalId: GlobalObjectId_V1-3-508fc6c14d27a4647b01ac395adeee6c-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-33b22011e4c091647b5d92266b391355-7400000-0
+  - originalClipName: Dying
+    originalClipGlobalId: GlobalObjectId_V1-3-fc7ed1da6ffcdea489a46e5d52dbaa98-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-4273e163acc2e1c489e8a506cae7e5c3-7400000-0
+  - originalClipName: Idle
+    originalClipGlobalId: GlobalObjectId_V1-3-6a60e55c530415344b4cd4a58b57203a-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-0caf1fd43a75f0e42aecafd78b44c745-7400000-0
+  - originalClipName: Running
+    originalClipGlobalId: GlobalObjectId_V1-3-d42e36603bf1b2e48a85aeef761a0b1c-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-fe52d0bcd6d90bf4db9981cdfc23855d-7400000-0
+  - originalClipName: Skill Casting
+    originalClipGlobalId: GlobalObjectId_V1-3-d8645eacda6130b46b59e003f708127a-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-eb58ae4aa6d03bd47a21f1e320c5ae86-10599277277383218317-0
+  - originalClipName: Stunned
+    originalClipGlobalId: GlobalObjectId_V1-3-ef80fb3d341933e4fa833fb5b17c9284-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-649652e4beccb844490fd7ee8e14bf8e-7400000-0
+  - originalClipName: Blocking
+    originalClipGlobalId: GlobalObjectId_V1-3-4c6135601c3bf4a48ad7fd4a6e3e4e3e-7400000-0
+    replacementClipGlobalId: GlobalObjectId_V1-1-c1332b1ba1de331459bd8e649bef127f-7400000-0
+  showAnimatorOverrideClipFields: 1
+  animatorOverrideClipFieldsScrollPosition: {x: 0, y: 0}
+  createStandaloneDuplicates: 0
+  duplicateCount: 0
+  duplicateNamePrefix: Enemy Copy
+  duplicateMinRadius: 2
+  duplicateMaxRadius: 6
+  duplicateMinSpacing: 2
+  duplicatePlacementAttempts: 100
+  avoidSpawnCollisionLayers: 0
+  blockedSpawnLayers: 0
+  spawnCollisionCheckRadius: 1
+  spawnCollisionCheckYOffset: 0.5
+  spawnCollisionTriggerInteraction: 1
+  duplicateRangeGizmoYOffset: 0
