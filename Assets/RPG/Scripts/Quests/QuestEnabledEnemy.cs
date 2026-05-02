@@ -25,7 +25,6 @@ namespace PLAYERTWO.ARPGProject
         protected Coroutine m_initializeRoutine;
         protected Coroutine m_disableRoutine;
         protected Collider[] m_colliders;
-        protected Renderer[] m_renderers;
         protected bool m_waitingForQuestState;
 
         protected virtual void InitializeEntity()
@@ -33,7 +32,6 @@ namespace PLAYERTWO.ARPGProject
             m_entity = GetComponent<Entity>();
             m_entity.onDie.AddListener(AddQuestProgression);
             m_colliders = GetComponentsInChildren<Collider>(true);
-            m_renderers = GetComponentsInChildren<Renderer>(true);
         }
 
         protected virtual void InitializeCallbacks()
@@ -89,7 +87,7 @@ namespace PLAYERTWO.ARPGProject
                     m_disableRoutine = null;
                 }
 
-                SetEnemyActiveState(true);
+                gameObject.SetActive(true);
             }
             else
             {
@@ -99,9 +97,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void TryDisableEnemy()
         {
-           if (disableDelay <= 0f)
+           if (disableDelay <= 0f || !gameObject.activeInHierarchy)
             {
-                SetEnemyActiveState(false);
+                gameObject.SetActive(false);
                 m_disableRoutine = null;
                 return;
             }
@@ -112,7 +110,7 @@ namespace PLAYERTWO.ARPGProject
             if (!isActiveAndEnabled)
             {
                 m_disableRoutine = null;
-                SetEnemyActiveState(false);
+                gameObject.SetActive(false);
                 return;
             }
 
@@ -123,28 +121,8 @@ namespace PLAYERTWO.ARPGProject
         protected virtual IEnumerator DisableEnemyAfterDelay()
         {
             yield return new WaitForSeconds(disableDelay);
-            SetEnemyActiveState(false);
+            gameObject.SetActive(false);
             m_disableRoutine = null;
-        }
-
-        protected virtual void SetEnemyActiveState(bool active)
-        {
-            if (m_entity != null)
-                m_entity.enabled = active;
-
-            if (m_colliders != null)
-            {
-                foreach (var current in m_colliders)
-                    if (current)
-                        current.enabled = active;
-            }
-
-            if (m_renderers != null)
-            {
-                foreach (var current in m_renderers)
-                    if (current)
-                        current.enabled = active;
-            }
         }
 
         protected virtual void ApplyPreInitializationLock(bool value)
