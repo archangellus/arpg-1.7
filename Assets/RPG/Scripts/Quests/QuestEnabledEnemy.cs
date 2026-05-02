@@ -24,14 +24,18 @@ namespace PLAYERTWO.ARPGProject
         protected QuestsManager m_quests;
         protected Coroutine m_initializeRoutine;
         protected Coroutine m_disableRoutine;
+        protected Coroutine m_startupRefreshRoutine;
         protected Collider[] m_colliders;
+        protected Renderer[] m_renderers;
         protected bool m_waitingForQuestState;
+        protected bool m_hasResolvedInitialState;
 
         protected virtual void InitializeEntity()
         {
             m_entity = GetComponent<Entity>();
             m_entity.onDie.AddListener(AddQuestProgression);
             m_colliders = GetComponentsInChildren<Collider>(true);
+            m_renderers = GetComponentsInChildren<Renderer>(true);
         }
 
         protected virtual void InitializeCallbacks()
@@ -66,11 +70,15 @@ namespace PLAYERTWO.ARPGProject
             if (!showOnlyWhenQuestIsActive)
                 return;
 
-            ApplyPreInitializationLock(false);
+            if (m_quests == null)
+                m_quests = Game.instance ? Game.instance.quests : null;
+
+            if (m_quests == null)
+                return;
 
             var shouldBeActive = false;
 
-            foreach (var quest in Game.instance.quests.list)
+            foreach (var quest in m_quests.list)
             {
                 if (quest.IsProgressKey(enemyKey) && !quest.completed)
                 {
@@ -81,16 +89,27 @@ namespace PLAYERTWO.ARPGProject
 
             if (shouldBeActive)
             {
+                m_hasResolvedInitialState = true;
+                m_waitingForQuestState = false;
                 if (m_disableRoutine != null)
                 {
                     StopCoroutine(m_disableRoutine);
                     m_disableRoutine = null;
                 }
 
-                gameObject.SetActive(true);
+                SetEnemyEnabled(true);
             }
             else
             {
+                m_waitingForQuestState = false;
+
+                if (!m_hasResolvedInitialState)
+                {
+                    m_hasResolvedInitialState = true;
+                    SetEnemyEnabled(false);
+                    return;
+                }
+
                 TryDisableEnemy();
             }
         }
@@ -99,7 +118,7 @@ namespace PLAYERTWO.ARPGProject
         {
            if (disableDelay <= 0f || !gameObject.activeInHierarchy)
             {
-                gameObject.SetActive(false);
+                SetEnemyEnabled(false);
                 m_disableRoutine = null;
                 return;
             }
@@ -110,7 +129,7 @@ namespace PLAYERTWO.ARPGProject
             if (!isActiveAndEnabled)
             {
                 m_disableRoutine = null;
-                gameObject.SetActive(false);
+                SetEnemyEnabled(false);
                 return;
             }
 
@@ -121,8 +140,25 @@ namespace PLAYERTWO.ARPGProject
         protected virtual IEnumerator DisableEnemyAfterDelay()
         {
             yield return new WaitForSeconds(disableDelay);
-            gameObject.SetActive(false);
+            SetEnemyEnabled(false);
             m_disableRoutine = null;
+        }
+
+
+        protected virtual void SetEnemyEnabled(bool value)
+        {
+            if (m_entity != null)
+                m_entity.enabled = value;
+
+            if (m_colliders != null)
+                foreach (var current in m_colliders)
+                    if (current)
+                        current.enabled = value;
+
+            if (m_renderers != null)
+                foreach (var current in m_renderers)
+                    if (current)
+                        current.enabled = value;
         }
 
         protected virtual void ApplyPreInitializationLock(bool value)
@@ -132,15 +168,8 @@ namespace PLAYERTWO.ARPGProject
 
             m_waitingForQuestState = value;
 
-            if (m_entity != null)
-                m_entity.enabled = !value;
+            SetEnemyEnabled(!value);
 
-            if (m_colliders == null)
-                return;
-
-            foreach (var current in m_colliders)
-                if (current)
-                    current.enabled = !value;
         }
 
         public virtual void AddQuestProgression() =>
@@ -161,7 +190,18 @@ namespace PLAYERTWO.ARPGProject
             m_quests = Game.instance.quests;
             InitializeCallbacks();
             HandleActive();
+
+            if (m_startupRefreshRoutine != null)
+                StopCoroutine(m_startupRefreshRoutine);
+
+            m_startupRefreshRoutine = StartCoroutine(RefreshAfterQuestLoad());
             m_initializeRoutine = null;
+        }
+
+        protected virtual IEnumerator RefreshAfterQuestLoad()
+        {
+            yield return null;
+            HandleActive();
         }
 
         protected virtual void OnDestroy()
@@ -171,6 +211,9 @@ namespace PLAYERTWO.ARPGProject
 
             if (m_disableRoutine != null)
                 StopCoroutine(m_disableRoutine);
+
+            if (m_startupRefreshRoutine != null)
+                StopCoroutine(m_startupRefreshRoutine);
 
             RemoveCallbacks();
         }
