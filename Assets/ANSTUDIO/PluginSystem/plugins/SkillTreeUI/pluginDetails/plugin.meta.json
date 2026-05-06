@@ -1,0 +1,5 @@
+{
+  "description": "Adds a UI-based skill tree that unlocks and learns skills when configured conditions are met (level requirements, quest completion IDs, and prerequisite skills). No ARPG core scripts are modified.",
+  "previewImageRelativePath": "",
+  "iconRelativePath": ""
+}
