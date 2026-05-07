@@ -32,3 +32,14 @@ UI-based skill tree plugin for ARPG Project.
 - On click, a node learns its skill and consumes points.
 - Learned nodes are shown as Learned in status.
 
+
+## Required EventBus hooks in core (for automatic unlock updates)
+This plugin now expects these EventBus emits to exist in core runtime flow:
+- `EventBus.RaiseQuestCompleted(QuestInstance quest)` when a quest is completed.
+- `EventBus.RaiseEntityLevelUp(Entity entity)` when an entity levels up.
+
+### Example core integration points
+- `Core/Quest/QuestsManager.cs` inside `CompleteQuest(...)` right after `onQuestCompleted?.Invoke(quest);`.
+- `Core/Entity/EntityStatsManager.cs` inside `LevelUp()` right after `onLevelUp?.Invoke();`.
+
+These are already wired by this plugin update.

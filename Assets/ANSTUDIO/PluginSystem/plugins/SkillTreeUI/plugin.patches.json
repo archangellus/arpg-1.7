@@ -1,3 +1,34 @@
-{
-  "targets": []
+﻿{
+    "targets": [
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/Entity/EntityStatsManager.cs",
+            "insert_at": [
+                {
+                    "id": "FIND:onLevelUp?.Invoke();|R10_bbca54b0",
+                    "line": 803,
+                    "column": 0,
+                    "insert": "EventBus.RaiseEntityLevelUp(GetComponent<Entity>());",
+                    "replace_line": false,
+                    "search": "onLevelUp?.Invoke();",
+                    "use_search": true,
+                    "search_line_range": 10
+                }
+            ]
+        },
+        {
+            "path": "Assets/PLAYER TWO/ARPG Project/Core/Quest/QuestsManager.cs",
+            "insert_at": [
+                {
+                    "id": "FIND:onQuestCompleted?.Invoke(quest);|R10_0844bad9",
+                    "line": 112,
+                    "column": 0,
+                    "insert": "EventBus.RaiseEntityLevelUp(Level.instance.player.GetComponent<Entity>());",
+                    "replace_line": false,
+                    "search": "onQuestCompleted?.Invoke(quest);",
+                    "use_search": true,
+                    "search_line_range": 10
+                }
+            ]
+        }
+    ]
 }
