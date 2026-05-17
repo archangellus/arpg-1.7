@@ -23,6 +23,11 @@ public class AIFollowPlayerProfile : AIProfile
     public Color stoppingDistanceColor = Color.red;
     public float gizmoYOffset = 0.03f;
 
+
+    [Header("Pet Gathering")]
+    [Tooltip("Optional helper on the same pet that can temporarily override follow behavior to gather collectibles for the player.")]
+    public PetGatheringBehaviour gatheringBehaviour;
+
     [Header("Animation Settings")]
     public List<string> idleAnimations;
     public float idleTimeThreshold = 5f;
@@ -50,6 +55,14 @@ public class AIFollowPlayerProfile : AIProfile
         }
 
         float playerSpeed = controller.GetPlayerSpeed();
+
+        if (gatheringBehaviour != null && gatheringBehaviour.TryGetGatherDestination(out Vector3 gatherDestination))
+        {
+            controller.SetMoveSpeed(Mathf.Max(speed, playerSpeed));
+            SetAnimatorSpeed(controller, Mathf.Max(speed, playerSpeed));
+            ExitSpecialIdleAnimationIfMoving(controller, Mathf.Max(speed, playerSpeed));
+            return gatherDestination;
+        }
 
         Vector3 toPlayer = playerTransform.position - controller.transform.position;
         toPlayer.y = 0f;
