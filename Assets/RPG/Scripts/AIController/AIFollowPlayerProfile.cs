@@ -51,20 +51,6 @@ public class AIFollowPlayerProfile : AIProfile
 
         float playerSpeed = controller.GetPlayerSpeed();
 
-        PetFollowPlayerGathering gatherer = controller.GetComponent<PetFollowPlayerGathering>();
-        if (gatherer != null)
-        {
-            gatherer.SetPlayer(playerTransform);
-
-            if (gatherer.TryGetGatherTargetPosition(out Vector3 gatherTarget))
-            {
-                controller.SetMoveSpeed(Mathf.Max(speed, playerSpeed));
-                SetAnimatorSpeed(controller, controller.GetMoveSpeed());
-                ExitSpecialIdleAnimationIfMoving(controller, controller.GetMoveSpeed());
-                return gatherTarget;
-            }
-        }
-
         Vector3 toPlayer = playerTransform.position - controller.transform.position;
         toPlayer.y = 0f;
 
