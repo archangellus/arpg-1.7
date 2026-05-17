@@ -4,14 +4,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AIProfile/FollowPlayerProfile")]
 public class AIFollowPlayerProfile : AIProfile
 {
-    public enum GatherMode
-    {
-        Disabled,
-        GatherGoldOnly,
-        GatherItemsOnly,
-        GatherGoldAndItems
-    }
-
     [Header("Distance Settings")]
     public float followDistance = 5f;
     public float speed = 1f;
@@ -44,23 +36,10 @@ public class AIFollowPlayerProfile : AIProfile
     [Tooltip("Small blend time used when leaving a special idle animation and returning to the normal idle/locomotion state.")]
     public float idleExitFadeDuration = 0.1f;
 
-    [Header("Pet Gather Settings")]
-    public GatherMode gatherMode = GatherMode.GatherGoldAndItems;
-    [Tooltip("How far from the pet to scan for gatherable targets.")]
-    public float gatherScanRange = 7f;
-    [Tooltip("How close the pet must get before a gather target is considered collected.")]
-    public float gatherCollectDistance = 1f;
-    [Tooltip("Tags that should be treated as gatherable items.")]
-    public List<string> gatherableItemTags = new List<string> { "Item", "Gold" };
-    [Tooltip("How often to search for nearby gather targets.")]
-    public float gatherScanInterval = 0.25f;
-
     private float idleTime = 0f;
     private int animationIndex = 0;
     private bool specialIdleAnimationIsPlaying = false;
     private Transform playerTransform = null;
-    private float gatherScanTimer = 0f;
-    private Transform activeGatherTarget = null;
 
     public override Vector3 GetTargetPosition(Vector3 currentTargetPosition, Vector3 startPoint, AIController controller)
     {
@@ -71,11 +50,6 @@ public class AIFollowPlayerProfile : AIProfile
         }
 
         float playerSpeed = controller.GetPlayerSpeed();
-
-        if (TryHandleGatherAction(controller))
-        {
-            return controller.GetCurrentTargetPosition();
-        }
 
         Vector3 toPlayer = playerTransform.position - controller.transform.position;
         toPlayer.y = 0f;
@@ -107,105 +81,6 @@ public class AIFollowPlayerProfile : AIProfile
         ExitSpecialIdleAnimationIfMoving(controller, followSpeed);
 
         return desiredFollowPosition;
-    }
-
-    private bool TryHandleGatherAction(AIController controller)
-    {
-        if (gatherMode == GatherMode.Disabled)
-        {
-            activeGatherTarget = null;
-            return false;
-        }
-
-        gatherScanTimer -= Time.deltaTime;
-        if (activeGatherTarget == null && gatherScanTimer <= 0f)
-        {
-            gatherScanTimer = Mathf.Max(0.05f, gatherScanInterval);
-            activeGatherTarget = FindClosestGatherTarget(controller.transform.position);
-        }
-
-        if (activeGatherTarget == null)
-        {
-            return false;
-        }
-
-        Vector3 gatherPos = activeGatherTarget.position;
-        gatherPos.y = controller.transform.position.y;
-        float distanceToTarget = Vector3.Distance(controller.transform.position, gatherPos);
-
-        if (distanceToTarget <= Mathf.Max(0.05f, gatherCollectDistance))
-        {
-            Object.Destroy(activeGatherTarget.gameObject);
-            activeGatherTarget = null;
-            return false;
-        }
-
-        controller.SetMoveSpeed(speed);
-        SetAnimatorSpeed(controller, speed);
-        ExitSpecialIdleAnimationIfMoving(controller, speed);
-        controller.SetDestination(gatherPos);
-        return true;
-    }
-
-    private Transform FindClosestGatherTarget(Vector3 fromPosition)
-    {
-        Collider[] nearby = Physics.OverlapSphere(fromPosition, Mathf.Max(0.1f, gatherScanRange));
-        Transform closest = null;
-        float closestSqr = float.MaxValue;
-
-        foreach (Collider hit in nearby)
-        {
-            if (hit == null || hit.transform == null)
-            {
-                continue;
-            }
-
-            if (!IsValidGatherTarget(hit.gameObject))
-            {
-                continue;
-            }
-
-            float sqr = (hit.transform.position - fromPosition).sqrMagnitude;
-            if (sqr < closestSqr)
-            {
-                closestSqr = sqr;
-                closest = hit.transform;
-            }
-        }
-
-        return closest;
-    }
-
-    private bool IsValidGatherTarget(GameObject target)
-    {
-        if (target == null)
-        {
-            return false;
-        }
-
-        bool allowGold = gatherMode == GatherMode.GatherGoldOnly || gatherMode == GatherMode.GatherGoldAndItems;
-        bool allowItems = gatherMode == GatherMode.GatherItemsOnly || gatherMode == GatherMode.GatherGoldAndItems;
-
-        if (allowGold && target.CompareTag("Gold"))
-        {
-            return true;
-        }
-
-        if (!allowItems || gatherableItemTags == null)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < gatherableItemTags.Count; i++)
-        {
-            string tag = gatherableItemTags[i];
-            if (!string.IsNullOrWhiteSpace(tag) && target.CompareTag(tag))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void HandleIdleAnimations(AIController controller)

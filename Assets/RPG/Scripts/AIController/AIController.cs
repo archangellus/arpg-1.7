@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 public class AIController : MonoBehaviour
 {
@@ -15,19 +14,6 @@ public class AIController : MonoBehaviour
 
     [Header("Animation")]
     public string animatorParameter = "Speed";
-
-    [Header("Pet Spawn (Input System)")]
-    [Tooltip("Optional spawn/despawn action. Assign an Input Action Reference from the new Input System.")]
-    public InputActionReference spawnPetAction;
-
-    [Tooltip("Pet prefab to spawn when the action is pressed.")]
-    public GameObject petPrefab;
-
-    [Tooltip("Local-space offset from this spawner when creating the pet.")]
-    public Vector3 petSpawnOffset = new Vector3(1.5f, 0f, 1.5f);
-
-    [Tooltip("If true, pressing the spawn action again despawns the existing pet.")]
-    public bool togglePetOnSameKey = true;
 
     [Header("Character Controller Movement")]
     [Tooltip("Used only when this GameObject has a CharacterController instead of a NavMeshAgent.")]
@@ -79,7 +65,6 @@ public class AIController : MonoBehaviour
     private bool movementPaused;
 
     private static Material gizmoMaterial;
-    private AIController spawnedPetController;
 
     public Vector3 initialPosition { get; private set; }
 
@@ -119,47 +104,6 @@ public class AIController : MonoBehaviour
         }
 
         StartCoroutine(FindPlayer());
-    }
-
-    private void OnEnable()
-    {
-        if (spawnPetAction != null && spawnPetAction.action != null)
-        {
-            spawnPetAction.action.Enable();
-            spawnPetAction.action.performed += OnSpawnPetPerformed;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (spawnPetAction != null && spawnPetAction.action != null)
-        {
-            spawnPetAction.action.performed -= OnSpawnPetPerformed;
-            spawnPetAction.action.Disable();
-        }
-    }
-
-    private void OnSpawnPetPerformed(InputAction.CallbackContext context)
-    {
-        if (petPrefab == null)
-        {
-            return;
-        }
-
-        if (spawnedPetController != null)
-        {
-            if (togglePetOnSameKey)
-            {
-                Destroy(spawnedPetController.gameObject);
-                spawnedPetController = null;
-            }
-
-            return;
-        }
-
-        Vector3 spawnPosition = transform.TransformPoint(petSpawnOffset);
-        GameObject instance = Instantiate(petPrefab, spawnPosition, Quaternion.identity);
-        spawnedPetController = instance.GetComponent<AIController>();
     }
 
     private void Update()
