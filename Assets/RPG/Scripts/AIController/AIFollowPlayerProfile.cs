@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PLAYERTWO.ARPGProject;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AIProfile/FollowPlayerProfile")]
@@ -36,20 +37,118 @@ public class AIFollowPlayerProfile : AIProfile
     [Tooltip("Small blend time used when leaving a special idle animation and returning to the normal idle/locomotion state.")]
     public float idleExitFadeDuration = 0.1f;
 
+    [Header("Player Assist Gathering")]
+    public bool enableGathering = true;
+    public bool gatherMoney = true;
+    public bool gatherItems = true;
+    public List<ItemTypeFilter> gatherableItemTypes = new() { ItemTypeFilter.Any };
+    [Tooltip("Radius around the pet used to scan for gatherable collectibles.")]
+    public float gatherScanRange = 8f;
+
+    [Tooltip("Maximum distance from the pet to actively pursue a collectible target. Set <= 0 to use gatherScanRange.")]
+    public float gatherTargetDistance = 8f;
+    public float gatherMoveToCollectibleRange = 1.25f;
+    public float gatherDelay = 0.15f;
+    public float gatherMoveDuration = 0.2f;
+
+    [Header("Dynamic Gather Speed")]
+    [Tooltip("Additional speed added while moving to a gather target, scaled by distance.")]
+    public float gatherSpeedBonus = 4f;
+    [Tooltip("Maximum distance used to normalize dynamic gather speed scaling.")]
+    public float gatherSpeedDistanceScale = 10f;
+    [Tooltip("Additional speed added while returning to the player after leash cancel, scaled by distance.")]
+    public float returnSpeedBonus = 3f;
+    [Tooltip("Maximum distance used to normalize return-to-player speed scaling.")]
+    public float returnSpeedDistanceScale = 12f;
+
+    [Tooltip("Maximum distance the pet can be from the player while gathering. If exceeded, gathering is abandoned and the pet returns to follow.")]
+    public float maxGatherDistanceFromPlayer = 12f;
+
+    [Tooltip("Extra distance the pet must move back inside leash range before gathering can resume after an abandon. Prevents edge jitter.")]
+    public float gatherLeashHysteresis = 1f;
+
+    public enum ItemTypeFilter
+    {
+        Any,
+        Weapon,
+        Armor,
+        Consumable,
+        Skill,
+        Equippable,
+        Shield,
+        Bow,
+        Blade,
+        Ring,
+        Amulet,
+        Potion,
+    }
+
     private float idleTime = 0f;
     private int animationIndex = 0;
     private bool specialIdleAnimationIsPlaying = false;
     private Transform playerTransform = null;
+    private Transform petTransform = null;
+    private Entity playerEntity;
+    private Entity petEntity;
+    private Collectible currentGatherTarget;
+    private readonly Dictionary<Collectible, float> pendingCollectibles = new();
+    private readonly Dictionary<Collectible, (float startTime, Vector3 startPosition)> movingCollectibles = new();
+    private bool gatherSuspendedByLeash;
 
     public override Vector3 GetTargetPosition(Vector3 currentTargetPosition, Vector3 startPoint, AIController controller)
     {
         playerTransform = controller.GetPlayerTransform();
+        petTransform = controller.transform;
+
         if (playerTransform == null)
         {
             return currentTargetPosition;
         }
+        if (playerEntity == null && playerTransform != null)
+            playerEntity = ResolveEntityFromTransform(playerTransform);
+
+        if (petEntity == null)
+            controller.TryGetComponent(out petEntity);
 
         float playerSpeed = controller.GetPlayerSpeed();
+
+        if (enableGathering)
+        {
+            if (IsOutOfGatherLeashRange())
+            {
+                gatherSuspendedByLeash = true;
+                AbandonGathering();
+            }
+            else
+            {
+                if (gatherSuspendedByLeash && !IsBackInsideGatherLeash())
+                {
+                    AbandonGathering();
+                }
+                else
+                {
+                    gatherSuspendedByLeash = false;
+                    ScanForCollectiblesInRange();
+
+                    if (TryGetGatherTarget(out var gatherTarget))
+                    {
+                        currentGatherTarget = gatherTarget;
+                        ProcessPendingCollectibles(currentGatherTarget, controller);
+                        ProcessMovingCollectibles();
+
+                        if (currentGatherTarget != null)
+                            return MoveToGatherTarget(controller, currentGatherTarget, playerSpeed);
+                    }
+                    else
+                    {
+                        currentGatherTarget = null;
+                    }
+
+                    ProcessPendingCollectibles(null, controller);
+                    ProcessMovingCollectibles();
+                }
+            }
+        }
 
         Vector3 toPlayer = playerTransform.position - controller.transform.position;
         toPlayer.y = 0f;
@@ -76,11 +175,317 @@ public class AIFollowPlayerProfile : AIProfile
         }
 
         float followSpeed = distanceToPlayer < innerDistance ? speed : Mathf.Max(speed, playerSpeed);
+
+        if (gatherSuspendedByLeash)
+        {
+            float returnScale = returnSpeedDistanceScale > 0f ? Mathf.Clamp01(distanceToPlayer / returnSpeedDistanceScale) : 1f;
+            followSpeed += returnSpeedBonus * returnScale;
+        }
         controller.SetMoveSpeed(followSpeed);
         SetAnimatorSpeed(controller, followSpeed);
         ExitSpecialIdleAnimationIfMoving(controller, followSpeed);
 
         return desiredFollowPosition;
+    }
+
+    private bool IsOutOfGatherLeashRange()
+    {
+        if (petTransform == null || playerTransform == null)
+            return false;
+
+        if (maxGatherDistanceFromPlayer <= 0f)
+            return false;
+
+        float leashSqr = maxGatherDistanceFromPlayer * maxGatherDistanceFromPlayer;
+        return (petTransform.position - playerTransform.position).sqrMagnitude > leashSqr;
+    }
+
+    private bool IsBackInsideGatherLeash()
+    {
+        if (petTransform == null || playerTransform == null)
+            return true;
+
+        if (maxGatherDistanceFromPlayer <= 0f)
+            return true;
+
+        float effectiveLeash = Mathf.Max(0f, maxGatherDistanceFromPlayer - Mathf.Max(0f, gatherLeashHysteresis));
+        return (petTransform.position - playerTransform.position).sqrMagnitude <= effectiveLeash * effectiveLeash;
+    }
+
+    private void AbandonGathering()
+    {
+        currentGatherTarget = null;
+
+        foreach (var pair in movingCollectibles)
+        {
+            if (pair.Key != null)
+                pair.Key.interactive = true;
+        }
+
+        movingCollectibles.Clear();
+        pendingCollectibles.Clear();
+    }
+
+    private Vector3 MoveToGatherTarget(AIController controller, Collectible gatherTarget, float playerSpeed)
+    {
+        var gatherTargetPosition = gatherTarget.transform.position;
+        gatherTargetPosition.y = controller.transform.position.y;
+
+        float distToTarget = Vector3.Distance(controller.transform.position, gatherTarget.transform.position);
+        float gatherScale = gatherSpeedDistanceScale > 0f ? Mathf.Clamp01(distToTarget / gatherSpeedDistanceScale) : 1f;
+        float speedToCollect = Mathf.Max(speed, playerSpeed) + gatherSpeedBonus * gatherScale;
+        controller.SetMoveSpeed(speedToCollect);
+        SetAnimatorSpeed(controller, speedToCollect);
+        ExitSpecialIdleAnimationIfMoving(controller, speedToCollect);
+
+        return gatherTargetPosition;
+    }
+
+    private bool TryGetGatherTarget(out Collectible gatherTarget)
+    {
+        gatherTarget = null;
+
+        if (petTransform == null)
+        {
+            return false;
+        }
+
+        float gatherRange = gatherTargetDistance > 0f ? gatherTargetDistance : gatherScanRange;
+        float gatherRangeSqr = gatherRange * gatherRange;
+        float closestDistance = float.MaxValue;
+
+        foreach (var collectible in Collectible.all)
+        {
+            if (collectible == null || !collectible.interactive || movingCollectibles.ContainsKey(collectible) || !ShouldGather(collectible) || !CanCollect(collectible))
+            {
+                continue;
+            }
+
+            float distToPetSqr = (collectible.transform.position - petTransform.position).sqrMagnitude;
+            if (distToPetSqr > gatherRangeSqr)
+            {
+                continue;
+            }
+
+            if (maxGatherDistanceFromPlayer > 0f && playerTransform != null)
+            {
+                float distToPlayerSqr = (collectible.transform.position - playerTransform.position).sqrMagnitude;
+                if (distToPlayerSqr > maxGatherDistanceFromPlayer * maxGatherDistanceFromPlayer)
+                    continue;
+            }
+
+            if (distToPetSqr < closestDistance)
+            {
+                closestDistance = distToPetSqr;
+                gatherTarget = collectible;
+            }
+        }
+
+        return gatherTarget != null;
+    }
+
+    private void ScanForCollectiblesInRange()
+    {
+        if (petTransform == null)
+            return;
+
+        float gatherRangeSqr = gatherScanRange * gatherScanRange;
+
+        foreach (var collectible in Collectible.all)
+        {
+            if (collectible == null || !collectible.interactive || movingCollectibles.ContainsKey(collectible) || !ShouldGather(collectible) || !CanCollect(collectible))
+                continue;
+
+            float sqrDistance = (collectible.transform.position - petTransform.position).sqrMagnitude;
+            if (sqrDistance > gatherRangeSqr)
+                continue;
+
+            if (!pendingCollectibles.ContainsKey(collectible) && !movingCollectibles.ContainsKey(collectible))
+                pendingCollectibles[collectible] = Time.time;
+        }
+
+        var removeList = new List<Collectible>();
+
+        foreach (var collectible in pendingCollectibles.Keys)
+        {
+            if (collectible == null)
+            {
+                removeList.Add(collectible);
+                continue;
+            }
+
+            float sqrDistance = (collectible.transform.position - petTransform.position).sqrMagnitude;
+            if (sqrDistance > gatherRangeSqr || !ShouldGather(collectible) || !CanCollect(collectible))
+                removeList.Add(collectible);
+        }
+
+        foreach (var collectible in removeList)
+            pendingCollectibles.Remove(collectible);
+    }
+
+    private void ProcessPendingCollectibles(Collectible activeTarget, AIController controller)
+    {
+        var promoteList = new List<Collectible>();
+
+        foreach (var pair in pendingCollectibles)
+        {
+            var collectible = pair.Key;
+            if (collectible == null)
+            {
+                promoteList.Add(collectible);
+                continue;
+            }
+
+            if (Time.time - pair.Value < gatherDelay)
+                continue;
+
+            if (activeTarget == collectible && CanCollect(collectible))
+            {
+                float distToPet = Vector3.Distance(collectible.transform.position, petTransform.position);
+                float triggerRange = Mathf.Max(gatherMoveToCollectibleRange, controller.GetStoppingDistance() + 0.2f);
+                if (distToPet <= triggerRange)
+                {
+                    collectible.StartGathering();
+                    movingCollectibles[collectible] = (Time.time, collectible.transform.position);
+                    promoteList.Add(collectible);
+                }
+            }
+        }
+
+        foreach (var collectible in promoteList)
+            pendingCollectibles.Remove(collectible);
+    }
+
+    private void ProcessMovingCollectibles()
+    {
+        var toCollect = new List<Collectible>();
+
+        foreach (var pair in movingCollectibles)
+        {
+            var collectible = pair.Key;
+            if (collectible == null || playerTransform == null)
+            {
+                toCollect.Add(collectible);
+                continue;
+            }
+
+            float t = (Time.time - pair.Value.startTime) / Mathf.Max(0.01f, gatherMoveDuration);
+            collectible.transform.position = Vector3.Lerp(pair.Value.startPosition, petTransform.position, t);
+
+            if (t >= 1f)
+                toCollect.Add(collectible);
+        }
+
+        foreach (var collectible in toCollect)
+        {
+            if (collectible != null)
+            {
+                collectible.interactive = true;
+
+                var collector = GetCollectorEntity();
+                if (collector != null)
+                {
+                    collectible.Interact(collector);
+                }
+                else
+                {
+                    // No valid Entity receiver found: release collectible so it can be targeted again.
+                    collectible.StartGathering();
+                    collectible.interactive = true;
+                }
+            }
+
+            movingCollectibles.Remove(collectible);
+        }
+    }
+
+    private bool ShouldGather(Collectible collectible)
+    {
+        if (collectible is CollectibleMoney)
+            return gatherMoney;
+
+        if (!gatherItems || collectible is not CollectibleItem collectibleItem || collectibleItem.item?.data == null)
+            return false;
+
+        if (gatherableItemTypes == null || gatherableItemTypes.Count == 0 || gatherableItemTypes.Contains(ItemTypeFilter.Any))
+            return true;
+
+        var item = collectibleItem.item.data;
+
+        foreach (var filter in gatherableItemTypes)
+        {
+            if ((filter == ItemTypeFilter.Weapon && item is ItemWeapon)
+                || (filter == ItemTypeFilter.Armor && item is ItemArmor)
+                || (filter == ItemTypeFilter.Consumable && item is ItemConsumable)
+                || (filter == ItemTypeFilter.Skill && item is ItemSkill)
+                || (filter == ItemTypeFilter.Equippable && item is ItemEquippable)
+                || (filter == ItemTypeFilter.Shield && item is ItemShield)
+                || (filter == ItemTypeFilter.Bow && item is ItemBow)
+                || (filter == ItemTypeFilter.Blade && item is ItemBlade)
+                || (filter == ItemTypeFilter.Ring && item is ItemRing)
+                || (filter == ItemTypeFilter.Amulet && item is ItemAmulet)
+                || (filter == ItemTypeFilter.Potion && item is ItemPotion))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    private Entity GetCollectorEntity()
+    {
+        var collector = Level.instance != null ? Level.instance.player : null;
+        if (collector == null)
+            collector = playerEntity != null ? playerEntity : petEntity;
+
+        return collector;
+    }
+
+    private bool CanCollect(Collectible collectible)
+    {
+        if (collectible is CollectibleMoney)
+            return true;
+
+        var collector = GetCollectorEntity();
+        if (collector == null)
+            return false;
+
+        if (collectible is CollectibleItem collectibleItem && collectibleItem.item != null)
+        {
+            var inventory = collector.inventory.instance;
+            var item = collectibleItem.item;
+
+            if (item.IsStackable())
+            {
+                foreach (var existingItem in inventory.items.Keys)
+                {
+                    if (existingItem.data == item.data && existingItem.stack < existingItem.data.stackCapacity)
+                        return true;
+                }
+            }
+
+            return inventory.CanInsertItem(item);
+        }
+
+        return false;
+    }
+
+    private Entity ResolveEntityFromTransform(Transform source)
+    {
+        if (source == null)
+            return null;
+
+        var entity = source.GetComponent<Entity>();
+        if (entity != null)
+            return entity;
+
+        entity = source.GetComponentInParent<Entity>();
+        if (entity != null)
+            return entity;
+
+        return source.GetComponentInChildren<Entity>();
     }
 
     private void HandleIdleAnimations(AIController controller)
