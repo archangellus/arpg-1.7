@@ -68,6 +68,13 @@ namespace PLAYERTWO.ARPGProject
 
                 ownership.ownerEntityId = caster.GetInstanceID();
 
+                var summonOwnership = instance.GetComponent<SummonSkillOwnership>();
+                if (summonOwnership == null)
+                    summonOwnership = instance.AddComponent<SummonSkillOwnership>();
+
+                summonOwnership.ownerEntityId = caster.GetInstanceID();
+                summonOwnership.skillInstanceId = GetInstanceID();
+
                 spawnedList.Add(instance);
 
                 if (instance.TryGetComponent(out m_tempAI))
