@@ -43,6 +43,13 @@ namespace PLAYERTWO.ARPGProject
                     m_tempAI.transform.position = position + offset;
                 }
 
+                var ownership = instance.GetComponent<SummonSkillOwnership>();
+                if (ownership == null)
+                    ownership = instance.gameObject.AddComponent<SummonSkillOwnership>();
+
+                ownership.ownerEntityId = caster.GetInstanceID();
+                ownership.skillInstanceId = GetInstanceID();
+
                 caster.summonedEntities.Add(instance);
             }
         }
