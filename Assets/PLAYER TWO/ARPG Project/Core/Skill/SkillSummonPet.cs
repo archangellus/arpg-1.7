@@ -113,14 +113,34 @@ namespace PLAYERTWO.ARPGProject
                 return;
             }
 
-            foreach (var entity in caster.summonedEntities)
+            for (int i = caster.summonedEntities.Count - 1; i >= 0; i--)
             {
-                if (entity)
-                    Destroy(entity.gameObject);
+                var entity = caster.summonedEntities[i];
+                if (!entity)
+                {
+                    caster.summonedEntities.RemoveAt(i);
+                    continue;
+                }
+
+                if (!IsSummonedByThisSkill(entity, caster.GetInstanceID()))
+                    continue;
+
+                Destroy(entity.gameObject);
+                caster.summonedEntities.RemoveAt(i);
             }
 
-            caster.summonedEntities.Clear();
             ClearOwnedScenePets(caster.GetInstanceID());
+        }
+
+        private bool IsSummonedByThisSkill(Entity entity, int ownerId)
+        {
+            if (!entity)
+                return false;
+
+            if (!entity.TryGetComponent<SummonSkillOwnership>(out var ownership) || ownership == null)
+                return false;
+
+            return ownership.ownerEntityId == ownerId && ownership.skillInstanceId == GetInstanceID();
         }
 
         private bool HasActivePets(Entity caster)
