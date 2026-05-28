@@ -17,6 +17,9 @@ namespace PLAYERTWO.ARPGProject
             entity.SnapToGround();
             entity.EvaluateDirectionalMovement();
 
+            if (!entity.target)
+                return;
+
             if (entity.IsCloseToAttackTarget())
             {
                 entity.Attack();

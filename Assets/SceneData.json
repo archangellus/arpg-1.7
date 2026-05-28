@@ -1,0 +1,37 @@
+{
+    "sceneInfos": [
+        {
+            "sceneName": "OasisTitle",
+            "scenePath": "Assets/RPG/Scenes/OasisTitle.unity",
+            "customIconId": "desert_camp_43x43"
+        },
+        {
+            "sceneName": "Oasis2",
+            "scenePath": "Assets/RPG/Scenes/Oasis2.unity",
+            "customIconId": "oasis"
+        },
+        {
+            "sceneName": "Tutorial",
+            "scenePath": "Assets/PLAYER TWO/ARPG Project/Examples/Scenes/Tutorial.unity",
+            "customIconId": ""
+        },
+        {
+            "sceneName": "Demo_GoodUIIconTrail",
+            "scenePath": "Assets/GoodUIIconTrail/Scenes/Demo_GoodUIIconTrail.unity",
+            "customIconId": ""
+        }
+    ],
+    "importedImages": [
+        {
+            "id": "desert_camp_43x43",
+            "displayName": "desert_camp_43x43",
+            "assetPath": "Assets/ANSTUDIO/Scripts/SceneSwitcher/Editor/ImportedIcons/desert_camp_43x43.png"
+        },
+        {
+            "id": "oasis",
+            "displayName": "oasis",
+            "assetPath": "Assets/ANSTUDIO/Scripts/SceneSwitcher/Editor/ImportedIcons/oasis.png"
+        }
+    ],
+    "embeddedImages": []
+}

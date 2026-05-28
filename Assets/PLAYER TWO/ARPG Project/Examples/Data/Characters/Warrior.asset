@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59ec0f2f626ec144ba083fbe7146536, type: 3}
   m_Name: Warrior
   m_EditorClassIdentifier: 
-  entity: {fileID: 2957117560480157750, guid: 6c9d15a835757e54ca2db47589a05b77, type: 3}
+  entity: {fileID: 1752613483322990316, guid: 30a53bd63aa3b8e47aa5cd37b3e23fcb, type: 3}
   initialScene: Oasis2
   level: 1
   strength: 25
@@ -23,7 +23,7 @@ MonoBehaviour:
     entries:
     - slot: 0
       item:
-        data: {fileID: 11400000, guid: c1a513f5b99edca4ba6554fd3529d7c2, type: 2}
+        data: {fileID: 11400000, guid: 5cf83e0ed05e81641bdc02abc92de27f, type: 2}
         stack: 0
         attributes: []
         durability: 0

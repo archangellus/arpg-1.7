@@ -1,6 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using BLINK.WorldClusters;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,6 +23,7 @@ namespace BLINK.WorldClusters
             {
                 return;
             }
+
             ActiveCluster newActiveCluster = new ActiveCluster();
             newActiveCluster.cluster = cluster;
             newActiveCluster.clusterGroupIndex = clusterGroupindex;
@@ -117,13 +117,21 @@ namespace BLINK.WorldClusters
                 ? entry.action.enterMaterial
                 : entry.action.exitMaterial;
         }
+
         private UnityEvent GetActionUnityEvent(ClusterEntry entry, ClUSTER_ACTION_EVENT_TYPE clusterActionEventType)
         {
             return clusterActionEventType == ClUSTER_ACTION_EVENT_TYPE.Enter
                 ? entry.action.enterEvents
                 : entry.action.exitEvents;
         }
-        
+
+        private ClUSTER_SOUND_ACTION_TYPE GetSoundAction(ClusterEntry entry, ClUSTER_ACTION_EVENT_TYPE clusterActionEventType)
+        {
+            return clusterActionEventType == ClUSTER_ACTION_EVENT_TYPE.Enter
+                ? entry.action.enterSoundAction
+                : entry.action.exitSoundAction;
+        }
+
         private string GetActionTag(ClusterEntry entry, ClUSTER_ACTION_EVENT_TYPE clusterActionEventType)
         {
             return clusterActionEventType == ClUSTER_ACTION_EVENT_TYPE.Enter
@@ -186,7 +194,6 @@ namespace BLINK.WorldClusters
             }
         }
 
-
         public void HandleEntryLogic(ClusterEntry entry, ClUSTER_ACTION_EVENT_TYPE clusterActionEventType)
         {
             switch (entry.Type)
@@ -240,6 +247,9 @@ namespace BLINK.WorldClusters
                     break;
                 case ClUSTER_ENTRY_TYPE.UnityEvent:
                     ClusterLogic.TriggerUnityEvents(GetActionUnityEvent(entry, clusterActionEventType));
+                    break;
+                case ClUSTER_ENTRY_TYPE.SoundPlay:
+                    ClusterLogic.HandleAudioPlayback(entry, GetSoundAction(entry, clusterActionEventType));
                     break;
             }
         }

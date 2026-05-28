@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111bd96bf59b4464fa69103f99df7351, type: 3}
+  m_Name: AN_ShaderVariantAutoStripProfileV7
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::ANSTUDIO.ShaderVariants.ANShaderVariantAutoStripProfileV7
+  enableBuildStripper: 0
+  limitToURPShaders: 1
+  verboseBuildLog: 0
+  useRegexShaderNameBlocklist: 1
+  stripKeywords: []
+  reviewKeywords: []
+  notes:
+  - 'Keep XR / Stereo rendering: Disable XR Plug-in Management for this build target
+    if this is not an XR project.'
+  - 'Keep URP Debug Display: Safe to strip in shipping builds unless you intentionally
+    ship debug rendering tools.'
+  - 'Keep Editor Visualization: Usually safe to strip from player builds.'
+  - 'Keep DOTS Instancing: Keep only if using Entities Graphics or custom DOTS instanced
+    rendering. GPU Resident Drawer is tracked separately.'
+  - 'Keep URP GPU Resident Drawer: Keep if URP GPU Resident Drawer is enabled. Otherwise
+    disable GPU Resident Drawer and BatchRendererGroup variants in Graphics/URP settings.'
+  - 'Keep Adaptive Probe Volumes: Strip only when the target does not use Adaptive
+    Probe Volumes and relies on lightmaps, reflection probes, classic light probes
+    or no GI.'
+  - 'Keep Screen Space Lens Flare: Remove Lens Flare (SRP) components and renderer
+    features if this target does not use screen-space lens flares.'
+  - 'Keep Foveated Rendering: Safe to strip for non-XR targets. Review if XR stereo
+    keywords or XR packages are detected.'
+  - 'Keep URP Water System: Strip when the Water Renderer Feature / water components
+    are not present in the selected build target.'
+  - 'Keep Procedural Instancing: Keep if you use DrawMeshInstancedIndirect, GPU instancing
+    systems or procedural vegetation.'
+  - 'Keep GPU Instancing: Usually keep. Strip only if you are absolutely certain
+    no material uses GPU Instancing.'
+  - 'Keep URP Additional Lights: In every URP Asset used by Graphics and Quality,
+    set Additional Lights to Disabled if your game uses only the main directional
+    light plus baked lighting.'
+  - 'Keep URP Additional Light Shadows: Disable Additional Light Shadows in all URP
+    Assets, or reduce the number of shadow-casting point/spot lights.'
+  - 'Keep URP Main Light Shadows: Keep for most 3D projects. Strip only for fully
+    unlit or fully baked scenes with no realtime directional shadows.'
+  - 'Keep URP Soft Shadows: Disable Soft Shadows in all URP Assets if hard shadows
+    are acceptable.'
+  - 'Keep Light Cookies: Remove cookie textures from lights and disable cookie support
+    if you do not use projected light patterns.'
+  - 'Keep Light Layers / Rendering Layers: Disable Light Layers / Rendering Layers
+    in URP Assets if lights do not target specific rendering layers.'
+  - 'Keep URP Decals: Remove Decal Renderer Features and Decal Projectors if the
+    game does not use decals.'
+  - 'Keep Screen Space Ambient Occlusion: Remove the Screen Space Ambient Occlusion
+    Renderer Feature if not used.'
+  - 'Keep Reflection Probe Options: Disable Reflection Probe Blending and Box Projection
+    in URP Assets if not needed.'
+  - 'Keep Lightmaps / Mixed Lighting: Keep if any scene uses baked lighting, mixed
+    lighting, probes or shadow masks.'
+  - 'Keep Fog: Disable fog in Lighting/Environment and remove runtime fog changes
+    if the game does not use fog.'
+  - 'Keep Motion Vectors: Keep if you use motion blur, TAA, DLSS/FSR-like systems
+    or effects requiring motion vectors.'
+  - 'Keep LOD Cross Fade: Disable Animate Cross-fading on LODGroups if you do not
+    need dithered LOD transitions.'
+  - 'Keep Native Render Pass: Keep if your URP renderer uses native render pass features.'
+  - 'Keep Screen Coord Override: Use Project Settings > Graphics stripping options
+    for screen coord override variants where possible.'
+  - 'Keep URP Anti-aliasing / Post-process AA: Keep the AA keywords used by UniversalAdditionalCameraData
+    or Volume Profiles; strip unused AA modes per build target.'
+  - 'Keep Temporal Upscaling / TAA / FSR hooks: Keep if cameras use TAA, temporal
+    upsampling, FSR-like upscalers or any custom pass that depends on motion vectors.'
+  - 'Keep SpeedTree vegetation: Keep when materials reference SpeedTree shaders or
+    vegetation packages. Strip only for builds with no SpeedTree assets.'
+  - Check Project Settings > Graphics > Always Included Shaders. Remove broad shaders
+    such as URP/Lit or large Shader Graph master shaders unless absolutely required.
+  - Enable Unity's built-in shader stripping options in Project Settings > Graphics
+    and URP Asset settings before relying on custom stripping.
+  - Make sure every enabled Quality level for your build target uses compatible URP
+    feature settings. One quality level with extra features can force extra variants.
+  - Use a Shader Variant Collection for warmup and tracking, instead of putting large
+    shaders in Always Included Shaders.
+  - Addressables and AssetBundle-marked assets are scanned when enabled, but Resources,
+    generated bundles and runtime-created materials can still be missed. Keep review
+    keywords conservative.
+  - Shader Variant Collections are treated as keep evidence because Unity uses them
+    to preload or preserve variants that may not appear in scenes.
+  - Review Renderer Data Inventory when using Forward+ or Deferred; _ADDITIONAL_LIGHTS_VERTEX
+    pressure is primarily a Forward renderer concern.
+  - Review Volume Profiles for Motion Blur, TAA and temporal upscaling before stripping
+    motion-vector or post-processing keywords.
+  - Review Compute Shader keyword pragmas separately from graphics shader material
+    keywords; compute variants can be kept alive by URP features such as SSAO and
+    screen-space passes.
+  - Use the Always Included Shaders auditor to remove catch-all shaders that force
+    broad variant inclusion.
+  - Use the SRP Batcher tab to fix shader layout problems that affect runtime performance
+    even when variant counts are reduced.
+  - Generated with review keywords promoted into stripKeywords. Validate a development
+    build before shipping.
+  - Generated with advanced unobserved rule keywords. This is intentionally aggressive
+    and needs manual validation.
+  profileVersionHash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  generatedForBuildTarget: StandaloneWindows
+  keepAtLeastOneVariantPerSnippet: 1
+  neverStripBaseVariant: 1
+  shaderNameBlocklist:
+  - Hidden/Internal
+  - Hidden/Blit
+  - Hidden/Universal Render Pipeline/CoreBlit
+  - TextMeshPro
+  - Sprites/

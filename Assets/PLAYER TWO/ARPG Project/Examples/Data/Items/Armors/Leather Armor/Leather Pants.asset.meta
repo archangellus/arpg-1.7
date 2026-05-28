@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2becde0ecdf38e7eeafb464a3297561e
+guid: 5ce95a4e64c2897459fa18ac4f11080f
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
@@ -10,7 +10,7 @@ AssetOrigin:
   serializedVersion: 1
   productId: 251134
   packageName: ARPG Project
-  packageVersion: 1.7.0
+  packageVersion: 1.7.1
   assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Leather Armor/Leather
     Pants.asset
-  uploadId: 907338
+  uploadId: 915662

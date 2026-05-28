@@ -170,6 +170,9 @@ namespace PLAYERTWO.ARPGProject
             int actualDamageDone
         )
         {
+            if (m_entity.isDead)
+                return;
+
             ApplyOnHitBonuses(other);
             ApplyDamageToMana(total);
             ApplyLeech(other, actualDamageDone);
@@ -300,7 +303,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void ApplyOnHitBonuses(Entity other)
         {
-            if (other == null || other.stats == null)
+            if (other == null || other.stats == null || other.isDead)
                 return;
 
             other.stats.health += other.stats.healthOnHit;
@@ -312,7 +315,11 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void ApplyDamageToMana(int damage)
         {
-            if (m_entity.stats == null || m_entity.stats.damageToManaPercent <= 0)
+            if (
+                m_entity.stats == null
+                || m_entity.stats.damageToManaPercent <= 0
+                || m_entity.isDead
+            )
                 return;
 
             m_entity.stats.mana += Mathf.Max(
@@ -330,7 +337,7 @@ namespace PLAYERTWO.ARPGProject
             if (m_entity.stats != null && m_entity.stats.immuneToLeech)
                 return;
 
-            if (other == null || other.stats == null)
+            if (other == null || other.stats == null || other.isDead)
                 return;
 
             other.stats.health += Mathf.RoundToInt(damage * other.stats.healthLeechPercent / 100f);
@@ -346,7 +353,12 @@ namespace PLAYERTWO.ARPGProject
             if (other != null && other.stats != null && other.stats.immuneToReflection)
                 return;
 
-            if (m_entity.stats == null || m_entity.stats.damageReflectionPercent <= 0)
+            if (
+                m_entity.stats == null
+                || m_entity.stats.damageReflectionPercent <= 0
+                || m_entity.isDead
+                || other.isDead
+            )
                 return;
 
             var reflected = Mathf.Max(

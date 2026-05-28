@@ -1,0 +1,19 @@
+﻿{
+  "postBuildTime": "2026-05-28 22:21:55",
+  "buildTarget": "StandaloneWindows64",
+  "outputPath": "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis.exe",
+  "result": "Unknown",
+  "totalSize": 0,
+  "shaderRelatedFileBytes": 91675,
+  "lastKnownEstimatedVariantBudgetTotal": 2693991504807381,
+  "shaderRelatedFiles": [
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/RuntimeInitializeOnLoads.json | role: GlobalGameManagers | bytes: 13030",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/ScriptingAssemblies.json | role: GlobalGameManagers | bytes: 5597",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/Unity.RenderPipeline.Universal.ShaderLibrary.dll | role: ManagedLibrary | bytes: 9216",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/Unity.RenderPipelines.Core.ShaderLibrary.dll | role: ManagedLibrary | bytes: 4608",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll | role: ManagedLibrary | bytes: 4608",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/Unity.RenderPipelines.Universal.Shaders.dll | role: ManagedLibrary | bytes: 4608",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/UnityEngine.ShaderRuntimeModule.dll | role: ManagedEngineAPI | bytes: 25512",
+    "C:/Users/ANSTUDIO/Documents/Projects/ARPG-Project-Test2/BUILD/Oasis_Data/Managed/UnityEngine.ShaderVariantAnalyticsModule.dll | role: ManagedEngineAPI | bytes: 24496"
+  ]
+}

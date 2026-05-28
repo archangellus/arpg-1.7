@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7f0969509b89240a530a481a93fd6a, type: 3}
+  m_Name: AN_ShaderVariantStripperSettings
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::ANSTUDIO.EditorTools.ANShaderVariantStripperSettings
+  enabled: 1
+  disableForDevelopmentBuilds: 0
+  logSummary: 1
+  stripXRAndStereo: 1
+  stripDebugDisplay: 1
+  stripEditorVisualization: 1
+  stripAdditionalLights: 0
+  stripAdditionalLightShadows: 0
+  stripMainLightShadows: 0
+  stripSoftShadows: 0
+  stripLightCookies: 0
+  stripLightLayers: 1
+  stripScreenSpaceOcclusion: 0
+  stripDecals: 0
+  stripRenderPassEnabled: 0
+  stripRenderingLayers: 1
+  stripReflectionProbeBlending: 0
+  stripReflectionProbeBoxProjection: 0
+  stripLightmaps: 0
+  stripFog: 0
+  stripGpuInstancing: 0
+  stripDotsInstancing: 1
+  stripProceduralInstancing: 1
+  stripMetaPass: 0
+  stripMotionVectorsPass: 1
+  stripShadowCasterPass: 0
+  customStripKeywords:
+  - DEBUG_DISPLAY
+  - SCENESELECTIONPASS
+  - PICKINGPASS

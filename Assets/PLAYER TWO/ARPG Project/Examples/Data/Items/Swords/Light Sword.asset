@@ -37,6 +37,6 @@ MonoBehaviour:
   nextComboDelay: 0.1
   type: 0
   rightHandPosition: {x: 0, y: 0, z: 0}
-  rightHandRotation: {x: -90, y: 90, z: 90}
+  rightHandRotation: {x: -180, y: 90, z: 180}
   leftHandPosition: {x: 0, y: 0, z: 0}
-  leftHandRotation: {x: 90, y: 90, z: 90}
+  leftHandRotation: {x: 180, y: 90, z: 180}

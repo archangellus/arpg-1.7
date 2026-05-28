@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59bae1f8005e01240b5d5a9344a095a1, type: 3}
+  m_Name: FoxFollowPlayer
+  m_EditorClassIdentifier: 
+  activationRange: 6.67
+  stoppingDistance: 2
+  followDistance: 0.16
+  speed: 2
+  followDistanceDeadZone: 0.25
+  numSegments: 50
+  showFollowDistanceGizmo: 0
+  showDeadZoneGizmo: 1
+  showActivationRangeGizmo: 0
+  showStoppingDistanceGizmo: 1
+  followDistanceColor: {r: 0, g: 1, b: 1, a: 1}
+  followDistanceDeadZoneColor: {r: 0, g: 1, b: 1, a: 0.22}
+  activationRangeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 0.21960784}
+  stoppingDistanceColor: {r: 1, g: 0, b: 0, a: 0.5372549}
+  gizmoYOffset: 0.01
+  idleAnimations:
+  - Fox_Sit1
+  - Fox_Sit2_Idle
+  - Fox_Sit_Idle_Break
+  - Fox_Sit_No
+  - Fox_Sit3_StandUp
+  idleTimeThreshold: 5
+  animationDelays:
+  - 0.1
+  - 1.29
+  - 2
+  - 1.29
+  - 0.1
+  DefaultIdleAnimationName: Fox_Run
+  playAnimationsInOrder: 1
+  returnToDefaultIdleWhenMoving: 1
+  idleExitFadeDuration: 0.1
+  enableGathering: 1
+  gatherMoney: 1
+  gatherItems: 1
+  gatherableItemTypes: 00000000
+  gatherScanRange: 15
+  gatherTargetDistance: 11
+  gatherMoveToCollectibleRange: 0.5
+  gatherDelay: 0.15
+  gatherMoveDuration: 0.2
+  gatherSpeedBonus: 4
+  gatherSpeedDistanceScale: 10
+  returnSpeedBonus: 3
+  returnSpeedDistanceScale: 12
+  maxGatherDistanceFromPlayer: 12
+  gatherLeashHysteresis: 1

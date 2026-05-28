@@ -24,7 +24,17 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
         public float arcHeight = 2f;
 
         [Tooltip("Curve defining the shape of the arc over normalized time (0-1).")]
-        public AnimationCurve arcCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 0f);
+        public AnimationCurve arcCurve;
+
+        [Tooltip("The maximum range around the player to drop items.")]
+        public float dropRange = 2f;
+
+        [Header("Target Safety")]
+        [Tooltip("Minimum horizontal distance used when the raycast hits the player/entity itself. Prevents instant self-pickup drops.")]
+        public float selfTargetMinimumDistance = 0.75f;
+
+        [Tooltip("Temporarily disables the dropped item's colliders while the arc animation is running. This prevents instant pickup/destruction while the coroutine still owns the Transform.")]
+        public bool disablePickupCollidersDuringDrop = true;
 
         [Header("Rotation Settings")]
         [Tooltip("Enable rotation on the X axis when dropping items.")]
@@ -39,10 +49,70 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
         [Tooltip("Rotation speed in degrees per second for dropped items.")]
         public float rotationSpeed = 250f;
 
-        [Tooltip("The maximum range around the player to drop items.")]
-        public float dropRange = 2f;
+        [Header("Timing")]
+        [Tooltip("Use unscaled time so drop motion stays identical even if Time.timeScale changes.")]
+        public bool useUnscaledTime = false;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        [Header("Debug")]
+        public bool logRuntimeValues = false;
+#endif
+
+        private struct ColliderState
+        {
+            public Collider collider;
+            public bool enabled;
+        }
 
         private Action<object> m_dropHandler;
+
+        private AnimationCurve m_runtimeArcCurve;
+        private float m_runtimeDropSpeed;
+        private float m_runtimeArcHeight;
+        private float m_runtimeRotationSpeed;
+        private float m_runtimeDropRange;
+        private float m_runtimeSelfTargetMinimumDistance;
+
+        private static AnimationCurve CreateDefaultArcCurve()
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.25f, 0.5f),
+                new Keyframe(0.5f, 1f),
+                new Keyframe(0.75f, 0.5f),
+                new Keyframe(1f, 0f)
+            );
+
+            curve.preWrapMode = WrapMode.ClampForever;
+            curve.postWrapMode = WrapMode.ClampForever;
+            return curve;
+        }
+
+        private void Reset()
+        {
+            if (arcCurve == null || arcCurve.length == 0)
+                arcCurve = CreateDefaultArcCurve();
+
+            ApplyAutomaticDefaults();
+            ValidateSerializedValues();
+        }
+
+        private void OnValidate()
+        {
+            if (arcCurve == null || arcCurve.length == 0)
+                arcCurve = CreateDefaultArcCurve();
+
+            ValidateSerializedValues();
+        }
+
+        private void ValidateSerializedValues()
+        {
+            dropSpeed = Mathf.Max(0.01f, dropSpeed);
+            arcHeight = Mathf.Max(0f, arcHeight);
+            rotationSpeed = Mathf.Max(0f, rotationSpeed);
+            dropRange = Mathf.Max(0f, dropRange);
+            selfTargetMinimumDistance = Mathf.Max(0f, selfTargetMinimumDistance);
+        }
 
         private void ApplyAutomaticDefaults()
         {
@@ -66,14 +136,8 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
             if (droppedItemPrefab)
                 return;
 
-            foreach (var candidate in Resources.FindObjectsOfTypeAll<CollectibleItem>())
-            {
-                if (candidate && candidate.name == "Collectible Item")
-                {
-                    droppedItemPrefab = candidate;
-                    break;
-                }
-            }
+            if (Game.instance)
+                droppedItemPrefab = Game.instance.collectibleItemPrefab;
         }
 
         private void ApplyDefaultSpeeds()
@@ -85,26 +149,48 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
                 rotationSpeed = 250f;
         }
 
-        private void EnsureCurve()
+        private void CacheRuntimeValues()
         {
-            if (arcCurve == null || arcCurve.length <= 1)
+            if (arcCurve == null || arcCurve.length == 0)
+                arcCurve = CreateDefaultArcCurve();
+
+            m_runtimeArcCurve = new AnimationCurve(arcCurve.keys)
             {
-                arcCurve = new AnimationCurve(
-                    new Keyframe(0f, 0f),
-                    new Keyframe(0.25f, 0.5f),
-                    new Keyframe(0.5f, 1f),
-                    new Keyframe(0.75f, 0.5f),
-                    new Keyframe(1f, 0f)
+                preWrapMode = arcCurve.preWrapMode,
+                postWrapMode = arcCurve.postWrapMode
+            };
+
+            m_runtimeDropSpeed = Mathf.Max(0.01f, dropSpeed);
+            m_runtimeArcHeight = Mathf.Max(0f, arcHeight);
+            m_runtimeRotationSpeed = Mathf.Max(0f, rotationSpeed);
+            m_runtimeDropRange = Mathf.Max(0f, dropRange);
+            m_runtimeSelfTargetMinimumDistance = Mathf.Max(0f, selfTargetMinimumDistance);
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (logRuntimeValues)
+            {
+                Debug.Log(
+                    $"[ArcDropRuntime] Cached Values | " +
+                    $"dropSpeed={m_runtimeDropSpeed}, " +
+                    $"arcHeight={m_runtimeArcHeight}, " +
+                    $"rotationSpeed={m_runtimeRotationSpeed}, " +
+                    $"dropRange={m_runtimeDropRange}, " +
+                    $"selfTargetMinimumDistance={m_runtimeSelfTargetMinimumDistance}, " +
+                    $"curveKeys={(m_runtimeArcCurve != null ? m_runtimeArcCurve.length : 0)}, " +
+                    $"dropGroundLayer={dropGroundLayer.value}, " +
+                    $"prefab={(droppedItemPrefab ? droppedItemPrefab.name : "NULL")}",
+                    this
                 );
             }
+#endif
         }
 
         private void Awake()
         {
             ApplyAutomaticDefaults();
-            EnsureCurve();
-            dropSpeed = Mathf.Max(0.01f, dropSpeed);
-            rotationSpeed = Mathf.Max(0f, rotationSpeed);
+            ValidateSerializedValues();
+            CacheRuntimeValues();
+
             m_dropHandler = HandleArcDropRequested;
             EventBus.Subscribe(EventBus.ArcDropRequested, m_dropHandler);
         }
@@ -127,6 +213,10 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
                 return;
 
             if (args[2] is not Entity entity || !entity)
+                return;
+
+            Transform entityTransform = entity.transform;
+            if (!entityTransform)
                 return;
 
             var onDropCompleted = args[3] as Action;
@@ -152,17 +242,40 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
                 return;
             }
 
-            Vector3 direction = (hit.point - entity.transform.position).normalized;
-            float distance = Mathf.Min(Vector3.Distance(entity.transform.position, hit.point), dropRange);
-            Vector3 targetPosition = entity.transform.position + direction * distance;
+            Vector3 startPosition = entityTransform.position;
+            Vector3 targetPosition = ResolveTargetPosition(entityTransform, hit);
 
-            var prefab = droppedItemPrefab ? droppedItemPrefab : Game.instance.collectibleItemPrefab;
-            var collectible = Instantiate(prefab, entity.transform.position, Quaternion.identity);
+            var prefab = droppedItemPrefab ? droppedItemPrefab :
+                (Game.instance ? Game.instance.collectibleItemPrefab : null);
+
+            if (!prefab)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[ArcDropRuntime] No dropped item prefab available.", this);
+#endif
+                onDropFailed?.Invoke();
+                return;
+            }
+
+            var collectible = Instantiate(prefab, startPosition, Quaternion.identity);
+            if (!collectible)
+            {
+                onDropFailed?.Invoke();
+                return;
+            }
+
+            ColliderState[] colliderStates = disablePickupCollidersDuringDrop
+                ? SetCollidersEnabled(collectible, false)
+                : Array.Empty<ColliderState>();
+
             collectible.SetItem(guiItem.item);
             RegisterDroppedItem(collectible);
 
             markHandled?.Invoke(true);
             onDropCompleted?.Invoke();
+
+            if (!collectible)
+                return;
 
             Vector3 axis = new Vector3(
                 rotateOnX ? UnityEngine.Random.Range(-1f, 1f) : 0f,
@@ -175,7 +288,93 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
 
             axis.Normalize();
 
-            StartCoroutine(AnimateDropItem(collectible.transform, targetPosition, axis, rotationSpeed));
+            StartCoroutine(AnimateDropItem(collectible, targetPosition, axis, m_runtimeRotationSpeed, colliderStates));
+        }
+
+        private Vector3 ResolveTargetPosition(Transform entityTransform, RaycastHit hit)
+        {
+            Vector3 entityPosition = entityTransform.position;
+            Vector3 hitPoint = hit.point;
+
+            Vector3 flatDirection = hitPoint - entityPosition;
+            flatDirection.y = 0f;
+
+            bool hitEntity = IsEntityOrChild(hit.transform, entityTransform);
+
+            if (flatDirection.sqrMagnitude <= 0.0001f)
+            {
+                flatDirection = entityTransform.forward;
+                flatDirection.y = 0f;
+
+                if (flatDirection.sqrMagnitude <= 0.0001f)
+                    flatDirection = Vector3.forward;
+            }
+
+            flatDirection.Normalize();
+
+            float flatDistance = Vector3.Distance(
+                new Vector3(entityPosition.x, 0f, entityPosition.z),
+                new Vector3(hitPoint.x, 0f, hitPoint.z)
+            );
+
+            float distance = Mathf.Min(flatDistance, m_runtimeDropRange);
+
+            if (hitEntity && m_runtimeDropRange > 0f)
+                distance = Mathf.Max(distance, Mathf.Min(m_runtimeSelfTargetMinimumDistance, m_runtimeDropRange));
+
+            Vector3 targetPosition = entityPosition + flatDirection * distance;
+            targetPosition.y = hitPoint.y;
+
+            return targetPosition;
+        }
+
+        private static bool IsEntityOrChild(Transform candidate, Transform entityTransform)
+        {
+            if (!candidate || !entityTransform)
+                return false;
+
+            return candidate == entityTransform || candidate.IsChildOf(entityTransform);
+        }
+
+        private static ColliderState[] SetCollidersEnabled(CollectibleItem collectible, bool enabled)
+        {
+            if (!collectible)
+                return Array.Empty<ColliderState>();
+
+            var colliders = collectible.GetComponentsInChildren<Collider>(true);
+            if (colliders == null || colliders.Length == 0)
+                return Array.Empty<ColliderState>();
+
+            var states = new ColliderState[colliders.Length];
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                var collider = colliders[i];
+
+                states[i] = new ColliderState
+                {
+                    collider = collider,
+                    enabled = collider && collider.enabled
+                };
+
+                if (collider)
+                    collider.enabled = enabled;
+            }
+
+            return states;
+        }
+
+        private static void RestoreColliderStates(ColliderState[] states)
+        {
+            if (states == null)
+                return;
+
+            for (int i = 0; i < states.Length; i++)
+            {
+                var collider = states[i].collider;
+                if (collider)
+                    collider.enabled = states[i].enabled;
+            }
         }
 
         private void RegisterDroppedItem(CollectibleItem collectible)
@@ -186,45 +385,81 @@ namespace PLAYERTWO.ARPGProject.ArcDrop
             if (Level.instance.droppedItems == null)
                 Level.instance.droppedItems = new List<CollectibleItem>();
 
-            collectible.onCollect.AddListener(() => Level.instance.droppedItems.Remove(collectible));
+            collectible.onCollect.AddListener(() =>
+            {
+                if (Level.instance && Level.instance.droppedItems != null)
+                    Level.instance.droppedItems.Remove(collectible);
+            });
+
             Level.instance.droppedItems.Add(collectible);
         }
 
         private IEnumerator AnimateDropItem(
-            Transform itemTransform,
+            CollectibleItem collectible,
             Vector3 targetPosition,
             Vector3 rotateAxis,
-            float rotateSpeed
+            float rotateSpeed,
+            ColliderState[] colliderStates
         )
         {
-            Vector3 startPosition = itemTransform.position;
-            float startY = startPosition.y;
-            float endY = targetPosition.y;
-            float distance = Vector3.Distance(startPosition, targetPosition);
-            float animationDuration = distance / Mathf.Max(0.01f, dropSpeed);
-            float elapsedTime = 0f;
+            if (!collectible)
+                yield break;
 
-            while (elapsedTime < animationDuration)
+            Transform itemTransform = collectible.transform;
+            if (!itemTransform)
+                yield break;
+
+            try
             {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / animationDuration);
+                Vector3 startPosition = itemTransform.position;
+                float startY = startPosition.y;
+                float endY = targetPosition.y;
 
-                Vector3 flatPos = Vector3.Lerp(
-                    new Vector3(startPosition.x, 0f, startPosition.z),
-                    new Vector3(targetPosition.x, 0f, targetPosition.z),
-                    t
-                );
+                float distance = Vector3.Distance(startPosition, targetPosition);
+                float animationDuration = distance / m_runtimeDropSpeed;
 
-                float heightOffset = arcCurve.Evaluate(t) * arcHeight;
-                float currentY = Mathf.Lerp(startY, endY, t) + heightOffset;
+                if (animationDuration <= 0.0001f)
+                {
+                    if (itemTransform)
+                        itemTransform.position = targetPosition;
 
-                itemTransform.position = new Vector3(flatPos.x, currentY, flatPos.z);
-                itemTransform.Rotate(rotateAxis, rotateSpeed * Time.deltaTime, Space.World);
+                    yield break;
+                }
 
-                yield return null;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < animationDuration)
+                {
+                    if (!collectible || !itemTransform)
+                        yield break;
+
+                    float deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+                    elapsedTime += deltaTime;
+
+                    float t = Mathf.Clamp01(elapsedTime / animationDuration);
+
+                    Vector3 flatPos = Vector3.Lerp(
+                        new Vector3(startPosition.x, 0f, startPosition.z),
+                        new Vector3(targetPosition.x, 0f, targetPosition.z),
+                        t
+                    );
+
+                    float heightOffset = m_runtimeArcCurve.Evaluate(t) * m_runtimeArcHeight;
+                    float currentY = Mathf.Lerp(startY, endY, t) + heightOffset;
+
+                    itemTransform.position = new Vector3(flatPos.x, currentY, flatPos.z);
+                    itemTransform.Rotate(rotateAxis, rotateSpeed * deltaTime, Space.World);
+
+                    yield return null;
+                }
+
+                if (itemTransform)
+                    itemTransform.position = targetPosition;
             }
-
-            itemTransform.position = targetPosition;
+            finally
+            {
+                RestoreColliderStates(colliderStates);
+            }
         }
     }
 }

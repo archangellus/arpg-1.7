@@ -497,16 +497,12 @@ namespace PLAYERTWO.ARPGProject
             m_effects == null ? 1f : m_effects.damageTakenMultiplier;
 
         /// <summary>
-        /// Returns the effective attack speed including any active buff or debuff modifiers,
-        /// clamped to the maximum allowed attack speed.
+        /// Returns the multiplier for attack speed from active buff or debuff effects.
+        /// Values above 1 indicate an increase (e.g., 1.2 = 20% faster attack speed),
+        /// while values below 1 indicate a decrease (e.g., 0.8 = 20% slower attack speed).
         /// </summary>
-        public int effectiveAttackSpeed =>
-            m_effects == null
-                ? attackSpeed
-                : Mathf.Min(
-                    (int)(attackSpeed * m_effects.attackSpeedMultiplier),
-                    Game.instance.maxAttackSpeed
-                );
+        public float attackSpeedMultiplier =>
+            m_effects == null ? 1f : m_effects.attackSpeedMultiplier;
 
         /// <summary>
         /// Returns the effective move speed including any active buff or debuff modifiers.
@@ -530,7 +526,7 @@ namespace PLAYERTWO.ARPGProject
         /// Return the attack animation speed multiplier based on the effective attack speed stat.
         /// </summary>
         public virtual float GetAnimationAttackSpeed() =>
-            effectiveAttackSpeed / (float)Game.instance.maxAttackSpeed;
+            attackSpeed / (float)Game.instance.maxAttackSpeed;
 
         /// <summary>
         /// Return the block animation speed multiplier based on the block speed stat.

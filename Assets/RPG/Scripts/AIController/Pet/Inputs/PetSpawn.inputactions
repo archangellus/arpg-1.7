@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "PetSpawn",
+    "maps": [
+        {
+            "name": "PetSpawn",
+            "id": "13a250a3-e7b9-4093-800d-f89099bbddf6",
+            "actions": [
+                {
+                    "name": "Key",
+                    "type": "Button",
+                    "id": "52795c92-1051-48de-82ae-0baae35e1e6d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bae75b25-a7e1-45fd-8f8f-87e274246c73",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Key",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

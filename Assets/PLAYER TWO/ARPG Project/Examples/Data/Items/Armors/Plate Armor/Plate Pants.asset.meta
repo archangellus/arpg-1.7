@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2dcec98257ae609109ae7736c75fa382
+guid: 41d91c16c7b4c374d9cedd9c8afd2894
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
@@ -10,7 +10,7 @@ AssetOrigin:
   serializedVersion: 1
   productId: 251134
   packageName: ARPG Project
-  packageVersion: 1.7.0
+  packageVersion: 1.7.1
   assetPath: Assets/PLAYER TWO/ARPG Project/Examples/Data/Items/Armors/Plate Armor/Plate
     Pants.asset
-  uploadId: 907338
+  uploadId: 915662

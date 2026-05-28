@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
-using Object = UnityEngine.Object;
 
 namespace BLINK.WorldClusters
 {
@@ -14,6 +10,7 @@ namespace BLINK.WorldClusters
         public static void TriggerCluster(Cluster cluster, int groupIndex, GameObject collided, ClUSTER_ACTION_EVENT_TYPE actionEventType, ClusterCollider clusterCollider)
         {
             if (!SceneHasManager()) return;
+            if (cluster == null) return;
             if (cluster.enabled == false) return;
             if (groupIndex > cluster.clusterGroups.Count - 1) return;
             if (actionEventType == ClUSTER_ACTION_EVENT_TYPE.Exit && !WorldClustersManager.Instance.IsPlayerInClusterGroup(cluster, groupIndex))
@@ -21,10 +18,12 @@ namespace BLINK.WorldClusters
                 WorldClustersManager.Instance.RemoveOverridenCluster(cluster, groupIndex);
                 return;
             }
+
             foreach (var entry in cluster.clusterGroups[groupIndex].Entries)
             {
                 if (!IsValidCollision(entry.action, collided)) continue;
                 if (clusterCollider != null) HandleActiveClusters(cluster, groupIndex, actionEventType, clusterCollider);
+
                 switch (actionEventType)
                 {
                     case ClUSTER_ACTION_EVENT_TYPE.Enter:
@@ -34,6 +33,7 @@ namespace BLINK.WorldClusters
                         HandleOverridenClusters(cluster, groupIndex);
                         break;
                 }
+
                 HandleCluster(entry, actionEventType);
             }
         }
@@ -41,11 +41,13 @@ namespace BLINK.WorldClusters
         public static void TriggerClusterInstantly(Cluster cluster, int groupIndex, ClUSTER_ACTION_EVENT_TYPE actionEventType, bool isOverride)
         {
             if (!SceneHasManager()) return;
+            if (cluster == null) return;
             if (cluster.enabled == false) return;
             if (groupIndex > cluster.clusterGroups.Count - 1) return;
+
             foreach (var entry in cluster.clusterGroups[groupIndex].Entries)
             {
-                if(!isOverride) HandleActiveClusters(cluster, groupIndex, actionEventType, null);
+                if (!isOverride) HandleActiveClusters(cluster, groupIndex, actionEventType, null);
                 HandleCluster(entry, actionEventType);
             }
         }
@@ -54,8 +56,8 @@ namespace BLINK.WorldClusters
         {
             foreach (var activeCluster in WorldClustersManager.Instance.ActiveClusters)
             {
-                if(!activeCluster.isOverriden) continue;
-                if(activeCluster.overridenByClusterGroupIndex != overridenByClusterGroupIndex) continue;
+                if (!activeCluster.isOverriden) continue;
+                if (activeCluster.overridenByClusterGroupIndex != overridenByClusterGroupIndex) continue;
                 TriggerClusterInstantly(cluster, activeCluster.clusterGroupIndex, ClUSTER_ACTION_EVENT_TYPE.Enter, false);
                 activeCluster.isOverriden = false;
                 activeCluster.overridenByClusterGroupIndex = -1;
@@ -70,7 +72,7 @@ namespace BLINK.WorldClusters
             return false;
         }
 
-        private static void HandleActiveClusters (Cluster cluster, int groupIndex, ClUSTER_ACTION_EVENT_TYPE actionEventType, ClusterCollider clusterCollider)
+        private static void HandleActiveClusters(Cluster cluster, int groupIndex, ClUSTER_ACTION_EVENT_TYPE actionEventType, ClusterCollider clusterCollider)
         {
             switch (actionEventType)
             {
@@ -94,7 +96,7 @@ namespace BLINK.WorldClusters
             {
                 if (newGroupIndex == cOverride.clusterGroupIndex) continue;
                 if (cOverride.clusterGroupIndex > cluster.clusterGroups.Count) continue;
-                if(!WorldClustersManager.Instance.IsPlayerInClusterGroup(cluster, cOverride.clusterGroupIndex)) continue;
+                if (!WorldClustersManager.Instance.IsPlayerInClusterGroup(cluster, cOverride.clusterGroupIndex)) continue;
                 TriggerClusterInstantly(cluster, cOverride.clusterGroupIndex, ClUSTER_ACTION_EVENT_TYPE.Exit, true);
                 WorldClustersManager.Instance.OverrideActiveCluster(cluster, cOverride.clusterGroupIndex, newGroupIndex);
             }
@@ -114,10 +116,11 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Game Object");
                     continue;
                 }
+
                 go.SetActive(active);
             }
         }
-        
+
         public static void ChangeRenderersActivation(List<Renderer> renderers, bool active)
         {
             foreach (var re in renderers)
@@ -127,9 +130,11 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Renderer");
                     continue;
                 }
+
                 re.enabled = active;
             }
         }
+
         public static void ChangeRenderersVisibility(List<Renderer> renderers, bool active)
         {
             foreach (var re in renderers)
@@ -139,9 +144,11 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Renderer");
                     continue;
                 }
+
                 re.shadowCastingMode = active ? ShadowCastingMode.On : ShadowCastingMode.ShadowsOnly;
             }
         }
+
         public static void ChangeLightsVisibility(List<Light> lights, bool active)
         {
             foreach (var light in lights)
@@ -151,10 +158,11 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Light");
                     continue;
                 }
+
                 light.enabled = active;
             }
         }
-        
+
         public static void ChangeParticleSystemsActivation(List<ParticleSystem> particleSystems, bool active)
         {
             foreach (var ps in particleSystems)
@@ -164,6 +172,7 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Particle System");
                     continue;
                 }
+
                 if (active)
                 {
                     ps.Play();
@@ -174,20 +183,21 @@ namespace BLINK.WorldClusters
                 }
             }
         }
-        
+
         public static void ChangeRenderersMaterial(List<Renderer> renderers, Material mat)
         {
             foreach (var re in renderers)
             {
                 if (re == null)
                 {
-                        HandleMissingListEntry("Renderer");
+                    HandleMissingListEntry("Renderer");
                     continue;
                 }
+
                 re.material = mat;
             }
         }
-        
+
         public static void ChangeGameObjectsTag(List<GameObject> gameObjectsList, string tag)
         {
             foreach (var go in gameObjectsList)
@@ -197,9 +207,11 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Game Object");
                     continue;
                 }
+
                 go.tag = tag;
             }
         }
+
         public static void ChangeGameObjectsLayer(List<GameObject> gameObjectsList, int layer, bool applyOnChild)
         {
             foreach (var go in gameObjectsList)
@@ -209,8 +221,10 @@ namespace BLINK.WorldClusters
                     HandleMissingListEntry("Game Object");
                     continue;
                 }
+
                 go.layer = layer;
-                if(!applyOnChild) continue;
+                if (!applyOnChild) continue;
+
                 foreach (var child in go.GetComponentsInChildren<Transform>())
                 {
                     child.gameObject.layer = layer;
@@ -220,15 +234,129 @@ namespace BLINK.WorldClusters
 
         public static void TriggerUnityEvents(UnityEvent events)
         {
+            if (events == null) return;
             events.Invoke();
         }
-        
-        
+
+        public static void HandleAudioPlayback(ClusterEntry entry, ClUSTER_SOUND_ACTION_TYPE soundAction)
+        {
+            if (entry.AudioSourceList == null || entry.AudioSourceList.Count == 0)
+            {
+                Debug.LogWarning("WORLD CLUSTERS: SoundPlay entry has no AudioSource assigned.");
+                return;
+            }
+
+            foreach (var audioSource in entry.AudioSourceList)
+            {
+                if (audioSource == null)
+                {
+                    HandleMissingListEntry("Audio Source");
+                    continue;
+                }
+
+                if (entry.soundOverrideAudioSourceSettings)
+                    ApplyAudioSourceSettings(audioSource, entry);
+
+                ExecuteAudioAction(audioSource, entry, soundAction);
+            }
+        }
+
+        private static void ApplyAudioSourceSettings(AudioSource audioSource, ClusterEntry entry)
+        {
+            if (entry.soundOverrideClip && entry.soundClip != null)
+                audioSource.clip = entry.soundClip;
+
+            if (entry.soundOutputMixerGroup != null)
+                audioSource.outputAudioMixerGroup = entry.soundOutputMixerGroup;
+
+            audioSource.mute = entry.soundMute;
+            audioSource.loop = entry.soundLoop;
+            audioSource.playOnAwake = entry.soundPlayOnAwake;
+            audioSource.bypassEffects = entry.soundBypassEffects;
+            audioSource.bypassListenerEffects = entry.soundBypassListenerEffects;
+            audioSource.bypassReverbZones = entry.soundBypassReverbZones;
+            audioSource.ignoreListenerPause = entry.soundIgnoreListenerPause;
+            audioSource.ignoreListenerVolume = entry.soundIgnoreListenerVolume;
+            audioSource.volume = Mathf.Clamp01(entry.soundVolume);
+            audioSource.pitch = Mathf.Clamp(entry.soundPitch, -3f, 3f);
+            audioSource.priority = Mathf.Clamp(entry.soundPriority, 0, 256);
+            audioSource.panStereo = Mathf.Clamp(entry.soundStereoPan, -1f, 1f);
+            audioSource.spatialBlend = Mathf.Clamp01(entry.soundSpatialBlend);
+            audioSource.reverbZoneMix = Mathf.Max(0f, entry.soundReverbZoneMix);
+            audioSource.dopplerLevel = Mathf.Max(0f, entry.soundDopplerLevel);
+            audioSource.spread = Mathf.Clamp(entry.soundSpread, 0f, 360f);
+            audioSource.minDistance = Mathf.Max(0f, entry.soundMinDistance);
+            audioSource.maxDistance = Mathf.Max(audioSource.minDistance, entry.soundMaxDistance);
+            audioSource.rolloffMode = entry.soundRolloffMode;
+        }
+
+        private static void ExecuteAudioAction(AudioSource audioSource, ClusterEntry entry, ClUSTER_SOUND_ACTION_TYPE soundAction)
+        {
+            switch (soundAction)
+            {
+                case ClUSTER_SOUND_ACTION_TYPE.Play:
+                    PlayAudioSource(audioSource, entry);
+                    break;
+                case ClUSTER_SOUND_ACTION_TYPE.PlayOneShot:
+                    PlayAudioSourceOneShot(audioSource, entry);
+                    break;
+                case ClUSTER_SOUND_ACTION_TYPE.Stop:
+                    audioSource.Stop();
+                    break;
+                case ClUSTER_SOUND_ACTION_TYPE.Pause:
+                    audioSource.Pause();
+                    break;
+                case ClUSTER_SOUND_ACTION_TYPE.UnPause:
+                    audioSource.UnPause();
+                    break;
+            }
+        }
+
+        private static void PlayAudioSource(AudioSource audioSource, ClusterEntry entry)
+        {
+            var clipToPlay = GetAudioClip(audioSource, entry);
+            if (clipToPlay == null)
+            {
+                Debug.LogWarning("WORLD CLUSTERS: No AudioClip found for SoundPlay entry.");
+                return;
+            }
+
+            if (entry.soundOverrideClip && entry.soundClip != null)
+                audioSource.clip = entry.soundClip;
+            else if (audioSource.clip != clipToPlay)
+                audioSource.clip = clipToPlay;
+
+            audioSource.Play();
+        }
+
+        private static void PlayAudioSourceOneShot(AudioSource audioSource, ClusterEntry entry)
+        {
+            var clipToPlay = GetAudioClip(audioSource, entry);
+            if (clipToPlay == null)
+            {
+                Debug.LogWarning("WORLD CLUSTERS: No AudioClip found for SoundPlay entry.");
+                return;
+            }
+
+            audioSource.PlayOneShot(clipToPlay, 1f);
+        }
+
+        private static AudioClip GetAudioClip(AudioSource audioSource, ClusterEntry entry)
+        {
+            if (entry.soundOverrideClip && entry.soundClip != null)
+                return entry.soundClip;
+
+            return audioSource.clip;
+        }
+
         private static bool IsValidCollision(ClusterAction action, GameObject collidedObject)
         {
             if (collidedObject == null) return true;
+            if (action == null || action.conditions == null) return true;
+
             List<bool> optionalResults = new List<bool>();
             List<bool> requiredResults = new List<bool>();
+
             foreach (var validCollision in action.conditions.collisionConditions)
             {
                 bool result = false;
@@ -247,7 +375,8 @@ namespace BLINK.WorldClusters
 
                 if (validCollision.requirementType == ClUSTER_CONDITION_REQUIREMENT_TYPE.Optional)
                     optionalResults.Add(result);
-                else requiredResults.Add(result);
+                else
+                    requiredResults.Add(result);
             }
 
             bool optionalIsValid = optionalResults.Count == 0 || optionalResults.Contains(true);

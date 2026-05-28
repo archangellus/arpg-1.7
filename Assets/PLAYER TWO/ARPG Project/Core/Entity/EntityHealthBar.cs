@@ -38,11 +38,13 @@ namespace PLAYERTWO.ARPGProject
 
         protected Entity m_entity;
         protected GUIHealthBar m_individualBar;
+        protected Highlighter m_highlighter;
 
         protected virtual void Start()
         {
             InitializeEntity();
             InitializeShowMode();
+            InitializeHighlighter();
             InitializeHealthBar();
             InitializeCallbacks();
         }
@@ -57,6 +59,12 @@ namespace PLAYERTWO.ARPGProject
 #if UNITY_ANDROID || UNITY_IOS
             showMode = ShowMode.OnDamage;
 #endif
+        }
+
+        protected virtual void InitializeHighlighter()
+        {
+            if (showMode == ShowMode.OnHighlight)
+                TryGetComponent(out m_highlighter);
         }
 
         protected virtual void InitializeHealthBar()
@@ -85,6 +93,14 @@ namespace PLAYERTWO.ARPGProject
 
             if (showMode == ShowMode.OnHighlight)
                 m_entity.onHighlightChanged.AddListener(OnHighlightChanged);
+
+            if (barType == BarType.Global && showMode == ShowMode.OnHighlight && m_highlighter)
+            {
+                Highlighter.onCurrentChanged += OnCurrentHighlightChanged;
+
+                if (Highlighter.current == m_highlighter)
+                    OnCurrentHighlightChanged(null, Highlighter.current);
+            }
         }
 
         protected virtual void OnDie()
@@ -93,12 +109,25 @@ namespace PLAYERTWO.ARPGProject
 
             if (m_individualBar)
                 m_individualBar.gameObject.SetActive(false);
+
+            if (barType == BarType.Global && showMode == ShowMode.OnHighlight)
+                GlobalHealthBar.ClearInstance(m_entity);
         }
 
         protected virtual void OnRevive()
         {
             if (m_individualBar && showMode == ShowMode.OnHighlight && m_entity.isHighlighted)
                 m_individualBar.gameObject.SetActive(true);
+
+            if (
+                barType == BarType.Global
+                && showMode == ShowMode.OnHighlight
+                && m_highlighter
+                && Highlighter.current == m_highlighter
+            )
+            {
+                GlobalHealthBar.AssignToInstance(m_entity, true);
+            }
         }
 
         protected virtual void OnHealthChanged()
@@ -116,7 +145,7 @@ namespace PLAYERTWO.ARPGProject
             }
             else if (barType == BarType.Global && m_entity.stats.initialized)
             {
-                if (showMode == ShowMode.OnDamage || m_entity.isHighlighted)
+                if (showMode == ShowMode.OnDamage)
                     GlobalHealthBar.AssignToInstance(m_entity);
             }
         }
@@ -125,8 +154,29 @@ namespace PLAYERTWO.ARPGProject
         {
             if (barType == BarType.Individual && m_individualBar)
                 m_individualBar.gameObject.SetActive(highlighted && !m_entity.isDead);
-            else if (barType == BarType.Global && highlighted)
-                GlobalHealthBar.AssignToInstance(m_entity);
+        }
+
+        protected virtual void OnCurrentHighlightChanged(Highlighter previous, Highlighter current)
+        {
+            if (
+                !isActiveAndEnabled
+                || barType != BarType.Global
+                || showMode != ShowMode.OnHighlight
+                || !m_highlighter
+            )
+            {
+                return;
+            }
+
+            if (current == m_highlighter)
+            {
+                if (!m_entity.isDead)
+                    GlobalHealthBar.AssignToInstance(m_entity, true);
+            }
+            else if (previous == m_highlighter)
+            {
+                GlobalHealthBar.ClearInstance(m_entity);
+            }
         }
 
         protected virtual IEnumerator HideIndividualBarDelayed()
@@ -141,12 +191,35 @@ namespace PLAYERTWO.ARPGProject
         {
             if (m_individualBar)
                 m_individualBar.gameObject.SetActive(false);
+
+            if (barType == BarType.Global && showMode == ShowMode.OnHighlight && m_entity)
+                GlobalHealthBar.ClearInstance(m_entity);
         }
 
         protected virtual void OnEnable()
         {
             if (m_individualBar && showMode == ShowMode.OnHighlight && m_entity.isHighlighted)
                 m_individualBar.gameObject.SetActive(true);
+
+            if (
+                m_entity
+                && barType == BarType.Global
+                && showMode == ShowMode.OnHighlight
+                && m_highlighter
+                && Highlighter.current == m_highlighter
+                && !m_entity.isDead
+            )
+            {
+                GlobalHealthBar.AssignToInstance(m_entity, true);
+            }
+        }
+
+        protected virtual void OnDestroy()
+        {
+            Highlighter.onCurrentChanged -= OnCurrentHighlightChanged;
+
+            if (barType == BarType.Global && showMode == ShowMode.OnHighlight && m_entity)
+                GlobalHealthBar.ClearInstance(m_entity);
         }
     }
 }

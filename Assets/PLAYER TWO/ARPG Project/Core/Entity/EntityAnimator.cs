@@ -94,6 +94,7 @@ namespace PLAYERTWO.ARPGProject
         protected int m_onDieHash;
         protected int m_onBlockHash;
         protected int m_onStunnedHash;
+        protected int m_walkSpeedHash;
         protected int m_attackSpeedHash;
         protected int m_blockSpeedHash;
         protected int m_stunSpeedHash;
@@ -112,6 +113,7 @@ namespace PLAYERTWO.ARPGProject
             m_onDieHash = Animator.StringToHash("On Die");
             m_onBlockHash = Animator.StringToHash("On Block");
             m_onStunnedHash = Animator.StringToHash("On Stunned");
+            m_walkSpeedHash = Animator.StringToHash("Walk Speed");
             m_attackSpeedHash = Animator.StringToHash("Attack Speed");
             m_blockSpeedHash = Animator.StringToHash("Block Speed");
             m_stunSpeedHash = Animator.StringToHash("Stun Speed");
@@ -121,7 +123,9 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void InitializeTriggers()
         {
             m_entity.onAttack.AddListener(TriggerAttack);
-            m_entity.onMagicAttack.AddListener(() => TriggerNextFrameSafe(m_onMagicAttackHash));
+            m_entity.onMagicAttack.AddListener(
+                () => StartCoroutine(TriggerNextFrame(m_onMagicAttackHash))
+            );
             m_entity.onDie.AddListener(TriggerDying);
             m_entity.onBlock.AddListener(_ => m_animator.SetTrigger(m_onBlockHash));
             m_entity.onStunned.AddListener(() => m_animator.SetTrigger(m_onStunnedHash));
@@ -248,11 +252,15 @@ namespace PLAYERTWO.ARPGProject
             m_overrides.ApplyOverrides(overrides);
         }
 
+        protected virtual float GetWalkAnimationSpeed() =>
+            m_entity.stats.effectiveMoveSpeed / m_entity.stats.moveSpeed;
+
         /// <summary>
         /// Returns the current attack animation speed multiplier.
         /// </summary>
         protected virtual float GetAttackSpeed() =>
-            baseAttackSpeed + m_entity.stats.GetAnimationAttackSpeed();
+            (baseAttackSpeed + m_entity.stats.GetAnimationAttackSpeed())
+            * m_entity.stats.attackSpeedMultiplier;
 
         /// <summary>
         /// Returns the current block animation speed multiplier.
@@ -302,6 +310,7 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual void HandleParameters()
         {
+            m_animator.SetFloat(m_walkSpeedHash, GetWalkAnimationSpeed());
             m_animator.SetFloat(m_attackSpeedHash, GetAttackSpeed());
             m_animator.SetFloat(m_blockSpeedHash, GetBlockSpeed());
             m_animator.SetFloat(m_stunSpeedHash, GetStunSpeed());
@@ -351,7 +360,7 @@ namespace PLAYERTWO.ARPGProject
         {
             m_animator.ResetTrigger(m_onStunnedHash);
             m_animator.ResetTrigger(m_onBlockHash);
-            TriggerNextFrameSafe(m_onDieHash);
+            StartCoroutine(TriggerNextFrame(m_onDieHash));
         }
 
         /// <summary>
@@ -360,18 +369,7 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void TriggerAttack()
         {
             m_animator.SetInteger(m_comboIndexHash, m_entity.comboIndex);
-            TriggerNextFrameSafe(m_onAttackHash);
-        }
-
-        protected virtual void TriggerNextFrameSafe(int hash)
-        {
-            if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
-            {
-                m_animator.SetTrigger(hash);
-                return;
-            }
-
-            StartCoroutine(TriggerNextFrame(hash));
+            StartCoroutine(TriggerNextFrame(m_onAttackHash));
         }
 
         protected IEnumerator TriggerNextFrame(int hash)

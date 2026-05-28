@@ -60,15 +60,9 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The dialogue to be shown when the Quest is started.")]
         public string startDialogue;
 
-        [Tooltip("The sound effect to play when the Quest start dialogue is shown.")]
-        public AudioClip startDialogueClip;
-
         [TextArea(5, 5)]
         [Tooltip("The dialogue to be shown when the Quest is completed.")]
         public string completeDialogue;
-
-        [Tooltip("The sound effect to play when the Quest complete dialogue is shown.")]
-        public AudioClip completeDialogueClip;
 
         /// <summary>
         /// Returns true if this Quest has any rewards.

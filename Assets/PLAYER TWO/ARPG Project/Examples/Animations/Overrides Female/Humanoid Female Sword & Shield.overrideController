@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Humanoid Female Sword & Shield
+  m_Controller: {fileID: 9100000, guid: 77a0bdc498d53794ebcebc8269326af9, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 01c647c22e41921419a9b538ad3c79c2, type: 2}
+    m_OverrideClip: {fileID: -7391068719408809722, guid: f935b9f1d197ae64fa23d312530efa23, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 47ede99e5c22e484980800755c4eb29a, type: 2}
+    m_OverrideClip: {fileID: -4705555360703855209, guid: 0c17a750330e6e04c9685ac96f8e0351, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 508fc6c14d27a4647b01ac395adeee6c, type: 2}
+    m_OverrideClip: {fileID: 8693406656015917775, guid: 07e9746d22304ff42b1cc5a3188188f4, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 6a60e55c530415344b4cd4a58b57203a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7bbf8d565649add4493220de25c1ebf9, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d42e36603bf1b2e48a85aeef761a0b1c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 16d0770916b44d14caa67a73ede47307, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: fc7ed1da6ffcdea489a46e5d52dbaa98, type: 2}
+    m_OverrideClip: {fileID: -9068623006234277952, guid: ba712bc218430524fa031872282d608f, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: d8645eacda6130b46b59e003f708127a, type: 2}
+    m_OverrideClip: {fileID: -7847466796326333299, guid: eb58ae4aa6d03bd47a21f1e320c5ae86, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 4c6135601c3bf4a48ad7fd4a6e3e4e3e, type: 2}
+    m_OverrideClip: {fileID: 3000321647727746755, guid: ae8fdb6878262174d9fb75ab0a1cc2c7, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: ef80fb3d341933e4fa833fb5b17c9284, type: 2}
+    m_OverrideClip: {fileID: 6692839014519323341, guid: d8297cea82629d64eb643bdd5a58539c, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 24d4aa5cffff3f74ab94455f2b7da0ad, type: 2}
+    m_OverrideClip: {fileID: -7547999234632045885, guid: 7739bed5bb55d074cbf73297d850ce47, type: 3}
+  - m_OriginalClip: {fileID: -3860305613129121529, guid: 233b3501b85312548b5d518a8c1d7062, type: 3}
+    m_OverrideClip: {fileID: -3860305613129121529, guid: 233b3501b85312548b5d518a8c1d7062, type: 3}

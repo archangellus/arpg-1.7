@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "Entity Controls",
     "maps": [
         {
@@ -126,6 +127,15 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "d9e595d1-5e48-40dd-b18a-9a8fe754317b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Spawn",
+                    "type": "Button",
+                    "id": "3287f5e1-e3fd-4682-93a6-20a7f209b95d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -350,6 +360,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0384cf9f-5ad2-470d-892c-e127b991ac02",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spawn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

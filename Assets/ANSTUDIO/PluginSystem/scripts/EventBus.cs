@@ -39,6 +39,7 @@ namespace PLAYERTWO.ARPGProject
         public const string InfinityWardrobeApplied = nameof(InfinityWardrobeApplied);
         public const string QuestWindowUpdateRequested = nameof(QuestWindowUpdateRequested);
         public const string ArcDropRequested = nameof(ArcDropRequested);
+        public const string EntityLevelUp = nameof(EntityLevelUp);
 
 
         private static readonly Dictionary<string, Action<object>> s_events = new();
@@ -167,6 +168,26 @@ namespace PLAYERTWO.ARPGProject
         {
             InfinityWardrobeAppliedEvent?.Invoke(entity);
             Publish(InfinityWardrobeApplied, entity);
+        }
+
+        public static void RaiseQuestCompleted(QuestInstance quest)
+        {
+            if (quest == null)
+                return;
+
+            Publish(QuestCompleted, quest);
+            Publish(QuestCompleted, quest.data);
+
+            if (quest.data != null && !string.IsNullOrWhiteSpace(quest.data.name))
+                Publish(QuestCompleted, quest.data.name);
+        }
+
+        public static void RaiseEntityLevelUp(Entity entity)
+        {
+            if (entity == null)
+                return;
+
+            Publish(EntityLevelUp, entity);
         }
 
 

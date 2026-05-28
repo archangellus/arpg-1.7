@@ -61,6 +61,7 @@ namespace PLAYERTWO.ARPGProject
         protected bool m_attackMode;
         protected bool m_pointerOverUi;
         protected bool m_setDestinationHeld;
+        protected bool m_isDestroyed;
 
         protected float m_lockDirectionTime;
         protected float m_postActionMoveLockTime;
@@ -93,6 +94,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void InitializeCallbacks()
         {
+            if (m_entity == null || m_entity.onDie == null)
+                return;
+
             m_entity.onDie.AddListener(() =>
             {
                 enabled = false;
@@ -111,8 +115,20 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void InitializeConsoleCallbacks()
         {
-            Console.instance.onConsoleOpened.AddListener(() => actions.Disable());
-            Console.instance.onConsoleClosed.AddListener(() => actions.Enable());
+            if (Console.instance == null || actions == null)
+                return;
+
+            Console.instance.onConsoleOpened.AddListener(() =>
+            {
+                if (!m_isDestroyed && actions != null)
+                    actions.Disable();
+            });
+
+            Console.instance.onConsoleClosed.AddListener(() =>
+            {
+                if (!m_isDestroyed && actions != null)
+                    actions.Enable();
+            });
         }
 
         protected virtual void InitializeMovementMode()
@@ -122,6 +138,16 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
+        protected virtual bool CanProcessInput()
+        {
+            return !m_isDestroyed
+                && this != null
+                && isActiveAndEnabled
+                && m_entity != null
+                && m_entity.skills != null
+                && m_entity.states != null;
+        }
+
         public virtual bool MouseRaycast(
             out RaycastHit closestHit,
             int layer = Physics.DefaultRaycastLayers
@@ -129,11 +155,16 @@ namespace PLAYERTWO.ARPGProject
         {
             closestHit = new RaycastHit();
 
-            if (m_pointerOverUi)
+            if (m_isDestroyed || this == null || m_pointerOverUi)
+                return false;
+
+            var currentCamera = camera;
+
+            if (currentCamera == null)
                 return false;
 
             var position = GetPointerPosition();
-            var ray = camera.ScreenPointToRay(position);
+            var ray = currentCamera.ScreenPointToRay(position);
             var hits = Physics.RaycastNonAlloc(ray, m_hitResults, Mathf.Infinity, layer);
             var closestPoint = hits > 0 ? m_hitResults[0].point : Vector3.zero;
 
@@ -168,13 +199,13 @@ namespace PLAYERTWO.ARPGProject
             m_target = target;
             m_targetEntity = null;
 
-            if (target.IsEntity())
+            if (target != null && target.IsEntity())
                 m_targetEntity = target.GetComponent<Entity>();
         }
 
         protected virtual bool TrySetTarget(Collider collider)
         {
-            if (collider.IsUntagged())
+            if (collider == null || collider.IsUntagged())
                 return false;
 
             SetTarget(collider.transform);
@@ -183,28 +214,43 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool TryRefreshTarget()
         {
+            if (m_isDestroyed || this == null)
+                return false;
+
 #if UNITY_STANDALONE || UNITY_WEBGL
             return MouseRaycast(out var hit) && TrySetTarget(hit.collider);
 #else
+            if (m_areaScanner == null)
+                return false;
+
             SetTarget(m_areaScanner.GetClosestTarget());
             return m_target;
 #endif
         }
 
-        protected virtual bool IsTargetAttackable() => m_target.IsTarget();
+        protected virtual bool IsTargetAttackable() => m_target != null && m_target.IsTarget();
 
-        protected virtual bool IsTargetInteractive() => m_target.IsInteractive();
+        protected virtual bool IsTargetInteractive() => m_target != null && m_target.IsInteractive();
 
         protected virtual Vector3 GetMouseDirection()
         {
+            if (m_isDestroyed || this == null)
+                return Vector3.forward;
+
+            var currentCamera = camera;
+
+            if (currentCamera == null)
+                return transform.forward;
+
             var screenPosition = GetPointerPosition();
-            var ray = camera.ScreenPointToRay(screenPosition);
-            var groundPlane = new Plane(Vector3.up, transform.position);
+            var ray = currentCamera.ScreenPointToRay(screenPosition);
+            var currentPosition = transform.position;
+            var groundPlane = new Plane(Vector3.up, currentPosition);
 
             if (groundPlane.Raycast(ray, out float distance))
             {
                 var hitPoint = ray.GetPoint(distance);
-                var direction = (hitPoint - transform.position).normalized;
+                var direction = (hitPoint - currentPosition).normalized;
                 return new Vector3(direction.x, 0, direction.z);
             }
 
@@ -214,6 +260,9 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void OnSetDestination(InputAction.CallbackContext _)
         {
 #if UNITY_STANDALONE || UNITY_WEBGL
+            if (!CanProcessInput())
+                return;
+
             if (m_gamePause.isPaused || (!m_entity.canMove && m_entity.comboIndex == 0))
                 return;
 
@@ -259,11 +308,19 @@ namespace PLAYERTWO.ARPGProject
             m_pendingInteractive = null;
         }
 
-        protected virtual void OnDirectionalMovement(InputAction.CallbackContext _) =>
+        protected virtual void OnDirectionalMovement(InputAction.CallbackContext _)
+        {
+            if (m_isDestroyed || this == null)
+                return;
+
             m_target = null;
+        }
 
         protected virtual void OnSkill(InputAction.CallbackContext _)
         {
+            if (!CanProcessInput())
+                return;
+
             if (
                 m_gamePause.isPaused
                 || !m_entity.skills.CanUseSkill()
@@ -287,42 +344,108 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
-        protected virtual void OnSkillCancelled(InputAction.CallbackContext _) =>
+        protected virtual void OnSkillCancelled(InputAction.CallbackContext _)
+        {
+            if (m_isDestroyed || this == null)
+                return;
+
             m_holdSkill = false;
+        }
 
-        protected virtual void OnAttackMode(InputAction.CallbackContext _) => m_attackMode = true;
+        protected virtual void OnAttackMode(InputAction.CallbackContext _)
+        {
+            if (m_isDestroyed || this == null)
+                return;
 
-        protected virtual void OnAttackModeCancelled(InputAction.CallbackContext _) =>
+            m_attackMode = true;
+        }
+
+        protected virtual void OnAttackModeCancelled(InputAction.CallbackContext _)
+        {
+            if (m_isDestroyed || this == null)
+                return;
+
             m_attackMode = false;
+        }
 
-        protected virtual void OnConsumeItem0(InputAction.CallbackContext _) =>
+        protected virtual void OnConsumeItem0(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput() || m_entity.items == null)
+                return;
+
             m_entity.items.ConsumeItem(0);
+        }
 
-        protected virtual void OnConsumeItem1(InputAction.CallbackContext _) =>
+        protected virtual void OnConsumeItem1(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput() || m_entity.items == null)
+                return;
+
             m_entity.items.ConsumeItem(1);
+        }
 
-        protected virtual void OnConsumeItem2(InputAction.CallbackContext _) =>
+        protected virtual void OnConsumeItem2(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput() || m_entity.items == null)
+                return;
+
             m_entity.items.ConsumeItem(2);
+        }
 
-        protected virtual void OnConsumeItem3(InputAction.CallbackContext _) =>
+        protected virtual void OnConsumeItem3(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput() || m_entity.items == null)
+                return;
+
             m_entity.items.ConsumeItem(3);
+        }
 
-        protected virtual void OnSelectSkill0(InputAction.CallbackContext _) => EquipAndUseSkill(0);
+        protected virtual void OnSelectSkill0(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput())
+                return;
 
-        protected virtual void OnSelectSkill1(InputAction.CallbackContext _) => EquipAndUseSkill(1);
+            EquipAndUseSkill(0);
+        }
 
-        protected virtual void OnSelectSkill2(InputAction.CallbackContext _) => EquipAndUseSkill(2);
+        protected virtual void OnSelectSkill1(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput())
+                return;
 
-        protected virtual void OnSelectSkill3(InputAction.CallbackContext _) => EquipAndUseSkill(3);
+            EquipAndUseSkill(1);
+        }
+
+        protected virtual void OnSelectSkill2(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput())
+                return;
+
+            EquipAndUseSkill(2);
+        }
+
+        protected virtual void OnSelectSkill3(InputAction.CallbackContext _)
+        {
+            if (!CanProcessInput())
+                return;
+
+            EquipAndUseSkill(3);
+        }
 
         protected virtual void OnAttack(InputAction.CallbackContext _)
         {
+            if (!CanProcessInput())
+                return;
+
             m_entity.useSkill = false;
             m_holdAttack = m_attackMode = true;
         }
 
         void EquipAndUseSkill(int index)
         {
+            if (!CanProcessInput())
+                return;
+
             m_entity.skills.ChangeTo(index);
 
             if (
@@ -349,12 +472,23 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        protected virtual void OnAttackCancelled(InputAction.CallbackContext _) =>
+        protected virtual void OnAttackCancelled(InputAction.CallbackContext _)
+        {
+            if (m_isDestroyed || this == null)
+                return;
+
             m_holdAttack = m_attackMode = false;
+        }
 
         protected virtual void OnInteract(InputAction.CallbackContext _)
         {
+            if (!CanProcessInput() || m_areaScanner == null)
+                return;
+
             m_interactive = m_areaScanner.GetClosestInteractiveObject();
+
+            if (m_interactive == null)
+                return;
 
             // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(m_interactive.transform.position);|R5_bf69b73c
             // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgaWYgKG1faW50ZXJhY3RpdmUpDQo=
@@ -366,12 +500,20 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        protected virtual void HandlePointer() =>
+        protected virtual void HandlePointer()
+        {
+            if (m_isDestroyed || this == null || EventSystem.current == null)
+                return;
+
             m_pointerOverUi = EventSystem.current.IsPointerOverGameObject();
+        }
 
         protected virtual void HandleMovement()
         {
 #if UNITY_STANDALONE || UNITY_WEBGL
+            if (!CanProcessInput())
+                return;
+
             if (m_holdMove && m_entity.canMove)
             {
                 m_entity.lookDirection = GetMouseDirection();
@@ -402,7 +544,7 @@ namespace PLAYERTWO.ARPGProject
                         // >>> PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
                         // __PLUGIN_REPLACE_ORIGINAL:ICAgICAgICAgICAgICAgICAgICAgICAgbV9lbnRpdHkuTW92ZVRvKGhpdC5wb2ludCk7DQo=
                         {
-                        EventBus.allowMoveToPoint(m_entity, hit);
+                            EventBus.allowMoveToPoint(m_entity, hit);
                         }
                         // <<< PLUGIN_PATCH:CharacterController::FIND:m_entity.MoveTo(hit.point);|R5_f53b36cb
                     }
@@ -413,6 +555,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void HandleAttack()
         {
+            if (!CanProcessInput())
+                return;
+
             if (!m_holdAttack && !m_holdSkill)
                 return;
 
@@ -451,6 +596,9 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void HandleHighlight()
         {
 #if UNITY_STANDALONE || UNITY_WEBGL
+            if (m_isDestroyed || this == null)
+                return;
+
             m_highlighter.SafeCall(h => h.SetHighlight(false));
 
             if (!MouseRaycast(out var hit) || !hit.collider.TryGetComponent(out m_highlighter))
@@ -479,6 +627,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool IsCursorFacingPosition(Vector3 targetPosition)
         {
+            if (m_isDestroyed || this == null)
+                return false;
+
             var toTarget = targetPosition - transform.position;
             toTarget.y = 0;
 
@@ -490,6 +641,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void HandlePostActionLock()
         {
+            if (!CanProcessInput())
+                return;
+
 #if UNITY_STANDALONE || UNITY_WEBGL
             if (m_pendingInteractive != null && m_entity.targetInteractive != null)
             {
@@ -523,7 +677,8 @@ namespace PLAYERTWO.ARPGProject
         public virtual Vector3 GetMoveDirection()
         {
             if (
-                moveDirectionLocked
+                !CanProcessInput()
+                || moveDirectionLocked
                 || !m_entity.canMove
                 || movementMode != MovementMode.Directional
             )
@@ -534,7 +689,12 @@ namespace PLAYERTWO.ARPGProject
 
             if (direction.sqrMagnitude > 0)
             {
-                var rotation = Quaternion.AngleAxis(camera.transform.eulerAngles.y, Vector3.up);
+                var currentCamera = camera;
+
+                if (currentCamera == null)
+                    return Vector3.zero;
+
+                var rotation = Quaternion.AngleAxis(currentCamera.transform.eulerAngles.y, Vector3.up);
                 direction = rotation * direction;
                 direction = direction.normalized;
             }
@@ -576,8 +736,14 @@ namespace PLAYERTWO.ARPGProject
         public static Vector2 GetPointerPosition()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            if (Touchscreen.current == null)
+                return Vector2.zero;
+
             return Touchscreen.current.primaryTouch.position.ReadValue();
 #else
+            if (Mouse.current == null)
+                return Vector2.zero;
+
             return Mouse.current.position.ReadValue();
 #endif
         }
@@ -588,6 +754,9 @@ namespace PLAYERTWO.ARPGProject
         /// <param name="position">The position where the effect should be shown.</param>
         protected virtual void ShowDestinationEffect(Vector3 position)
         {
+            if (m_isDestroyed || this == null)
+                return;
+
             if (!m_destinationEffect)
                 return;
 
@@ -601,6 +770,8 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Start()
         {
+            m_isDestroyed = false;
+
             InitializeEntity();
             InitializeAreaScanner();
             InitializeActions();
@@ -613,6 +784,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Update()
         {
+            if (m_isDestroyed || this == null)
+                return;
+
             HandlePointer();
             HandleMovement();
             HandleAttack();
@@ -621,10 +795,39 @@ namespace PLAYERTWO.ARPGProject
             HandleMoveDirectionUnlock();
         }
 
-        protected virtual void OnEnable() => actions.Enable();
+        protected virtual void OnEnable()
+        {
+            if (m_isDestroyed || actions == null)
+                return;
 
-        protected virtual void OnDisable() => actions.Disable();
+            actions.Enable();
+        }
 
-        protected virtual void OnDestroy() => FinalizeActionCallbacks();
+        protected virtual void OnDisable()
+        {
+            if (actions != null)
+                actions.Disable();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            m_isDestroyed = true;
+            m_holdMove = false;
+            m_holdAttack = false;
+            m_holdSkill = false;
+            m_attackMode = false;
+            m_setDestinationHeld = false;
+
+            FinalizeActionCallbacks();
+
+            if (actions != null)
+                actions.Disable();
+
+            m_target = null;
+            m_targetEntity = null;
+            m_highlighter = null;
+            m_interactive = null;
+            m_pendingInteractive = null;
+        }
     }
 }

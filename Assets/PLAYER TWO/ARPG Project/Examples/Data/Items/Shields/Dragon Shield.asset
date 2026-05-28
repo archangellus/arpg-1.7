@@ -28,4 +28,4 @@ MonoBehaviour:
   defense: 0
   chanceToBlock: 45
   armPosition: {x: 0, y: 0, z: 0}
-  armRotation: {x: 0, y: 0, z: 0}
+  armRotation: {x: 0, y: 0, z: 180}

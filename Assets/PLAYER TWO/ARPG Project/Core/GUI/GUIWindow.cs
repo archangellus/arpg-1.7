@@ -120,7 +120,8 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Start()
         {
-            m_player = Level.instance.player;
+            if (Level.instance)
+                m_player = Level.instance.player;
         }
 
         protected virtual void LateUpdate()

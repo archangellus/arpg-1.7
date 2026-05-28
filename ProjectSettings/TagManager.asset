@@ -2,42 +2,48 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
-  - Entity/Player
+  - MainLight
+  - CinemachineTarget
+  - ScreenCamera
+  - cockpit_capitalLaser
   - Entity/Enemy
+  - Entity/Summoned
+  - Entity/Player
   - Interactive
   - Destructible
   - Collectible
-  - Entity/Summoned
+  - usableTAG
+  - ExampleAi
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Temp_Post
   - Water
   - UI
-  - Post-Processing
+  - Terminal
+  - Location
+  - LookInteractor
+  - Screen
+  - Occluder
+  - Camera
+  - MainCameraOnly
+  - Oasis_TerrainBake
   - Terrain
   - Entities
   - Ignore NavMesh
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Props
+  - Rocks
+  - Footprints
+  - Cockpit
+  - Cockpit_3DSkybox
+  - Cockpit_3DSkybox_BG
+  - Cockpit_Ally
+  - Cockpit_Invader
+  - Cockpit_BG
+  - Cockpit_DepthClear
   - 
   - 
   - 
@@ -47,3 +53,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default
+  - Screen
+  - Lamps

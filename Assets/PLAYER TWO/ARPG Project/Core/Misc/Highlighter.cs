@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,6 +7,10 @@ namespace PLAYERTWO.ARPGProject
     [AddComponentMenu("PLAYER TWO/ARPG Project/Misc/Highlighter")]
     public class Highlighter : MonoBehaviour
     {
+        public static event Action<Highlighter, Highlighter> onCurrentChanged;
+
+        public static Highlighter current { get; protected set; }
+
         public UnityEvent<bool> onSetHighlight;
 
         [Header("Highlight Settings")]
@@ -28,6 +33,16 @@ namespace PLAYERTWO.ARPGProject
         public bool highlighted { get; protected set; }
 
         protected MaterialPropertyBlock m_properties;
+
+        protected static void SetCurrent(Highlighter value)
+        {
+            if (current == value)
+                return;
+
+            var previous = current;
+            current = value;
+            onCurrentChanged?.Invoke(previous, current);
+        }
 
         protected virtual void InitializeRenderers()
         {
@@ -62,9 +77,21 @@ namespace PLAYERTWO.ARPGProject
 
             SetMaterialsEmission(value ? maxIntensity : 0);
             highlighted = value;
+
+            if (highlighted)
+                SetCurrent(this);
+            else if (current == this)
+                SetCurrent(null);
+
             onSetHighlight.Invoke(value);
         }
 
         protected virtual void Start() => InitializeRenderers();
+
+        protected virtual void OnDisable()
+        {
+            if (current == this)
+                SetCurrent(null);
+        }
     }
 }

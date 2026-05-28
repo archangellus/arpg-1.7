@@ -54,6 +54,10 @@
         },
         {
             "plugin": "ProjectileHeightPlugin",
+            "enabled": false
+        },
+        {
+            "plugin": "SkillTreeUI",
             "enabled": true
         }
     ]
