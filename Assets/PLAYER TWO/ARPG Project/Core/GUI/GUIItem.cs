@@ -153,8 +153,6 @@ namespace PLAYERTWO.ARPGProject
                 HandleBlacksmithEquip();
             else if (m_stash.isOpen)
                 HandleMoveToStash();
-            else if (TryMoveFromPetToPlayer())
-                return;
             else if (m_merchant.isOpen)
                 HandleSell();
             else
@@ -207,12 +205,6 @@ namespace PLAYERTWO.ARPGProject
                 if (player.skills.TryLearnSkill(item.GetSkill()) && m_inventory.TryRemove(this))
                     Destroy(gameObject);
             }
-        }
-
-        protected virtual bool TryMoveFromPetToPlayer()
-        {
-            var source = GetComponentInParent<GUIPetInventory>();
-            return source && source.TryMoveToPlayerInventory(this);
         }
 
         protected virtual void HandleMoveToStash()
