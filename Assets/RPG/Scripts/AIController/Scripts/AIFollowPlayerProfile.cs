@@ -42,6 +42,15 @@ public class AIFollowPlayerProfile : AIProfile
     public bool gatherMoney = true;
     public bool gatherItems = true;
     public List<ItemTypeFilter> gatherableItemTypes = new() { ItemTypeFilter.Any };
+
+    [SerializeField, HideInInspector]
+    private bool filterItemsByRarity = true;
+
+    [SerializeField, HideInInspector]
+    private bool gatherableItemRaritiesInitialized;
+
+    [SerializeField, HideInInspector]
+    private List<int> gatherableItemRarityIds = new();
     [Tooltip("Radius around the pet used to scan for gatherable collectibles.")]
     public float gatherScanRange = 8f;
 
@@ -94,6 +103,43 @@ public class AIFollowPlayerProfile : AIProfile
     private readonly Dictionary<Collectible, float> pendingCollectibles = new();
     private readonly Dictionary<Collectible, (float startTime, Vector3 startPosition)> movingCollectibles = new();
     private bool gatherSuspendedByLeash;
+
+    public IReadOnlyList<int> GatherableItemRarityIds => gatherableItemRarityIds;
+
+    public void InitializeGatherableItemRarities(int rarityCount)
+    {
+        if (gatherableItemRaritiesInitialized)
+            return;
+
+        gatherableItemRarityIds.Clear();
+
+        for (int i = 0; i < rarityCount; i++)
+            gatherableItemRarityIds.Add(i);
+
+        gatherableItemRaritiesInitialized = true;
+    }
+
+    public void SetGatherableItemRarityIds(IEnumerable<int> rarityIds)
+    {
+        gatherableItemRarityIds.Clear();
+        gatherableItemRaritiesInitialized = true;
+
+        if (rarityIds == null)
+            return;
+
+        foreach (var rarityId in rarityIds)
+        {
+            if (rarityId < 0 || gatherableItemRarityIds.Contains(rarityId))
+                continue;
+
+            gatherableItemRarityIds.Add(rarityId);
+        }
+    }
+
+    private void OnValidate()
+    {
+        filterItemsByRarity = true;
+    }
 
     public override Vector3 GetTargetPosition(Vector3 currentTargetPosition, Vector3 startPoint, AIController controller)
     {
@@ -407,6 +453,9 @@ public class AIFollowPlayerProfile : AIProfile
         if (!gatherItems || collectible is not CollectibleItem collectibleItem || collectibleItem.item?.data == null)
             return false;
 
+        if (!IsRarityAllowed(collectibleItem.item))
+            return false;
+
         if (gatherableItemTypes == null || gatherableItemTypes.Count == 0 || gatherableItemTypes.Contains(ItemTypeFilter.Any))
             return true;
 
@@ -433,6 +482,52 @@ public class AIFollowPlayerProfile : AIProfile
         return false;
     }
 
+
+    private bool IsRarityAllowed(ItemInstance item)
+    {
+        if (!filterItemsByRarity)
+            filterItemsByRarity = true;
+
+        if (item == null)
+            return false;
+
+        if (!gatherableItemRaritiesInitialized)
+            return true;
+
+        if (item.rarityId < 0)
+            return AreAllRaritiesGatherable();
+
+        return gatherableItemRarityIds != null
+            && gatherableItemRarityIds.Contains(item.rarityId);
+    }
+
+    private bool AreAllRaritiesGatherable()
+    {
+        int rarityCount = GetItemRarityCount();
+
+        if (rarityCount <= 0)
+            return true;
+
+        if (gatherableItemRarityIds == null || gatherableItemRarityIds.Count < rarityCount)
+            return false;
+
+        for (int i = 0; i < rarityCount; i++)
+        {
+            if (!gatherableItemRarityIds.Contains(i))
+                return false;
+        }
+
+        return true;
+    }
+
+    private int GetItemRarityCount()
+    {
+        var db = GameDatabase.instance;
+        if (db == null || db.gameData == null || db.gameData.itemRarities == null)
+            return 0;
+
+        return db.gameData.itemRarities.Count;
+    }
 
     private Entity GetCollectorEntity()
     {
