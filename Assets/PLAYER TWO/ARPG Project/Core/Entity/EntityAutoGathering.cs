@@ -165,7 +165,19 @@ namespace PLAYERTWO.ARPGProject
                 if (collectible != null)
                 {
                     collectible.interactive = true;
-                    collectible.Interact(entity);
+
+                    if (ShouldUsePetInventory(collectible))
+                    {
+                        if (!TryCollectIntoPetInventory(collectible))
+                        {
+                            collectible.StartGathering();
+                            collectible.interactive = true;
+                        }
+                    }
+                    else
+                    {
+                        collectible.Interact(GetCollectorEntity(collectible));
+                    }
                 }
 
                 m_movingCollectibles.Remove(collectible);
@@ -205,7 +217,10 @@ namespace PLAYERTWO.ARPGProject
 
             if (collectible is CollectibleItem collectibleItem && collectibleItem.item != null)
             {
-                var inventory = entity.inventory.instance;
+                var inventory = GetTargetInventory(collectible);
+                if (inventory == null)
+                    return false;
+
                 var item = collectibleItem.item;
 
                 if (item.IsStackable())
@@ -224,6 +239,39 @@ namespace PLAYERTWO.ARPGProject
             }
 
             return false;
+        }
+
+        protected virtual bool TryCollectIntoPetInventory(Collectible collectible)
+        {
+            if (!ShouldUsePetInventory(collectible))
+                return false;
+
+            return collectible.TryCollectInto(PetInventorySettings.instance.inventory, entity);
+        }
+
+        protected virtual bool ShouldUsePetInventory(Collectible collectible)
+        {
+            return collectible is CollectibleItem
+                && entity
+                && entity.GetComponentInParent<PetSummonOwnership>()
+                && PetInventorySettings.instance;
+        }
+
+        protected virtual Inventory GetTargetInventory(Collectible collectible)
+        {
+            if (ShouldUsePetInventory(collectible))
+                return PetInventorySettings.instance.inventory;
+
+            var collector = GetCollectorEntity(collectible);
+            return collector ? collector.inventory.instance : null;
+        }
+
+        protected virtual Entity GetCollectorEntity(Collectible collectible)
+        {
+            if (collectible is CollectibleMoney && entity.GetComponentInParent<PetSummonOwnership>())
+                return Level.instance ? Level.instance.player : entity;
+
+            return entity;
         }
 
 #if UNITY_EDITOR
