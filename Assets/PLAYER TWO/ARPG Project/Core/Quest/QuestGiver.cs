@@ -21,6 +21,7 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The list of Quests this Quest Giver offers to the Player.")]
         public Quest[] quests;
 
+
         [Space(10)]
         public UnityEvent<State> onStateChange;
 
@@ -30,6 +31,7 @@ namespace PLAYERTWO.ARPGProject
         public State state { get; protected set; } = State.None;
 
         protected QuestsManager m_manager => Game.instance.quests;
+        protected GameAudio m_audio => GameAudio.instance;
 
         protected override void Start()
         {
@@ -105,6 +107,7 @@ namespace PLAYERTWO.ARPGProject
                             quest.completeDialogue,
                             () => instance.NextState()
                         );
+                    PlayDialogueAudio(quest.completeDialogueClip);
                 }
             }
         }
@@ -121,7 +124,14 @@ namespace PLAYERTWO.ARPGProject
                         current.startDialogue,
                         () => GUIWindowsManager.instance.quest.SetQuest(current)
                     );
+                PlayDialogueAudio(current.startDialogueClip);
             }
+        }
+
+        protected virtual void PlayDialogueAudio(AudioClip clip)
+        {
+            if (clip && m_audio)
+                m_audio.PlayUiEffect(clip);
         }
 
         /// <summary>
