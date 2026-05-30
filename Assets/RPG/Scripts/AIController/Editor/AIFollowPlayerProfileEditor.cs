@@ -9,13 +9,34 @@ public class AIFollowPlayerProfileEditor : Editor
     private const string RarityIdsPropertyName = "gatherableItemRarityIds";
     private const string FilterByRarityPropertyName = "filterItemsByRarity";
     private const string RaritiesInitializedPropertyName = "gatherableItemRaritiesInitialized";
+    private const string EnableGatheringPropertyName = "enableGathering";
 
+    private static readonly string[] GatheringPropertyNames =
+    {
+        "gatherMoney",
+        "gatherItems",
+        "gatherableItemTypes",
+        "gatherScanRange",
+        "gatherTargetDistance",
+        "gatherMoveToCollectibleRange",
+        "gatherDelay",
+        "gatherMoveDuration",
+        "gatherSpeedBonus",
+        "gatherSpeedDistanceScale",
+        "returnSpeedBonus",
+        "returnSpeedDistanceScale",
+        "maxGatherDistanceFromPlayer",
+        "gatherLeashHysteresis",
+    };
+
+    private SerializedProperty enableGatheringProperty;
     private SerializedProperty filterByRarityProperty;
     private SerializedProperty rarityIdsProperty;
     private SerializedProperty raritiesInitializedProperty;
 
     private void OnEnable()
     {
+        enableGatheringProperty = serializedObject.FindProperty(EnableGatheringPropertyName);
         filterByRarityProperty = serializedObject.FindProperty(FilterByRarityPropertyName);
         rarityIdsProperty = serializedObject.FindProperty(RarityIdsPropertyName);
         raritiesInitializedProperty = serializedObject.FindProperty(RaritiesInitializedPropertyName);
@@ -28,16 +49,30 @@ public class AIFollowPlayerProfileEditor : Editor
         if (filterByRarityProperty != null)
             filterByRarityProperty.boolValue = true;
 
-        DrawPropertiesExcluding(
-            serializedObject,
+        bool gatheringEnabled = enableGatheringProperty == null || enableGatheringProperty.boolValue;
+        DrawPropertiesExcluding(serializedObject, GetExcludedPropertyNames(gatheringEnabled));
+
+        if (gatheringEnabled)
+            DrawRarityFilter();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+
+    private string[] GetExcludedPropertyNames(bool gatheringEnabled)
+    {
+        var excludedProperties = new List<string>
+        {
             "m_Script",
             FilterByRarityPropertyName,
             RaritiesInitializedPropertyName,
-            RarityIdsPropertyName);
+            RarityIdsPropertyName,
+        };
 
-        DrawRarityFilter();
+        if (!gatheringEnabled)
+            excludedProperties.AddRange(GatheringPropertyNames);
 
-        serializedObject.ApplyModifiedProperties();
+        return excludedProperties.ToArray();
     }
 
     private void DrawRarityFilter()
