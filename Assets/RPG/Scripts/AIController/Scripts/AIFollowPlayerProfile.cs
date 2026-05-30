@@ -42,6 +42,15 @@ public class AIFollowPlayerProfile : AIProfile
     public bool gatherMoney = true;
     public bool gatherItems = true;
     public List<ItemTypeFilter> gatherableItemTypes = new() { ItemTypeFilter.Any };
+
+    [Tooltip("When enabled, the pet only gathers item collectibles whose rarity tier is selected below. Rarity tiers are read from the active Game Data item rarity list.")]
+    public bool filterItemsByRarity = false;
+
+    [Tooltip("Allow the pet to gather plain items that do not have a rarity assigned when rarity filtering is enabled.")]
+    public bool gatherItemsWithoutRarity = true;
+
+    [SerializeField, HideInInspector]
+    private List<int> gatherableItemRarityIds = new();
     [Tooltip("Radius around the pet used to scan for gatherable collectibles.")]
     public float gatherScanRange = 8f;
 
@@ -94,6 +103,24 @@ public class AIFollowPlayerProfile : AIProfile
     private readonly Dictionary<Collectible, float> pendingCollectibles = new();
     private readonly Dictionary<Collectible, (float startTime, Vector3 startPosition)> movingCollectibles = new();
     private bool gatherSuspendedByLeash;
+
+    public IReadOnlyList<int> GatherableItemRarityIds => gatherableItemRarityIds;
+
+    public void SetGatherableItemRarityIds(IEnumerable<int> rarityIds)
+    {
+        gatherableItemRarityIds.Clear();
+
+        if (rarityIds == null)
+            return;
+
+        foreach (var rarityId in rarityIds)
+        {
+            if (rarityId < 0 || gatherableItemRarityIds.Contains(rarityId))
+                continue;
+
+            gatherableItemRarityIds.Add(rarityId);
+        }
+    }
 
     public override Vector3 GetTargetPosition(Vector3 currentTargetPosition, Vector3 startPoint, AIController controller)
     {
@@ -407,6 +434,9 @@ public class AIFollowPlayerProfile : AIProfile
         if (!gatherItems || collectible is not CollectibleItem collectibleItem || collectibleItem.item?.data == null)
             return false;
 
+        if (!IsRarityAllowed(collectibleItem.item))
+            return false;
+
         if (gatherableItemTypes == null || gatherableItemTypes.Count == 0 || gatherableItemTypes.Contains(ItemTypeFilter.Any))
             return true;
 
@@ -433,6 +463,22 @@ public class AIFollowPlayerProfile : AIProfile
         return false;
     }
 
+
+    private bool IsRarityAllowed(ItemInstance item)
+    {
+        if (!filterItemsByRarity)
+            return true;
+
+        if (item == null)
+            return false;
+
+        if (item.rarityId < 0)
+            return gatherItemsWithoutRarity;
+
+        return gatherableItemRarityIds != null
+            && gatherableItemRarityIds.Count > 0
+            && gatherableItemRarityIds.Contains(item.rarityId);
+    }
 
     private Entity GetCollectorEntity()
     {
