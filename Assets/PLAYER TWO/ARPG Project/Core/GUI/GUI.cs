@@ -34,7 +34,6 @@ namespace PLAYERTWO.ARPGProject
         public UnityEvent onToggleSkills;
         public UnityEvent onToggleCharacter;
         public UnityEvent onToggleInventory;
-        public UnityEvent onTogglePetInventory;
         public UnityEvent onToggleQuestLog;
         public UnityEvent onToggleMap;
         public UnityEvent onToggleMenu;
@@ -43,7 +42,6 @@ namespace PLAYERTWO.ARPGProject
         protected InputAction m_toggleSkills;
         protected InputAction m_toggleCharacter;
         protected InputAction m_toggleInventory;
-        protected InputAction m_togglePetInventory;
         protected InputAction m_toggleQuestLog;
         protected InputAction m_toggleMap;
         protected InputAction m_toggleMenu;
@@ -64,7 +62,6 @@ namespace PLAYERTWO.ARPGProject
             m_toggleSkills = actions["Toggle Skills"];
             m_toggleCharacter = actions["Toggle Character"];
             m_toggleInventory = actions["Toggle Inventory"];
-            m_togglePetInventory = actions.FindAction("Toggle Pet Inventory", false);
             m_toggleQuestLog = actions["Toggle Quest Log"];
             m_toggleMap = actions["Toggle Map"];
             m_toggleMenu = actions["Toggle Menu"];
@@ -78,16 +75,6 @@ namespace PLAYERTWO.ARPGProject
             m_toggleSkills.performed += _ => onToggleSkills.Invoke();
             m_toggleCharacter.performed += _ => onToggleCharacter.Invoke();
             m_toggleInventory.performed += _ => onToggleInventory.Invoke();
-
-            if (m_togglePetInventory != null)
-                m_togglePetInventory.performed += _ =>
-                {
-                    onTogglePetInventory.Invoke();
-
-                    if (onTogglePetInventory.GetPersistentEventCount() == 0)
-                        GUIWindowsManager.instance.SafeCall(w => w.TogglePetInventory());
-                };
-
             m_toggleQuestLog.performed += _ => onToggleQuestLog.Invoke();
             m_toggleMap.performed += _ => onToggleMap.Invoke();
 #if UNITY_WEBGL

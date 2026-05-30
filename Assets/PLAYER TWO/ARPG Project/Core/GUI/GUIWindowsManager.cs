@@ -14,9 +14,6 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("A reference to the GUI Player Inventory.")]
         public GUIWindow inventoryWindow;
 
-        [Tooltip("A reference to the GUI Pet Inventory.")]
-        public GUIWindow petInventoryWindow;
-
         [Tooltip("A reference to the GUI Quest Window.")]
         public GUIQuestWindow quest;
 
@@ -63,22 +60,6 @@ namespace PLAYERTWO.ARPGProject
 
             return inventoryWindow.GetComponent<GUIPlayerInventory>();
         }
-
-        /// <summary>
-        /// Returns the reference to the GUI Pet Inventory.
-        /// </summary>
-        public GUIPetInventory GetPetInventory()
-        {
-            if (!petInventoryWindow)
-                return null;
-
-            return petInventoryWindow.GetComponent<GUIPetInventory>();
-        }
-
-        /// <summary>
-        /// Toggles the Pet Inventory window visibility.
-        /// </summary>
-        public virtual void TogglePetInventory() => petInventoryWindow.SafeCall(w => w.Toggle());
 
         /// <summary>
         /// Returns the reference to the GUI Merchant.
