@@ -34,6 +34,7 @@ namespace PLAYERTWO.ARPGProject
         public UnityEvent onToggleSkills;
         public UnityEvent onToggleCharacter;
         public UnityEvent onToggleInventory;
+        public UnityEvent onTogglePetInventory;
         public UnityEvent onToggleQuestLog;
         public UnityEvent onToggleMap;
         public UnityEvent onToggleMenu;
@@ -42,6 +43,7 @@ namespace PLAYERTWO.ARPGProject
         protected InputAction m_toggleSkills;
         protected InputAction m_toggleCharacter;
         protected InputAction m_toggleInventory;
+        protected InputAction m_togglePetInventory;
         protected InputAction m_toggleQuestLog;
         protected InputAction m_toggleMap;
         protected InputAction m_toggleMenu;
@@ -62,6 +64,7 @@ namespace PLAYERTWO.ARPGProject
             m_toggleSkills = actions["Toggle Skills"];
             m_toggleCharacter = actions["Toggle Character"];
             m_toggleInventory = actions["Toggle Inventory"];
+            m_togglePetInventory = actions.FindAction("Toggle Pet Inventory", false);
             m_toggleQuestLog = actions["Toggle Quest Log"];
             m_toggleMap = actions["Toggle Map"];
             m_toggleMenu = actions["Toggle Menu"];
@@ -75,6 +78,10 @@ namespace PLAYERTWO.ARPGProject
             m_toggleSkills.performed += _ => onToggleSkills.Invoke();
             m_toggleCharacter.performed += _ => onToggleCharacter.Invoke();
             m_toggleInventory.performed += _ => onToggleInventory.Invoke();
+
+            if (m_togglePetInventory != null)
+                m_togglePetInventory.performed += _ => HandlePetInventoryToggle();
+
             m_toggleQuestLog.performed += _ => onToggleQuestLog.Invoke();
             m_toggleMap.performed += _ => onToggleMap.Invoke();
 #if UNITY_WEBGL
@@ -89,12 +96,45 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void InitializeConsoleCallbacks()
         {
             Console.instance.onConsoleOpened.AddListener(() => actions.Disable());
-            Console.instance.onConsoleClosed.AddListener(() => actions.Enable());
+            Console.instance.onConsoleClosed.AddListener(() =>
+            {
+                actions.Enable();
+                SetPetInventoryInputActive(PetInventorySettings.isPetActive);
+            });
         }
 
         protected virtual void InitializeGameCallbacks()
         {
             GameScenes.instance.onSceneLoadTriggered.AddListener(SafeDeselect);
+            PetSummonOwnership.onActivePetChanged += HandlePetActiveChanged;
+            SetPetInventoryInputActive(PetInventorySettings.isPetActive);
+        }
+
+        protected virtual void HandlePetInventoryToggle()
+        {
+            if (!PetInventorySettings.isPetActive)
+                return;
+
+            onTogglePetInventory.Invoke();
+
+            if (onTogglePetInventory.GetPersistentEventCount() == 0)
+                GUIWindowsManager.instance.SafeCall(w => w.TogglePetInventory());
+        }
+
+        protected virtual void HandlePetActiveChanged(bool active)
+        {
+            SetPetInventoryInputActive(active);
+        }
+
+        protected virtual void SetPetInventoryInputActive(bool active)
+        {
+            if (m_togglePetInventory == null)
+                return;
+
+            if (active && !m_togglePetInventory.enabled)
+                m_togglePetInventory.Enable();
+            else if (!active && m_togglePetInventory.enabled)
+                m_togglePetInventory.Disable();
         }
 
         public virtual void Select(GUIItem item)
@@ -145,6 +185,10 @@ namespace PLAYERTWO.ARPGProject
         {
             if (!selected || !canDropItems)
                 return;
+
+            if (TryDropPetInventoryItem())
+                return;
+
                 // >>> PLUGIN_PATCH:ArcDrop::FIND:return;|R2_974f70e6
                             var selectedItem = selected;
                             var dropHandled = EventBus.RaiseArcDropRequested(
@@ -180,6 +224,28 @@ namespace PLAYERTWO.ARPGProject
                 SafeDeselect();
             }
 #endif
+        }
+
+        protected virtual bool TryDropPetInventoryItem()
+        {
+            var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
+
+            if (!petInventory || !selected.WasRemovedFrom(petInventory))
+                return false;
+
+            var petTransform = PetInventorySettings.activePetTransform;
+
+            if (!petTransform)
+            {
+                SafeDeselect();
+                return true;
+            }
+
+            Level.instance.InstantiateItemDrop(selected.item, petTransform.position);
+            Destroy(selected.gameObject);
+            selected = null;
+            m_dropTime = Time.time;
+            return true;
         }
 
         protected virtual void HandleItemPosition()
@@ -225,8 +291,17 @@ namespace PLAYERTWO.ARPGProject
             HandleDropEntityRestoration();
         }
 
-        protected virtual void OnEnable() => actions.Enable();
+        protected virtual void OnEnable()
+        {
+            actions.Enable();
+            SetPetInventoryInputActive(PetInventorySettings.isPetActive);
+        }
 
         protected virtual void OnDisable() => actions.Disable();
+
+        protected virtual void OnDestroy()
+        {
+            PetSummonOwnership.onActivePetChanged -= HandlePetActiveChanged;
+        }
     }
 }

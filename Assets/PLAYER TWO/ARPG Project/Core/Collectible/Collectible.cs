@@ -69,6 +69,15 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public virtual Color GetNameColor() => nameColor;
 
+        public virtual bool TryCollectInto(Inventory inventory, object collector = null)
+        {
+            if (inventory == null || !TryCollect(inventory))
+                return false;
+
+            Collect(collector);
+            return true;
+        }
+
         protected abstract bool TryCollect(Inventory inventory);
 
         protected override void Start()
