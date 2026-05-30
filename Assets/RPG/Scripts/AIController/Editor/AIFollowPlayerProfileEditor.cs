@@ -8,24 +8,34 @@ public class AIFollowPlayerProfileEditor : Editor
 {
     private const string RarityIdsPropertyName = "gatherableItemRarityIds";
     private const string FilterByRarityPropertyName = "filterItemsByRarity";
+    private const string RaritiesInitializedPropertyName = "gatherableItemRaritiesInitialized";
 
     private SerializedProperty filterByRarityProperty;
     private SerializedProperty rarityIdsProperty;
+    private SerializedProperty raritiesInitializedProperty;
 
     private void OnEnable()
     {
         filterByRarityProperty = serializedObject.FindProperty(FilterByRarityPropertyName);
         rarityIdsProperty = serializedObject.FindProperty(RarityIdsPropertyName);
+        raritiesInitializedProperty = serializedObject.FindProperty(RaritiesInitializedPropertyName);
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        DrawPropertiesExcluding(serializedObject, "m_Script", RarityIdsPropertyName);
+        if (filterByRarityProperty != null)
+            filterByRarityProperty.boolValue = true;
 
-        if (filterByRarityProperty != null && filterByRarityProperty.boolValue)
-            DrawRarityFilter();
+        DrawPropertiesExcluding(
+            serializedObject,
+            "m_Script",
+            FilterByRarityPropertyName,
+            RaritiesInitializedPropertyName,
+            RarityIdsPropertyName);
+
+        DrawRarityFilter();
 
         serializedObject.ApplyModifiedProperties();
     }
@@ -44,6 +54,8 @@ public class AIFollowPlayerProfileEditor : Editor
             EditorGUILayout.PropertyField(rarityIdsProperty, includeChildren: true);
             return;
         }
+
+        InitializeRarityIdsIfNeeded(rarities.Count);
 
         if (rarities.Count > 31)
         {
@@ -67,6 +79,28 @@ public class AIFollowPlayerProfileEditor : Editor
         EditorGUILayout.HelpBox(
             "Rarity options are loaded from the existing Game Data item rarity list and stored as rarity ids, matching ItemInstance.rarityId.",
             MessageType.None);
+    }
+
+    private void InitializeRarityIdsIfNeeded(int rarityCount)
+    {
+        if (raritiesInitializedProperty != null && raritiesInitializedProperty.boolValue)
+            return;
+
+        SetAllRarities(rarityCount);
+
+        if (raritiesInitializedProperty != null)
+            raritiesInitializedProperty.boolValue = true;
+    }
+
+    private void SetAllRarities(int rarityCount)
+    {
+        rarityIdsProperty.ClearArray();
+
+        for (int i = 0; i < rarityCount; i++)
+        {
+            rarityIdsProperty.InsertArrayElementAtIndex(i);
+            rarityIdsProperty.GetArrayElementAtIndex(i).intValue = i;
+        }
     }
 
     private List<ItemRarity> GetExistingRarities()

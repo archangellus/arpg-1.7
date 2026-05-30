@@ -43,11 +43,11 @@ public class AIFollowPlayerProfile : AIProfile
     public bool gatherItems = true;
     public List<ItemTypeFilter> gatherableItemTypes = new() { ItemTypeFilter.Any };
 
-    [Tooltip("When enabled, the pet only gathers item collectibles whose rarity tier is selected below. Rarity tiers are read from the active Game Data item rarity list.")]
-    public bool filterItemsByRarity = false;
+    [SerializeField, HideInInspector]
+    private bool filterItemsByRarity = true;
 
-    [Tooltip("Allow the pet to gather plain items that do not have a rarity assigned when rarity filtering is enabled.")]
-    public bool gatherItemsWithoutRarity = true;
+    [SerializeField, HideInInspector]
+    private bool gatherableItemRaritiesInitialized;
 
     [SerializeField, HideInInspector]
     private List<int> gatherableItemRarityIds = new();
@@ -106,9 +106,23 @@ public class AIFollowPlayerProfile : AIProfile
 
     public IReadOnlyList<int> GatherableItemRarityIds => gatherableItemRarityIds;
 
+    public void InitializeGatherableItemRarities(int rarityCount)
+    {
+        if (gatherableItemRaritiesInitialized)
+            return;
+
+        gatherableItemRarityIds.Clear();
+
+        for (int i = 0; i < rarityCount; i++)
+            gatherableItemRarityIds.Add(i);
+
+        gatherableItemRaritiesInitialized = true;
+    }
+
     public void SetGatherableItemRarityIds(IEnumerable<int> rarityIds)
     {
         gatherableItemRarityIds.Clear();
+        gatherableItemRaritiesInitialized = true;
 
         if (rarityIds == null)
             return;
@@ -120,6 +134,11 @@ public class AIFollowPlayerProfile : AIProfile
 
             gatherableItemRarityIds.Add(rarityId);
         }
+    }
+
+    private void OnValidate()
+    {
+        filterItemsByRarity = true;
     }
 
     public override Vector3 GetTargetPosition(Vector3 currentTargetPosition, Vector3 startPoint, AIController controller)
@@ -467,17 +486,47 @@ public class AIFollowPlayerProfile : AIProfile
     private bool IsRarityAllowed(ItemInstance item)
     {
         if (!filterItemsByRarity)
-            return true;
+            filterItemsByRarity = true;
 
         if (item == null)
             return false;
 
+        if (!gatherableItemRaritiesInitialized)
+            return true;
+
         if (item.rarityId < 0)
-            return gatherItemsWithoutRarity;
+            return AreAllRaritiesGatherable();
 
         return gatherableItemRarityIds != null
-            && gatherableItemRarityIds.Count > 0
             && gatherableItemRarityIds.Contains(item.rarityId);
+    }
+
+    private bool AreAllRaritiesGatherable()
+    {
+        int rarityCount = GetItemRarityCount();
+
+        if (rarityCount <= 0)
+            return true;
+
+        if (gatherableItemRarityIds == null || gatherableItemRarityIds.Count < rarityCount)
+            return false;
+
+        for (int i = 0; i < rarityCount; i++)
+        {
+            if (!gatherableItemRarityIds.Contains(i))
+                return false;
+        }
+
+        return true;
+    }
+
+    private int GetItemRarityCount()
+    {
+        var db = GameDatabase.instance;
+        if (db == null || db.gameData == null || db.gameData.itemRarities == null)
+            return 0;
+
+        return db.gameData.itemRarities.Count;
     }
 
     private Entity GetCollectorEntity()
