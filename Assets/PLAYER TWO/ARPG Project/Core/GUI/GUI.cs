@@ -186,9 +186,6 @@ namespace PLAYERTWO.ARPGProject
             if (!selected || !canDropItems)
                 return;
 
-            if (TryDropPetInventoryItemOnPlayerUi())
-                return;
-
             if (TryDropPetInventoryItem())
                 return;
 
@@ -227,72 +224,6 @@ namespace PLAYERTWO.ARPGProject
                 SafeDeselect();
             }
 #endif
-        }
-
-        protected virtual bool TryDropPetInventoryItemOnPlayerUi()
-        {
-            var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
-
-            if (!petInventory || !selected.WasRemovedFrom(petInventory))
-                return false;
-
-            if (TryDropSelectedPetItemOnEquipmentSlot())
-                return true;
-
-            var playerInventory = GUIWindowsManager.instance.SafeGet(w => w.GetInventory());
-
-            if (!IsPointerInside(playerInventory.SafeGet(i => i.gridContainer)))
-                return false;
-
-            if (playerInventory.TryPlace(selected))
-                Deselect();
-            else
-            {
-                selected.TryMoveToLastPosition();
-                GameAudio.instance.PlayDeniedSound();
-            }
-
-            return true;
-        }
-
-        protected virtual bool TryDropSelectedPetItemOnEquipmentSlot()
-        {
-            var slots = Object.FindObjectsByType<GUIEquipmentSlot>(FindObjectsSortMode.None);
-
-            foreach (var slot in slots)
-            {
-                if (!slot || !IsPointerInside((RectTransform)slot.transform))
-                    continue;
-
-                if (slot.TryEquipOrStackSelectedItem())
-                    return true;
-
-                selected.TryMoveToLastPosition();
-                GameAudio.instance.PlayDeniedSound();
-                return true;
-            }
-
-            return false;
-        }
-
-        protected virtual bool IsPointerInside(RectTransform rect)
-        {
-            return rect
-                && RectTransformUtility.RectangleContainsScreenPoint(
-                    rect,
-                    EntityInputs.GetPointerPosition(),
-                    GetEventCamera(rect)
-                );
-        }
-
-        protected virtual Camera GetEventCamera(RectTransform rect)
-        {
-            var canvas = rect.GetComponentInParent<Canvas>();
-
-            if (!canvas || canvas.renderMode == RenderMode.ScreenSpaceOverlay)
-                return null;
-
-            return canvas.worldCamera;
         }
 
         protected virtual bool TryDropPetInventoryItem()
