@@ -153,6 +153,10 @@ namespace PLAYERTWO.ARPGProject
                 HandleBlacksmithEquip();
             else if (m_stash.isOpen)
                 HandleMoveToStash();
+            else if (TryUseFromPetInventory())
+                return;
+            else if (TryMoveFromPetToPlayer())
+                return;
             else if (m_merchant.isOpen)
                 HandleSell();
             else
@@ -207,6 +211,49 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
+        protected virtual bool TryUseFromPetInventory()
+        {
+            var source = GetComponentInParent<GUIPetInventory>();
+
+            if (!source)
+                return false;
+
+            if (item.IsEquippable())
+            {
+                var playerInventory = windowsManager.GetInventory();
+
+                if (
+                    playerInventory
+                    && playerInventory.equipments.TryAutoEquip(this)
+                    && source.TryRemove(this)
+                )
+                    return true;
+            }
+            else if (item.IsConsumable())
+            {
+                var hud = GUIEntity.instance;
+
+                if (hud && hud.TryEquipConsumable(this) && source.TryRemove(this))
+                    return true;
+            }
+            else if (item.IsSkill())
+            {
+                if (player.skills.TryLearnSkill(item.GetSkill()) && source.TryRemove(this))
+                {
+                    Destroy(gameObject);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected virtual bool TryMoveFromPetToPlayer()
+        {
+            var source = GetComponentInParent<GUIPetInventory>();
+            return source && source.TryMoveToPlayerInventory(this);
+        }
+
         protected virtual void HandleMoveToStash()
         {
             var source = GetComponentInParent<GUIInventory>();
@@ -245,6 +292,9 @@ namespace PLAYERTWO.ARPGProject
             m_lastInventoryPosition = position;
             m_lastSlot = null;
         }
+
+        public virtual bool WasRemovedFrom(GUIInventory inventory) =>
+            inventory && m_lastInventory == inventory;
 
         /// <summary>
         /// Sets the last position of this GUI Item from a given GUI Slot.
