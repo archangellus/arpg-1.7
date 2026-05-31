@@ -10,14 +10,11 @@ namespace PLAYERTWO.ARPGProject
         : MonoBehaviour,
             IPointerEnterHandler,
             IPointerExitHandler,
-            IPointerDownHandler
-#if UNITY_ANDROID || UNITY_IOS
-            ,
+            IPointerDownHandler,
             IDragHandler,
             IEndDragHandler,
             IDropHandler,
             IDeselectHandler
-#endif
     {
         [Tooltip("A reference to the Text component that represents the stack size.")]
         public Text stackText;
@@ -153,6 +150,8 @@ namespace PLAYERTWO.ARPGProject
                 HandleBlacksmithEquip();
             else if (m_stash.isOpen)
                 HandleMoveToStash();
+            else if (TryMoveFromPetToPlayer())
+                return;
             else if (m_merchant.isOpen)
                 HandleSell();
             else
@@ -207,6 +206,12 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
+        protected virtual bool TryMoveFromPetToPlayer()
+        {
+            var source = GetComponentInParent<GUIPetInventory>();
+            return source && source.TryMoveToPlayerInventory(this);
+        }
+
         protected virtual void HandleMoveToStash()
         {
             var source = GetComponentInParent<GUIInventory>();
@@ -245,6 +250,9 @@ namespace PLAYERTWO.ARPGProject
             m_lastInventoryPosition = position;
             m_lastSlot = null;
         }
+
+        public virtual bool WasRemovedFrom(GUIInventory inventory) =>
+            inventory && m_lastInventory == inventory;
 
         /// <summary>
         /// Sets the last position of this GUI Item from a given GUI Slot.
@@ -334,7 +342,6 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
-#if UNITY_ANDROID || UNITY_IOS
         public virtual void OnDrag(PointerEventData _)
         {
             if (onMerchant)
@@ -343,7 +350,114 @@ namespace PLAYERTWO.ARPGProject
             GUI.instance.Select(this);
         }
 
-        public virtual void OnEndDrag(PointerEventData _) => GUI.instance.DropItem();
+        public virtual void OnEndDrag(PointerEventData eventData)
+        {
+            if (TryDropOnUiTarget(eventData))
+                return;
+
+            StartCoroutine(DropAfterUiDropHandlers());
+        }
+
+        protected virtual bool TryDropOnUiTarget(PointerEventData eventData)
+        {
+            if (GUI.instance.selected != this)
+                return false;
+
+            if (TryDropOnRaycastTarget(eventData))
+                return true;
+
+            return TryDropOnRectTarget(eventData);
+        }
+
+        protected virtual bool TryDropOnRaycastTarget(PointerEventData eventData)
+        {
+            if (EventSystem.current == null)
+                return false;
+
+            var results = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, results);
+
+            foreach (var result in results)
+            {
+                if (!result.gameObject)
+                    continue;
+
+                var slot = result.gameObject.GetComponentInParent<GUIItemSlot>();
+                if (slot)
+                    return TryDropOnItemSlot(slot);
+
+                var inventory = result.gameObject.GetComponentInParent<GUIInventory>();
+                if (inventory)
+                    return TryDropOnInventory(inventory);
+            }
+
+            return false;
+        }
+
+        protected virtual bool TryDropOnRectTarget(PointerEventData eventData)
+        {
+            var slots = Object.FindObjectsByType<GUIItemSlot>(FindObjectsSortMode.None);
+
+            foreach (var slot in slots)
+            {
+                if (slot && IsPointerInside((RectTransform)slot.transform, eventData))
+                    return TryDropOnItemSlot(slot);
+            }
+
+            var inventories = Object.FindObjectsByType<GUIInventory>(FindObjectsSortMode.None);
+
+            foreach (var inventory in inventories)
+            {
+                if (
+                    inventory
+                    && inventory.gridContainer
+                    && IsPointerInside(inventory.gridContainer, eventData)
+                )
+                    return TryDropOnInventory(inventory);
+            }
+
+            return false;
+        }
+
+        protected virtual bool IsPointerInside(RectTransform rect, PointerEventData eventData)
+        {
+            return RectTransformUtility.RectangleContainsScreenPoint(
+                rect,
+                eventData.position,
+                eventData.pressEventCamera
+            );
+        }
+
+        protected virtual bool TryDropOnItemSlot(GUIItemSlot slot)
+        {
+            if (slot.TryEquipOrStackSelectedItem())
+                return true;
+
+            TryMoveToLastPosition();
+            GameAudio.instance.PlayDeniedSound();
+            return true;
+        }
+
+        protected virtual bool TryDropOnInventory(GUIInventory inventory)
+        {
+            if (inventory.TryPlace(this))
+                GUI.instance.Deselect();
+            else
+            {
+                TryMoveToLastPosition();
+                GameAudio.instance.PlayDeniedSound();
+            }
+
+            return true;
+        }
+
+        protected virtual System.Collections.IEnumerator DropAfterUiDropHandlers()
+        {
+            yield return null;
+
+            if (GUI.instance.selected == this)
+                GUI.instance.DropItem();
+        }
 
         public virtual void OnDrop(PointerEventData _)
         {
@@ -356,7 +470,6 @@ namespace PLAYERTWO.ARPGProject
             m_hovering = false;
             GUIItemInspector.instance.Hide();
         }
-#endif
 
         /// <summary>
         /// Initializes the GUI Item with a given Item Instance.
