@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace PLAYERTWO.ARPGProject
@@ -54,6 +55,8 @@ namespace PLAYERTWO.ARPGProject
         protected Entity m_entity;
 
         protected float m_dropTime;
+        protected int m_selectionFrame = -1;
+        protected bool m_waitingForSelectionRelease;
 
         public GUIItem selected { get; protected set; }
 
@@ -142,6 +145,8 @@ namespace PLAYERTWO.ARPGProject
             if (!selected)
             {
                 selected = item;
+                m_selectionFrame = Time.frameCount;
+                m_waitingForSelectionRelease = Mouse.current != null && Mouse.current.leftButton.isPressed;
                 selected.transform.SetParent(transform);
                 selected.Select();
                 m_entity.canUpdateDestination = false;
@@ -157,6 +162,7 @@ namespace PLAYERTWO.ARPGProject
                 var item = selected;
                 selected.Deselect();
                 selected = null;
+                m_waitingForSelectionRelease = false;
                 m_entity.canUpdateDestination = true;
                 onDeselectItem?.Invoke(item);
             }
@@ -168,6 +174,7 @@ namespace PLAYERTWO.ARPGProject
             {
                 Destroy(selected.gameObject);
                 selected = null;
+                m_waitingForSelectionRelease = false;
                 m_entity.canUpdateDestination = true;
             }
         }
@@ -184,6 +191,9 @@ namespace PLAYERTWO.ARPGProject
         public virtual void DropItem()
         {
             if (!selected || !canDropItems)
+                return;
+
+            if (TryDropPetInventoryItemOnUi())
                 return;
 
             if (TryDropPetInventoryItem())
@@ -226,6 +236,105 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
+        public virtual bool TryPlaceSelectedPetItem(GUIInventory inventory)
+        {
+            if (!inventory || !TryPrepareSelectedPetItem())
+                return false;
+
+            if (inventory.TryPlace(selected))
+                Deselect();
+            else
+            {
+                selected.TryMoveToLastPosition();
+                GameAudio.instance.PlayDeniedSound();
+            }
+
+            return true;
+        }
+
+        public virtual bool TryEquipSelectedPetItem(GUIItemSlot slot)
+        {
+            if (!(slot is GUIEquipmentSlot) || !TryPrepareSelectedPetItem())
+                return false;
+
+            if (slot.TryEquipOrStackSelectedItem())
+                return true;
+
+            selected.TryMoveToLastPosition();
+            GameAudio.instance.PlayDeniedSound();
+            return true;
+        }
+
+        protected virtual bool TryPrepareSelectedPetItem()
+        {
+            var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
+
+            if (!petInventory || !selected)
+                return false;
+
+            if (selected.WasRemovedFrom(petInventory))
+                return true;
+
+            return petInventory.Contains(selected) && petInventory.TryRemove(selected);
+        }
+
+        protected virtual bool TryDropPetInventoryItemOnUi()
+        {
+            if (!TryPrepareSelectedPetItem())
+                return false;
+
+            if (TryDropSelectedPetItemOnEquipmentSlot())
+                return true;
+
+            return TryDropSelectedPetItemOnInventory();
+        }
+
+        protected virtual bool TryDropSelectedPetItemOnEquipmentSlot()
+        {
+            var slots = Object.FindObjectsByType<GUIEquipmentSlot>(FindObjectsSortMode.None);
+
+            foreach (var slot in slots)
+            {
+                if (slot && IsPointerInside((RectTransform)slot.transform))
+                    return TryEquipSelectedPetItem(slot);
+            }
+
+            return false;
+        }
+
+        protected virtual bool TryDropSelectedPetItemOnInventory()
+        {
+            var inventories = Object.FindObjectsByType<GUIInventory>(FindObjectsSortMode.None);
+
+            foreach (var inventory in inventories)
+            {
+                if (inventory && IsPointerInside(inventory.gridContainer))
+                    return TryPlaceSelectedPetItem(inventory);
+            }
+
+            return false;
+        }
+
+        protected virtual bool IsPointerInside(RectTransform rect)
+        {
+            return rect
+                && RectTransformUtility.RectangleContainsScreenPoint(
+                    rect,
+                    EntityInputs.GetPointerPosition(),
+                    GetEventCamera(rect)
+                );
+        }
+
+        protected virtual Camera GetEventCamera(RectTransform rect)
+        {
+            var canvas = rect.GetComponentInParent<Canvas>();
+
+            if (!canvas || canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+                return null;
+
+            return canvas.worldCamera;
+        }
+
         protected virtual bool TryDropPetInventoryItem()
         {
             var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
@@ -246,6 +355,67 @@ namespace PLAYERTWO.ARPGProject
             selected = null;
             m_dropTime = Time.time;
             return true;
+        }
+
+        protected virtual void HandleSelectedPetItemPointerClick()
+        {
+            if (Mouse.current == null || !selected || !IsSelectedPetItem())
+                return;
+
+            if (m_waitingForSelectionRelease)
+            {
+                if (Mouse.current.leftButton.isPressed)
+                    return;
+
+                m_waitingForSelectionRelease = false;
+                return;
+            }
+
+            if (!Mouse.current.leftButton.wasPressedThisFrame || Time.frameCount == m_selectionFrame)
+                return;
+
+            if (TryClickSelectedPetItemOnRaycastTarget())
+                return;
+
+            TryDropPetInventoryItemOnUi();
+        }
+
+        protected virtual bool IsSelectedPetItem()
+        {
+            var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
+
+            return petInventory
+                && selected
+                && (selected.WasRemovedFrom(petInventory) || petInventory.Contains(selected));
+        }
+
+        protected virtual bool TryClickSelectedPetItemOnRaycastTarget()
+        {
+            if (EventSystem.current == null)
+                return false;
+
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                position = EntityInputs.GetPointerPosition(),
+            };
+            var results = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, results);
+
+            foreach (var result in results)
+            {
+                if (!result.gameObject)
+                    continue;
+
+                var slot = result.gameObject.GetComponentInParent<GUIEquipmentSlot>();
+                if (slot)
+                    return TryEquipSelectedPetItem(slot);
+
+                var inventory = result.gameObject.GetComponentInParent<GUIInventory>();
+                if (inventory)
+                    return TryPlaceSelectedPetItem(inventory);
+            }
+
+            return false;
         }
 
         protected virtual void HandleItemPosition()
@@ -283,6 +453,11 @@ namespace PLAYERTWO.ARPGProject
             InitializeCallbacks();
             InitializeConsoleCallbacks();
             InitializeGameCallbacks();
+        }
+
+        protected virtual void Update()
+        {
+            HandleSelectedPetItemPointerClick();
         }
 
         protected virtual void LateUpdate()
