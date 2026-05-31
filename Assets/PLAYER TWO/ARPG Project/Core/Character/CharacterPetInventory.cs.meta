@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b9fc842ceef64f53acf3fac5fa62437d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 251134
+  packageName: ARPG Project
+  packageVersion: 1.7.1
+  assetPath: Assets/PLAYER TWO/ARPG Project/Core/Character/CharacterPetInventory.cs
+  uploadId: 915662
