@@ -131,6 +131,9 @@ namespace PLAYERTWO.ARPGProject
         {
             if (GUI.instance.selected)
             {
+                if (GUI.instance.TryEquipSelectedPetItem(this))
+                    return;
+
                 if (!TryEquipOrStackSelectedItem())
                     GameAudio.instance.PlayDeniedSound();
             }
