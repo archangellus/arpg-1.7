@@ -377,13 +377,10 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void OnPointerDown(PointerEventData eventData)
         {
+#if UNITY_STANDALONE || UNITY_WEBGL
             if (!GUI.instance.selected)
                 return;
 
-            if (GUI.instance.TryPlaceSelectedPetItem(this))
-                return;
-
-#if UNITY_STANDALONE || UNITY_WEBGL
             if (TryPlace(GUI.instance.selected))
                 GUI.instance.Deselect();
             else
