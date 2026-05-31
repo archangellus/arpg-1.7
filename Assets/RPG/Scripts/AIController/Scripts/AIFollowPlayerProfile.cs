@@ -428,27 +428,16 @@ public class AIFollowPlayerProfile : AIProfile
             {
                 collectible.interactive = true;
 
-                if (ShouldUsePetInventory(collectible))
+                var collector = GetCollectorEntity();
+                if (collector != null)
                 {
-                    if (!TryCollectIntoPetInventory(collectible))
-                    {
-                        collectible.StartGathering();
-                        collectible.interactive = true;
-                    }
+                    collectible.Interact(collector);
                 }
                 else
                 {
-                    var collector = GetCollectorEntity(collectible);
-                    if (collector != null)
-                    {
-                        collectible.Interact(collector);
-                    }
-                    else
-                    {
-                        // No valid Entity receiver found: release collectible so it can be targeted again.
-                        collectible.StartGathering();
-                        collectible.interactive = true;
-                    }
+                    // No valid Entity receiver found: release collectible so it can be targeted again.
+                    collectible.StartGathering();
+                    collectible.interactive = true;
                 }
             }
 
@@ -540,11 +529,8 @@ public class AIFollowPlayerProfile : AIProfile
         return db.gameData.itemRarities.Count;
     }
 
-    private Entity GetCollectorEntity(Collectible collectible = null)
+    private Entity GetCollectorEntity()
     {
-        if (ShouldUsePetInventory(collectible))
-            return petEntity;
-
         var collector = Level.instance != null ? Level.instance.player : null;
         if (collector == null)
             collector = playerEntity != null ? playerEntity : petEntity;
@@ -552,41 +538,18 @@ public class AIFollowPlayerProfile : AIProfile
         return collector;
     }
 
-    private bool TryCollectIntoPetInventory(Collectible collectible)
-    {
-        if (!ShouldUsePetInventory(collectible))
-            return false;
-
-        return collectible.TryCollectInto(PetInventorySettings.instance.inventory, petEntity);
-    }
-
-    private bool ShouldUsePetInventory(Collectible collectible)
-    {
-        return collectible is CollectibleItem
-            && petTransform
-            && PetInventorySettings.instance;
-    }
-
-    private Inventory GetTargetInventory(Collectible collectible)
-    {
-        if (ShouldUsePetInventory(collectible))
-            return PetInventorySettings.instance.inventory;
-
-        var collector = GetCollectorEntity(collectible);
-        return collector ? collector.inventory.instance : null;
-    }
-
     private bool CanCollect(Collectible collectible)
     {
         if (collectible is CollectibleMoney)
             return true;
 
+        var collector = GetCollectorEntity();
+        if (collector == null)
+            return false;
+
         if (collectible is CollectibleItem collectibleItem && collectibleItem.item != null)
         {
-            var inventory = GetTargetInventory(collectible);
-            if (inventory == null)
-                return false;
-
+            var inventory = collector.inventory.instance;
             var item = collectibleItem.item;
 
             if (item.IsStackable())
