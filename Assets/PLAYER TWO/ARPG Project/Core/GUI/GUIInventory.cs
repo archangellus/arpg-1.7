@@ -384,7 +384,12 @@ namespace PLAYERTWO.ARPGProject
             if (TryPlace(GUI.instance.selected))
                 GUI.instance.Deselect();
             else
+            {
+                GUI.instance.selected.TryMoveToLastPosition();
                 GameAudio.instance.PlayDeniedSound();
+            }
+
+            UpdateSlots();
 #endif
         }
 
