@@ -130,6 +130,8 @@ namespace PLAYERTWO.ARPGProject
                 HandleBuy();
             else if (!GUI.instance.selected)
                 GUI.instance.Select(this);
+            else if (GUI.instance.TryPlaceSelectedPetItem(GetComponentInParent<GUIInventory>()))
+                return;
             else if (TryStack(GUI.instance.selected))
                 GUI.instance.ClearSelection();
             else
