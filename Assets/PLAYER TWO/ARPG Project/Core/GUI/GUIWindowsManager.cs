@@ -72,7 +72,12 @@ namespace PLAYERTWO.ARPGProject
             if (!petInventoryWindow)
                 return null;
 
-            return petInventoryWindow.GetComponent<GUIPetInventory>();
+            var petInventory = petInventoryWindow.GetComponent<GUIPetInventory>();
+
+            if (petInventory && !petInventory.EnsureInitialized())
+                return null;
+
+            return petInventory;
         }
 
         /// <summary>

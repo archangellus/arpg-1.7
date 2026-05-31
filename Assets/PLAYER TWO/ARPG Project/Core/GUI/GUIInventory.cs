@@ -41,6 +41,12 @@ namespace PLAYERTWO.ARPGProject
         protected float m_initializationTime;
 
         protected List<GUIItem> m_items = new();
+        protected bool m_initialized;
+
+        /// <summary>
+        /// Returns true after this GUI Inventory has been bound and built.
+        /// </summary>
+        public bool isInitialized => m_initialized;
 
         /// <summary>
         /// Returns the center of the grid container.
@@ -115,12 +121,22 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public virtual void InitializeInventory()
         {
+            if (m_initialized)
+                return;
+
+            if (m_inventory == null)
+            {
+                Debug.LogWarning($"{nameof(GUIInventory)} cannot initialize without an Inventory instance.");
+                return;
+            }
+
             InitializeGrid();
             InitializeSlots();
             InitializeItems();
             InitializeEquipments();
             InitializeCallbacks();
             UpdateMoney();
+            m_initialized = true;
         }
 
         /// <summary>
@@ -182,7 +198,13 @@ namespace PLAYERTWO.ARPGProject
         /// Returns true if the Inventory contains a given GUI Item.
         /// </summary>
         /// <param name="item">The GUI Item you want to check.</param>
-        public virtual bool Contains(GUIItem item) => m_inventory.Contains(item.item);
+        public virtual bool Contains(GUIItem item)
+        {
+            return item
+                && item.item != null
+                && m_inventory != null
+                && m_inventory.Contains(item.item);
+        }
 
         /// <summary>
         /// Returns the closest cell to a given GUI Item.
