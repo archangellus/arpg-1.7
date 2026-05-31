@@ -10,11 +10,14 @@ namespace PLAYERTWO.ARPGProject
         : MonoBehaviour,
             IPointerEnterHandler,
             IPointerExitHandler,
-            IPointerDownHandler,
+            IPointerDownHandler
+#if UNITY_ANDROID || UNITY_IOS
+            ,
             IDragHandler,
             IEndDragHandler,
             IDropHandler,
             IDeselectHandler
+#endif
     {
         [Tooltip("A reference to the Text component that represents the stack size.")]
         public Text stackText;
@@ -150,8 +153,6 @@ namespace PLAYERTWO.ARPGProject
                 HandleBlacksmithEquip();
             else if (m_stash.isOpen)
                 HandleMoveToStash();
-            else if (TryMoveFromPetToPlayer())
-                return;
             else if (m_merchant.isOpen)
                 HandleSell();
             else
@@ -206,12 +207,6 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        protected virtual bool TryMoveFromPetToPlayer()
-        {
-            var source = GetComponentInParent<GUIPetInventory>();
-            return source && source.TryMoveToPlayerInventory(this);
-        }
-
         protected virtual void HandleMoveToStash()
         {
             var source = GetComponentInParent<GUIInventory>();
@@ -250,9 +245,6 @@ namespace PLAYERTWO.ARPGProject
             m_lastInventoryPosition = position;
             m_lastSlot = null;
         }
-
-        public virtual bool WasRemovedFrom(GUIInventory inventory) =>
-            inventory && m_lastInventory == inventory;
 
         /// <summary>
         /// Sets the last position of this GUI Item from a given GUI Slot.
@@ -342,6 +334,7 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
+#if UNITY_ANDROID || UNITY_IOS
         public virtual void OnDrag(PointerEventData _)
         {
             if (onMerchant)
@@ -350,16 +343,7 @@ namespace PLAYERTWO.ARPGProject
             GUI.instance.Select(this);
         }
 
-        public virtual void OnEndDrag(PointerEventData _) =>
-            StartCoroutine(DropAfterUiDropHandlers());
-
-        protected virtual System.Collections.IEnumerator DropAfterUiDropHandlers()
-        {
-            yield return null;
-
-            if (GUI.instance.selected == this)
-                GUI.instance.DropItem();
-        }
+        public virtual void OnEndDrag(PointerEventData _) => GUI.instance.DropItem();
 
         public virtual void OnDrop(PointerEventData _)
         {
@@ -372,6 +356,7 @@ namespace PLAYERTWO.ARPGProject
             m_hovering = false;
             GUIItemInspector.instance.Hide();
         }
+#endif
 
         /// <summary>
         /// Initializes the GUI Item with a given Item Instance.

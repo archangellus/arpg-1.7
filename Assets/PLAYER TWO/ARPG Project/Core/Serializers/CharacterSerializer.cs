@@ -17,7 +17,6 @@ namespace PLAYERTWO.ARPGProject
         public StatsSerializer stats;
         public EquipmentsSerializer equipments;
         public InventorySerializer inventory;
-        public InventorySerializer petInventory;
         public SkillsSerializer skills;
         public QuestsSerializer quests;
         public ScenesSerializer scenes;
@@ -33,7 +32,6 @@ namespace PLAYERTWO.ARPGProject
             stats = new StatsSerializer(character.stats);
             equipments = new EquipmentsSerializer(character.equipments);
             inventory = new InventorySerializer(character.inventory);
-            petInventory = new InventorySerializer(character.petInventory);
             skills = new SkillsSerializer(character.skills);
             quests = new QuestsSerializer(character.quests);
             scenes = new ScenesSerializer(character.scenes);
