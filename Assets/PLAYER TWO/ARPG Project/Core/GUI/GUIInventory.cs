@@ -390,7 +390,6 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void OnDrop(PointerEventData eventData)
         {
-#if UNITY_ANDROID || UNITY_IOS
             if (!GUI.instance.selected)
                 return;
 
@@ -403,7 +402,6 @@ namespace PLAYERTWO.ARPGProject
             }
 
             UpdateSlots();
-#endif
         }
 
         protected virtual void Awake() => m_initializationTime = Time.time;

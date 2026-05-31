@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Toggle Pet Inventory",
+                    "type": "Button",
+                    "id": "be53ac17-d879-4d3a-8f4d-784ce12db0f5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Toggle Quest Log",
                     "type": "Button",
                     "id": "0cc514eb-0997-4518-9a92-d5f6277420bc",
@@ -129,6 +138,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "500db61c-5049-48fd-aedc-893fd24dbf33",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Pet Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

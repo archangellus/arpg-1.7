@@ -11,14 +11,12 @@ namespace PLAYERTWO.ARPGProject
         : GUISlot,
             IPointerEnterHandler,
             IPointerExitHandler,
-            IPointerDownHandler
-#if UNITY_ANDROID || UNITY_IOS
-            ,
+            IPointerDownHandler,
             IDeselectHandler,
+            IBeginDragHandler,
             IDragHandler,
             IEndDragHandler,
             IDropHandler
-#endif
     {
         [Header("Color Settings")]
         [Tooltip("The color of the slot when hovering a valid GUI Item for this slot.")]
@@ -199,14 +197,17 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
-#if UNITY_ANDROID || UNITY_IOS
         public virtual void OnDeselect(BaseEventData _)
         {
             m_hovering = false;
             GUIItemInspector.instance.Hide();
         }
 
-        public virtual void OnDrag(PointerEventData _)
+        public virtual void OnBeginDrag(PointerEventData eventData) => BeginDrag();
+
+        public virtual void OnDrag(PointerEventData _) => BeginDrag();
+
+        protected virtual void BeginDrag()
         {
             if (!GUI.instance.selected && item && CanUnequip())
             {
@@ -222,12 +223,14 @@ namespace PLAYERTWO.ARPGProject
             if (m_hovering && GUI.instance.selected)
             {
                 if (!TryEquipOrStackSelectedItem())
+                {
+                    GUI.instance.selected.TryMoveToLastPosition();
                     GameAudio.instance.PlayDeniedSound();
+                }
             }
 
             m_hovering = false;
         }
-#endif
 
         protected override void Awake()
         {
