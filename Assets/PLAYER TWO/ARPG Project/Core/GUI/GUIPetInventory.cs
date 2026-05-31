@@ -22,14 +22,10 @@ namespace PLAYERTWO.ARPGProject
         {
             var playerInventory = GUIWindowsManager.instance.GetInventory();
 
-            if (!playerInventory || !TryRemove(item))
+            if (!playerInventory || !playerInventory.TryAutoInsert(item))
                 return false;
 
-            if (playerInventory.TryAutoInsert(item))
-                return true;
-
-            item.TryMoveToLastPosition();
-            return false;
+            return TryRemove(item);
         }
     }
 }
