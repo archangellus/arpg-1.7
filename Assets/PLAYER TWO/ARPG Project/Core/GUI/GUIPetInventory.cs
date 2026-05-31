@@ -1,0 +1,31 @@
+using UnityEngine;
+
+namespace PLAYERTWO.ARPGProject
+{
+    [AddComponentMenu("PLAYER TWO/ARPG Project/GUI/GUI Pet Inventory")]
+    public class GUIPetInventory : GUIInventory
+    {
+        protected virtual void Start()
+        {
+            if (!PetInventorySettings.instance)
+            {
+                Debug.LogWarning("A GUIPetInventory needs a PetInventorySettings component in the scene.");
+                return;
+            }
+
+            moneyText.SafeCall(t => t.gameObject.SetActive(false));
+            SetInventory(PetInventorySettings.instance.inventory);
+            InitializeInventory();
+        }
+
+        public virtual bool TryMoveToPlayerInventory(GUIItem item)
+        {
+            var playerInventory = GUIWindowsManager.instance.GetInventory();
+
+            if (!playerInventory || !playerInventory.TryAutoInsert(item))
+                return false;
+
+            return TryRemove(item);
+        }
+    }
+}
