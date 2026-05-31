@@ -267,9 +267,12 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool TryPrepareSelectedPetItem()
         {
+            if (!PetInventorySettings.isPetActive || !selected)
+                return false;
+
             var petInventory = GUIWindowsManager.instance.SafeGet(w => w.GetPetInventory());
 
-            if (!petInventory || !selected)
+            if (!petInventory)
                 return false;
 
             if (selected.WasRemovedFrom(petInventory))
