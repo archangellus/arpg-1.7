@@ -153,8 +153,6 @@ namespace PLAYERTWO.ARPGProject
                 HandleBlacksmithEquip();
             else if (m_stash.isOpen)
                 HandleMoveToStash();
-            else if (TryMoveFromPetToPlayer())
-                return;
             else if (m_merchant.isOpen)
                 HandleSell();
             else
@@ -209,12 +207,6 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        protected virtual bool TryMoveFromPetToPlayer()
-        {
-            var source = GetComponentInParent<GUIPetInventory>();
-            return source && source.TryMoveToPlayerInventory(this);
-        }
-
         protected virtual void HandleMoveToStash()
         {
             var source = GetComponentInParent<GUIInventory>();
@@ -253,9 +245,6 @@ namespace PLAYERTWO.ARPGProject
             m_lastInventoryPosition = position;
             m_lastSlot = null;
         }
-
-        public virtual bool WasRemovedFrom(GUIInventory inventory) =>
-            inventory && m_lastInventory == inventory;
 
         /// <summary>
         /// Sets the last position of this GUI Item from a given GUI Slot.
