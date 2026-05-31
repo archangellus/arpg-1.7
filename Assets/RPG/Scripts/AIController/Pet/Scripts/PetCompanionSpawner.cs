@@ -52,6 +52,13 @@ public class PetCompanionSpawner : MonoBehaviour
         var spawnPosition = transform.position + forward.normalized * spawnDistanceFromPlayer;
         currentPet = Instantiate(petPrefab, spawnPosition, Quaternion.identity);
 
+        var ownership = currentPet.GetComponent<PetSummonOwnership>();
+        if (ownership == null)
+            ownership = currentPet.AddComponent<PetSummonOwnership>();
+
+        if (TryGetComponent<Entity>(out var ownerEntity))
+            ownership.ownerEntityId = ownerEntity.GetInstanceID();
+
         if (currentPet.TryGetComponent(out AIController controller))
         {
             controller.playerTAG = tag;
