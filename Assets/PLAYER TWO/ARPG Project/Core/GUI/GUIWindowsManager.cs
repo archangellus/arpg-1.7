@@ -14,6 +14,9 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("A reference to the GUI Player Inventory.")]
         public GUIWindow inventoryWindow;
 
+        [Tooltip("A reference to the GUI Pet Inventory.")]
+        public GUIWindow petInventoryWindow;
+
         [Tooltip("A reference to the GUI Quest Window.")]
         public GUIQuestWindow quest;
 
@@ -62,6 +65,47 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
+        /// Returns the reference to the GUI Pet Inventory.
+        /// </summary>
+        public GUIPetInventory GetPetInventory()
+        {
+            if (!petInventoryWindow)
+                return null;
+
+            return petInventoryWindow.GetComponent<GUIPetInventory>();
+        }
+
+        /// <summary>
+        /// Toggles the Pet Inventory window visibility.
+        /// </summary>
+        public virtual void TogglePetInventory()
+        {
+            if (!PetInventorySettings.isPetActive)
+                return;
+
+            petInventoryWindow.SafeCall(w => w.Toggle());
+        }
+
+        protected virtual void HandlePetActiveChanged(bool active)
+        {
+            if (active)
+                return;
+
+            GUI.instance.SafeCall(g => g.SafeDeselect());
+            petInventoryWindow.SafeCall(w => w.Hide());
+        }
+
+        protected virtual void OnEnable()
+        {
+            PetSummonOwnership.onActivePetChanged += HandlePetActiveChanged;
+        }
+
+        protected virtual void OnDisable()
+        {
+            PetSummonOwnership.onActivePetChanged -= HandlePetActiveChanged;
+        }
+
+        /// <summary>
         /// Returns the reference to the GUI Merchant.
         /// </summary>
         public GUIMerchant GetMerchant()
@@ -96,6 +140,9 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual void Start()
         {
+            if (!PetInventorySettings.isPetActive)
+                petInventoryWindow.SafeCall(w => w.Hide());
+
             var windows = GetComponentsInChildren<GUIWindow>(true);
 
             if (!m_audio)
