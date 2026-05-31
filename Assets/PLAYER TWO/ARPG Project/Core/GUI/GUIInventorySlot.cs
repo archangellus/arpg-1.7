@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace PLAYERTWO.ARPGProject
 {
     [RequireComponent(typeof(Image))]
     [AddComponentMenu("PLAYER TWO/ARPG Project/GUI/GUI Inventory Slot")]
-    public class GUIInventorySlot : MonoBehaviour, IPointerDownHandler
+    public class GUIInventorySlot : MonoBehaviour
     {
         public enum State
         {
@@ -68,11 +67,6 @@ namespace PLAYERTWO.ARPGProject
         /// Changes the slot color to invalid.
         /// </summary>
         public virtual void HighlightInvalid() => image.color = invalid;
-
-        public virtual void OnPointerDown(PointerEventData eventData)
-        {
-            GetComponentInParent<GUIInventory>().SafeCall(i => i.OnPointerDown(eventData));
-        }
 
         protected virtual void Awake() => m_image = GetComponent<Image>();
     }

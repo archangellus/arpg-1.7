@@ -381,9 +381,6 @@ namespace PLAYERTWO.ARPGProject
             if (!GUI.instance.selected)
                 return;
 
-            if (GUI.instance.TryPlaceSelectedPetItem(this))
-                return;
-
             if (TryPlace(GUI.instance.selected))
                 GUI.instance.Deselect();
             else
