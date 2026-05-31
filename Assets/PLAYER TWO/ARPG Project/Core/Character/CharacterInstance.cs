@@ -16,7 +16,6 @@ namespace PLAYERTWO.ARPGProject
         public CharacterStats stats;
         public CharacterEquipments equipments;
         public CharacterInventory inventory;
-        public CharacterPetInventory petInventory;
         public CharacterSkills skills;
         public CharacterQuests quests;
         public CharacterScenes scenes;
@@ -39,7 +38,6 @@ namespace PLAYERTWO.ARPGProject
             stats = new CharacterStats(data);
             equipments = new CharacterEquipments(data);
             inventory = new CharacterInventory(data);
-            petInventory = new CharacterPetInventory();
             skills = new CharacterSkills(data);
             quests = new CharacterQuests();
             scenes = new CharacterScenes();
@@ -79,7 +77,6 @@ namespace PLAYERTWO.ARPGProject
                 stats = CharacterStats.CreateFromSerializer(serializer.stats),
                 equipments = CharacterEquipments.CreateFromSerializer(serializer.equipments),
                 inventory = CharacterInventory.CreateFromSerializer(serializer.inventory),
-                petInventory = CharacterPetInventory.CreateFromSerializer(serializer.petInventory),
                 skills = CharacterSkills.CreateFromSerializer(serializer.skills),
                 quests = CharacterQuests.CreateFromSerializer(serializer.quests),
                 scenes = CharacterScenes.CreateFromSerializer(serializer.scenes),
