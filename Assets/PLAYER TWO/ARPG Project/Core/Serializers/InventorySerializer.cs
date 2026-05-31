@@ -27,11 +27,6 @@ namespace PLAYERTWO.ARPGProject
             Initialize(inventory.currentItems, inventory.currentMoney);
         }
 
-        public InventorySerializer(CharacterPetInventory inventory)
-        {
-            Initialize(inventory.currentItems, 0);
-        }
-
         protected virtual void Initialize(Dictionary<ItemInstance, InventoryCell> items, int coins)
         {
             foreach (var item in items)
