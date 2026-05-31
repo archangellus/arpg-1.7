@@ -11,11 +11,14 @@ namespace PLAYERTWO.ARPGProject
         : GUISlot,
             IPointerEnterHandler,
             IPointerExitHandler,
-            IPointerDownHandler,
+            IPointerDownHandler
+#if UNITY_ANDROID || UNITY_IOS
+            ,
             IDeselectHandler,
             IDragHandler,
             IEndDragHandler,
             IDropHandler
+#endif
     {
         [Header("Color Settings")]
         [Tooltip("The color of the slot when hovering a valid GUI Item for this slot.")]
@@ -196,6 +199,7 @@ namespace PLAYERTWO.ARPGProject
 #endif
         }
 
+#if UNITY_ANDROID || UNITY_IOS
         public virtual void OnDeselect(BaseEventData _)
         {
             m_hovering = false;
@@ -223,6 +227,7 @@ namespace PLAYERTWO.ARPGProject
 
             m_hovering = false;
         }
+#endif
 
         protected override void Awake()
         {
