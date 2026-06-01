@@ -131,7 +131,7 @@ namespace PLAYERTWO.ARPGProject
             this.data = data;
             this.attributes = attributes;
             this.durability = durability;
-            this.stack = stack;
+            SetStackOrDefault(stack);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace PLAYERTWO.ARPGProject
             this.data = data;
             this.attributes = attributes;
             this.durability = durability;
-            this.stack = stack;
+            SetStackOrDefault(stack);
             this.rarityId = rarityId;
             this.prefixIndices = prefixIndices;
             this.suffixIndices = suffixIndices;
@@ -609,8 +609,15 @@ namespace PLAYERTWO.ARPGProject
             if (IsEquippable())
                 durability = GetEquippable().maxDurability;
 
-            if (IsStackable())
-                stack = 1;
+            SetStackOrDefault(1);
+        }
+
+        protected virtual void SetStackOrDefault(int stack)
+        {
+            if (!IsStackable())
+                return;
+
+            this.stack = stack > 0 ? stack : 1;
         }
 
         /// <summary>
