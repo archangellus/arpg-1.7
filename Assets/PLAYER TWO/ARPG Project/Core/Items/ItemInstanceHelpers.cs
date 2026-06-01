@@ -64,6 +64,11 @@ namespace PLAYERTWO.ARPGProject
         public virtual ItemAmulet GetAmulet() => GetData<ItemAmulet>();
 
         /// <summary>
+        /// Returns the data of this Item Instance as an Item Material.
+        /// </summary>
+        public virtual ItemMaterial GetMaterial() => GetData<ItemMaterial>();
+
+        /// <summary>
         /// Returns true if this Item allows stacking.
         /// </summary>
         public virtual bool IsStackable() => data.canStack;
@@ -122,5 +127,10 @@ namespace PLAYERTWO.ARPGProject
         /// Returns true if this Item is an Amulet.
         /// </summary>
         public virtual bool IsAmulet() => data is ItemAmulet;
+
+        /// <summary>
+        /// Returns true if this Item is a Material.
+        /// </summary>
+        public virtual bool IsMaterial() => data is ItemMaterial;
     }
 }
