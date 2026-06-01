@@ -90,7 +90,6 @@ public class AIFollowPlayerProfile : AIProfile
         Ring,
         Amulet,
         Potion,
-        Material,
     }
 
     private float idleTime = 0f;
@@ -485,8 +484,7 @@ public class AIFollowPlayerProfile : AIProfile
                 || (filter == ItemTypeFilter.Blade && item is ItemBlade)
                 || (filter == ItemTypeFilter.Ring && item is ItemRing)
                 || (filter == ItemTypeFilter.Amulet && item is ItemAmulet)
-                || (filter == ItemTypeFilter.Potion && item is ItemPotion)
-                || (filter == ItemTypeFilter.Material && item is ItemMaterial))
+                || (filter == ItemTypeFilter.Potion && item is ItemPotion))
             {
                 return true;
             }
