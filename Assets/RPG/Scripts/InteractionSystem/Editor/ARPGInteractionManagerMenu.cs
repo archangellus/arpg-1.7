@@ -6,10 +6,10 @@ namespace PLAYERTWO.ARPGProject
 {
     public static class ARPGInteractionManagerMenu
     {
-        [MenuItem("Tools/PLAYER TWO/ARPG Project/Create Interaction Manager")]
+        [MenuItem("Tools/ANSTUDIO/Interaction System/Create Interaction Manager")]
         public static void CreateInteractionManager()
         {
-            var existing = Object.FindObjectOfType<ARPGInteractionManager>();
+            var existing = Object.FindFirstObjectByType<ARPGInteractionManager>();
 
             if (existing)
             {
@@ -22,10 +22,20 @@ namespace PLAYERTWO.ARPGProject
             var manager = managerObject.AddComponent<ARPGInteractionManager>();
             managerObject.AddComponent<ARPGInteractionPrompt>();
 
-            var playerObject = GameObject.FindGameObjectWithTag(GameTags.Player);
+            if (!string.IsNullOrWhiteSpace(manager.playerTag))
+            {
+                try
+                {
+                    var playerObject = GameObject.FindGameObjectWithTag(manager.playerTag);
 
-            if (playerObject)
-                playerObject.TryGetComponent(out manager.player);
+                    if (playerObject)
+                        playerObject.TryGetComponent(out manager.player);
+                }
+                catch (UnityException)
+                {
+                    Debug.LogWarning($"Cannot assign player because tag '{manager.playerTag}' is not defined.", manager);
+                }
+            }
 
             Undo.RegisterCreatedObjectUndo(managerObject, "Create ARPG Interaction Manager");
             Selection.activeObject = managerObject;

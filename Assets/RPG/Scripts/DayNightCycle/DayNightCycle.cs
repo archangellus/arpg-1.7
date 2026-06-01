@@ -256,6 +256,20 @@ public class DayNightCycle : MonoBehaviour
         return Mathf.Lerp(nightPostExposure, dayPostExposure, GetDayBlend());
     }
 
+    public void SetCurrentTimeOfDay(float timeOfDay)
+    {
+        currentTimeOfDay = Mathf.Repeat(timeOfDay, 1f);
+
+        RotateLights();
+        HandleLightActivation();
+        UpdateSkyAndGlowProgress(true);
+        UpdateVolumePostExposure();
+        CheckDayNightTransition();
+
+        previousDayDuration = dayDuration;
+        previousTimeOfDay = currentTimeOfDay;
+    }
+
     private void CheckDayNightTransition()
     {
         bool newIsDay = currentTimeOfDay < 0.5f;

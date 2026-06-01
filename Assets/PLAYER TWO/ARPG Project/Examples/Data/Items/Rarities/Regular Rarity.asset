@@ -14,16 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Regular
   color: {r: 1, g: 1, b: 1, a: 1}
+  affixes: {fileID: 11400000, guid: 2a115f430ca566a469906cf21e763c82, type: 2}
+  tier: 1
+  affixesMode: 0
   bothAffixChance: 0.25
-  bladeScope:
-    prefixes: []
-    suffixes: []
-  bowScope:
-    prefixes: []
-    suffixes: []
-  armorScope:
-    prefixes: []
-    suffixes: []
-  shieldScope:
-    prefixes: []
-    suffixes: []
+  minAffixes: 1
+  maxAffixes: 2
+  valueWeight: 0.5
+  bonusDamage: 0
+  bonusAttackSpeed: 0
+  bonusMaxDurability: 0
+  bonusDefense: 0
+  bonusChanceToBlock: 0

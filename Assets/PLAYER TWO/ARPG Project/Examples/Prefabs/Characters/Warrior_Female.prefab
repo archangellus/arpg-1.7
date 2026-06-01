@@ -25568,6 +25568,7 @@ GameObject:
   - component: {fileID: 6182206156139408239}
   - component: {fileID: 3043232846201754691}
   - component: {fileID: 6284599845968256153}
+  - component: {fileID: 8179862490445287946}
   m_Layer: 8
   m_Name: HumanFemale_Skin
   m_TagString: Untagged
@@ -63929,6 +63930,19 @@ MonoBehaviour:
     onDeactivate: []
     showList: 0
     shapeChoiceIndex: 0
+--- !u!114 &8179862490445287946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6235072306971297195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd775d84c98fad47bc3176726ddc02a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShatterStone.PickaxeAnimationEventRelay
+  pickaxeController: {fileID: 0}
 --- !u!1 &6268540230067057091
 GameObject:
   m_ObjectHideFlags: 0
@@ -64477,7 +64491,7 @@ MonoBehaviour:
     playWhileGroundedByDistance: 0
     minStepInterval: 0.12
     minStepDistance: 0.25
-    volumeMultiplier: 1.141
+    volumeMultiplier: 0.393
   - legName: RightLeg
     bone: {fileID: 3560913116786165573}
     audioSource: {fileID: 0}
@@ -64488,7 +64502,7 @@ MonoBehaviour:
     playWhileGroundedByDistance: 0
     minStepInterval: 0.12
     minStepDistance: 0.25
-    volumeMultiplier: 1.141
+    volumeMultiplier: 0.393
   textureTypeGroups:
   - groupName: sand
     randomClips:

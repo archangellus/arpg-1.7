@@ -29,6 +29,35 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         public bool interactive { get; set; } = true;
 
+        /// <summary>
+        /// Returns the preferred Interactive component from a Component.
+        /// </summary>
+        /// <param name="component">The Component to search from.</param>
+        public static Interactive GetInteractive(Component component)
+        {
+            if (!component)
+                return null;
+
+            var interactives = component.GetComponents<Interactive>();
+
+            if (interactives == null || interactives.Length == 0)
+                return null;
+
+            for (int i = 0; i < interactives.Length; i++)
+            {
+                if (interactives[i] is PlayerAnimationInteractive)
+                    return interactives[i];
+            }
+
+            for (int i = 0; i < interactives.Length; i++)
+            {
+                if (interactives[i] && interactives[i].GetType() != typeof(Interactive))
+                    return interactives[i];
+            }
+
+            return interactives[0];
+        }
+
         protected virtual void InitializeCollider()
         {
             m_collider = GetComponent<Collider>();

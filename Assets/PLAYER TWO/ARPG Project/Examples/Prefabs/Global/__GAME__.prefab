@@ -104,6 +104,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -412,6 +413,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -630,14 +632,20 @@ MonoBehaviour:
   maxLevel: 100
   enemyLootMoneyIncreaseRate: 0.15
   criticalMultiplier: 1.25
+  defenseConstant: 100
   maxAttackSpeed: 1000
   maxBlockChance: 0.75
   maxBlockSpeed: 1000
   maxStunChance: 0.75
   maxStunSpeed: 1000
-  maxAttributeChance: 0.8
-  minAttributeChance: 0.1
+  canMiss: 1
+  accuracyBase: 300
+  evasionLevelPenaltyFactor: 0.1
+  minHitChance: 0.05
+  maxHitChance: 0.95
   pricePerAttribute: 500
+  inventoryRows: 6
+  inventoryColumns: 10
   collectibleItemPrefab: {fileID: 2342676559043860120, guid: ddbeb43bb3ae20c4d8052803a47384ab, type: 3}
   collectibleMoneyPrefab: {fileID: 1553534218236778086, guid: 186ac45da2452424bb403f353bffcf15, type: 3}
   onCharacterAdded:
@@ -694,6 +702,9 @@ MonoBehaviour:
   loadingImage: {fileID: 4822160700523610660}
   loadStartClip: {fileID: 8300000, guid: bc488aa5fc16f5b44a215146dff75986, type: 3}
   loadFinishClip: {fileID: 0}
+  onSceneLoadTriggered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6599070479724307756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1259,6 +1270,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1409,6 +1421,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1730,10 +1743,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b8da3807fa145be4a22991759420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openInBuild: 0
   inputField: {fileID: 2438713659896294581}
   outputText: {fileID: 6644665331635273250}
   consolePanel: {fileID: 7377032498907219448}
   outputScrollRect: {fileID: 2023610582559305765}
+  onConsoleOpened:
+    m_PersistentCalls:
+      m_Calls: []
+  onConsoleClosed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7132020836836671796
 GameObject:
   m_ObjectHideFlags: 0
