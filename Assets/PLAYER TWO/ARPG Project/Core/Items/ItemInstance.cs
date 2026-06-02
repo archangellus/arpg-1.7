@@ -171,24 +171,6 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
-        /// Creates a separate Item Instance with the same item data, durability, rarity, affixes,
-        /// and attributes, using the requested stack size when the item can stack.
-        /// </summary>
-        /// <param name="stack">The stack size for the copied Item Instance.</param>
-        public virtual ItemInstance CopyWithStack(int stack)
-        {
-            return new ItemInstance(
-                data,
-                attributes != null ? new ItemAttributes(attributes) : null,
-                durability,
-                stack,
-                rarityId,
-                prefixIndices != null ? new List<int>(prefixIndices) : null,
-                suffixIndices != null ? new List<int>(suffixIndices) : null
-            );
-        }
-
-        /// <summary>
         /// Returns the required minimum level to equip this Item.
         /// </summary>
         public virtual int GetRequiredLevel()

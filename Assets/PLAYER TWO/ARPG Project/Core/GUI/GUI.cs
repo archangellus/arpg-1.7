@@ -57,8 +57,6 @@ namespace PLAYERTWO.ARPGProject
         protected float m_dropTime;
         protected int m_selectionFrame = -1;
         protected bool m_waitingForSelectionRelease;
-        protected GUIItem m_splitPreview;
-        protected GUIStackSplitMenu m_stackSplitMenu;
 
         public GUIItem selected { get; protected set; }
 
@@ -162,7 +160,6 @@ namespace PLAYERTWO.ARPGProject
             if (selected)
             {
                 var item = selected;
-                DestroySplitPreview();
                 selected.Deselect();
                 selected = null;
                 m_waitingForSelectionRelease = false;
@@ -175,7 +172,6 @@ namespace PLAYERTWO.ARPGProject
         {
             if (selected)
             {
-                DestroySplitPreview();
                 Destroy(selected.gameObject);
                 selected = null;
                 m_waitingForSelectionRelease = false;
@@ -283,198 +279,6 @@ namespace PLAYERTWO.ARPGProject
                 return true;
 
             return petInventory.Contains(selected) && petInventory.TryRemove(selected);
-        }
-
-
-        /// <summary>
-        /// Returns true while the player is holding either Shift key for stack splitting.
-        /// </summary>
-        public virtual bool IsStackSplitModifierPressed()
-        {
-            return Keyboard.current != null
-                && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
-        }
-
-        /// <summary>
-        /// Returns true if a selected GUI Item can start a stack split operation.
-        /// </summary>
-        public virtual bool CanSplitSelectedItem(GUIItem carried)
-        {
-            return selected
-                && carried
-                && selected == carried
-                && IsStackSplitModifierPressed()
-                && selected.item != null
-                && selected.item.IsStackable()
-                && selected.item.stack > 1
-                && selected.hasLastInventory
-                && !selected.onMerchant;
-        }
-
-        public virtual bool CanSplitSelectedItemToSlot(GUIItemSlot slot, GUIItem carried)
-        {
-            if (!CanSplitSelectedItem(carried) || !slot)
-                return false;
-
-            var split = selected.item.CopyWithStack(1);
-            return slot.CanEquip(CreateValidationItem(split))
-                || (slot.item && slot.item.item != null && slot.item.item.CanStack(split));
-        }
-
-        protected virtual GUIItem CreateValidationItem(ItemInstance item)
-        {
-            var validation = CreateGUIItem(item);
-            validation.gameObject.SetActive(false);
-            Destroy(validation.gameObject);
-            return validation;
-        }
-
-        /// <summary>
-        /// Tries to place one item from the selected stack into an Inventory and opens the split menu.
-        /// </summary>
-        public virtual bool TrySplitSelectedItemToInventory(GUIInventory inventory, GUIItem carried)
-        {
-            if (!CanSplitSelectedItem(carried) || !inventory)
-                return false;
-
-            if (WouldSplitOverlapSourceInventoryCell(inventory, carried))
-            {
-                GameAudio.instance.PlayDeniedSound();
-                return true;
-            }
-
-            var splitItem = selected.item.CopyWithStack(1);
-            var splitGuiItem = CreateGUIItem(splitItem);
-
-            if (!inventory.TryPlace(splitGuiItem))
-            {
-                Destroy(splitGuiItem.gameObject);
-                GameAudio.instance.PlayDeniedSound();
-                return true;
-            }
-
-            CompleteInitialSplitMove(selected.item, splitItem, 0);
-            return true;
-        }
-
-        protected virtual bool WouldSplitOverlapSourceInventoryCell(GUIInventory inventory, GUIItem carried)
-        {
-            if (!inventory || !carried || inventory != carried.lastInventory)
-                return false;
-
-            var target = inventory.FindClosestCell(carried);
-            var source = carried.lastInventoryPosition;
-
-            return target.x < source.row + carried.item.rows
-                && target.x + carried.item.rows > source.row
-                && target.y < source.column + carried.item.columns
-                && target.y + carried.item.columns > source.column;
-        }
-
-        /// <summary>
-        /// Tries to place one item from the selected stack into an item slot and opens the split menu.
-        /// </summary>
-        public virtual bool TrySplitSelectedItemToSlot(GUIItemSlot slot, GUIItem carried)
-        {
-            if (!CanSplitSelectedItem(carried) || !slot)
-                return false;
-
-            var splitItem = selected.item.CopyWithStack(1);
-            var splitGuiItem = CreateGUIItem(splitItem);
-            var destinationInitialStack = 0;
-
-            if (slot.item && slot.item.item != null && slot.item.item.CanStack(splitItem))
-            {
-                destinationInitialStack = slot.item.item.stack;
-                slot.item.item.stack += 1;
-                Destroy(splitGuiItem.gameObject);
-                splitItem = slot.item.item;
-            }
-            else if (slot.CanEquip(splitGuiItem))
-            {
-                slot.Equip(splitGuiItem);
-            }
-            else
-            {
-                Destroy(splitGuiItem.gameObject);
-                GameAudio.instance.PlayDeniedSound();
-                return true;
-            }
-
-            CompleteInitialSplitMove(selected.item, splitItem, destinationInitialStack);
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to move one item from the selected stack into another visible stack and opens the split menu.
-        /// </summary>
-        public virtual bool TrySplitSelectedItemToExistingStack(GUIItem destination, GUIItem carried)
-        {
-            if (!CanSplitSelectedItem(carried) || !destination || destination == carried)
-                return false;
-
-            if (destination.item == null || !destination.item.CanStack(selected.item.CopyWithStack(1)))
-                return false;
-
-            var destinationInitialStack = destination.item.stack;
-            destination.item.stack += 1;
-            CompleteInitialSplitMove(selected.item, destination.item, destinationInitialStack);
-            return true;
-        }
-
-        protected virtual void CompleteInitialSplitMove(
-            ItemInstance source,
-            ItemInstance destination,
-            int destinationInitialStack
-        )
-        {
-            source.stack -= 1;
-            DestroySplitPreview();
-            selected.TryMoveToLastPosition();
-            ShowStackSplitMenu(source, destination, destinationInitialStack);
-        }
-
-        protected virtual void ShowStackSplitMenu(
-            ItemInstance source,
-            ItemInstance destination,
-            int destinationInitialStack
-        )
-        {
-            if (!m_stackSplitMenu)
-                m_stackSplitMenu = GUIStackSplitMenu.Create(transform);
-
-            m_stackSplitMenu.Show(source, destination, 1, destinationInitialStack);
-        }
-
-        protected virtual void HandleSplitPreview()
-        {
-            if (!selected)
-            {
-                DestroySplitPreview();
-                return;
-            }
-
-            if (!CanSplitSelectedItem(selected))
-            {
-                DestroySplitPreview();
-                return;
-            }
-
-            if (m_splitPreview || !selected.lastInventory)
-                return;
-
-            m_splitPreview = selected.lastInventory.CreateVisualCopy(
-                selected,
-                selected.lastInventoryPosition
-            );
-        }
-
-        protected virtual void DestroySplitPreview()
-        {
-            if (m_splitPreview)
-                Destroy(m_splitPreview.gameObject);
-
-            m_splitPreview = null;
         }
 
         protected virtual bool TryDropPetInventoryItemOnUi()
@@ -657,7 +461,6 @@ namespace PLAYERTWO.ARPGProject
         protected virtual void Update()
         {
             HandleSelectedPetItemPointerClick();
-            HandleSplitPreview();
         }
 
         protected virtual void LateUpdate()
