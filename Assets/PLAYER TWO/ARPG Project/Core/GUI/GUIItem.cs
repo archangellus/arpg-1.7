@@ -255,21 +255,6 @@ namespace PLAYERTWO.ARPGProject
             inventory && m_lastInventory == inventory;
 
         /// <summary>
-        /// Returns the Inventory this GUI Item was last removed from.
-        /// </summary>
-        public GUIInventory lastInventory => m_lastInventory;
-
-        /// <summary>
-        /// Returns the Inventory cell this GUI Item was last removed from.
-        /// </summary>
-        public InventoryCell lastInventoryPosition => m_lastInventoryPosition;
-
-        /// <summary>
-        /// Returns true if this GUI Item was last removed from an Inventory.
-        /// </summary>
-        public bool hasLastInventory => m_lastInventory;
-
-        /// <summary>
         /// Sets the last position of this GUI Item from a given GUI Slot.
         /// </summary>
         /// <param name="slot">The GUI Slot you want to set as last one.</param>
@@ -445,9 +430,6 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool TryDropOnItemSlot(GUIItemSlot slot)
         {
-            if (GUI.instance.TrySplitSelectedItemToSlot(slot, this))
-                return true;
-
             if (slot.TryEquipOrStackSelectedItem())
                 return true;
 
@@ -458,9 +440,6 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual bool TryDropOnInventory(GUIInventory inventory)
         {
-            if (GUI.instance.TrySplitSelectedItemToInventory(inventory, this))
-                return true;
-
             if (inventory.TryPlace(this))
                 GUI.instance.Deselect();
             else
@@ -482,9 +461,6 @@ namespace PLAYERTWO.ARPGProject
 
         public virtual void OnDrop(PointerEventData _)
         {
-            if (GUI.instance.TrySplitSelectedItemToExistingStack(this, GUI.instance.selected))
-                return;
-
             if (TryStack(GUI.instance.selected))
                 GUI.instance.ClearSelection();
         }
@@ -523,12 +499,6 @@ namespace PLAYERTWO.ARPGProject
                 m_hovering = false;
                 GUIItemInspector.instance.Hide();
             }
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (item != null)
-                item.onStackChanged -= UpdateStackText;
         }
     }
 }
