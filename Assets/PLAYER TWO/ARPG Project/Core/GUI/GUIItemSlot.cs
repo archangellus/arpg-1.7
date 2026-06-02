@@ -220,6 +220,12 @@ namespace PLAYERTWO.ARPGProject
         {
             if (GUI.instance.selected)
             {
+                if (GUI.instance.TrySplitSelectedItemToSlot(this, GUI.instance.selected))
+                {
+                    m_hovering = false;
+                    return;
+                }
+
                 if (!TryEquipOrStackSelectedItem())
                 {
                     GUI.instance.selected.TryMoveToLastPosition();
@@ -251,7 +257,11 @@ namespace PLAYERTWO.ARPGProject
             {
                 m_image.color = invalid;
 
-                if (CanEquip(GUI.instance.selected) || CanStack(GUI.instance.selected))
+                if (
+                    CanEquip(GUI.instance.selected)
+                    || CanStack(GUI.instance.selected)
+                    || GUI.instance.CanSplitSelectedItemToSlot(this, GUI.instance.selected)
+                )
                     m_image.color = valid;
             }
 #if UNITY_STANDALONE || UNITY_WEBGL
