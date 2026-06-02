@@ -163,14 +163,35 @@ namespace PLAYERTWO.ARPGProject
         /// <param name="columnId">The column you want to place the item.</param>
         public virtual void Place(GUIItem item, int rowId, int columnId)
         {
-            var posX = columnId * Inventory.CellSize - size.x / 2 + item.size.x / 2;
-            var posY = size.y / 2 - item.size.y / 2 - rowId * Inventory.CellSize;
-            item.transform.SetParent(itemsContainer);
-            ((RectTransform)item.transform).anchoredPosition = new Vector2(posX, posY);
+            SetItemPosition(item, rowId, columnId);
             item.interactable = true;
             m_items.Add(item);
             PlayAudio(placeClip);
             UpdateSlots();
+        }
+
+        /// <summary>
+        /// Creates a non-interactable visual copy of a GUI Item in a cell without changing the Inventory.
+        /// </summary>
+        /// <param name="source">The GUI Item whose icon and stack text will be copied.</param>
+        /// <param name="cell">The cell where the visual copy should be placed.</param>
+        public virtual GUIItem CreateVisualCopy(GUIItem source, InventoryCell cell)
+        {
+            if (!source || source.item == null)
+                return null;
+
+            var copy = GUI.instance.CreateGUIItem(source.item, itemsContainer);
+            SetItemPosition(copy, cell.row, cell.column);
+            copy.interactable = false;
+            return copy;
+        }
+
+        protected virtual void SetItemPosition(GUIItem item, int rowId, int columnId)
+        {
+            var posX = columnId * Inventory.CellSize - size.x / 2 + item.size.x / 2;
+            var posY = size.y / 2 - item.size.y / 2 - rowId * Inventory.CellSize;
+            item.transform.SetParent(itemsContainer);
+            ((RectTransform)item.transform).anchoredPosition = new Vector2(posX, posY);
         }
 
         /// <summary>
@@ -406,6 +427,9 @@ namespace PLAYERTWO.ARPGProject
             if (GUI.instance.TryPlaceSelectedPetItem(this))
                 return;
 
+            if (GUI.instance.TrySplitSelectedItemToInventory(this, GUI.instance.selected))
+                return;
+
             if (TryPlace(GUI.instance.selected))
                 GUI.instance.Deselect();
             else
@@ -417,6 +441,12 @@ namespace PLAYERTWO.ARPGProject
         {
             if (!GUI.instance.selected)
                 return;
+
+            if (GUI.instance.TrySplitSelectedItemToInventory(this, GUI.instance.selected))
+            {
+                UpdateSlots();
+                return;
+            }
 
             if (TryPlace(GUI.instance.selected))
                 GUI.instance.Deselect();
