@@ -116,6 +116,20 @@ namespace PLAYERTWO.ARPGProject
         }
 
         /// <summary>
+        /// Creates an ItemAttributes instance with the same values as another instance.
+        /// </summary>
+        /// <param name="other">The attributes to copy.</param>
+        public ItemAttributes(ItemAttributes other)
+            : this()
+        {
+            if (other == null)
+                return;
+
+            foreach (AttributeType type in System.Enum.GetValues(typeof(AttributeType)))
+                m_values[type] = other[type];
+        }
+
+        /// <summary>
         /// Gets or sets the value for the given attribute type.
         /// </summary>
         public int this[AttributeType type]
