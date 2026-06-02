@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2486240716037880212}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.8733907, y: 1.1180619, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -167,10 +167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: decd76bfa8e4822419710696db249742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playSpawnAnimation: 1
+  animateLocallyWhenChildOfCollectible: 1
   jumpDuration: 0.4
   jumpDistance: 1
   jumpHeight: 1
-  spinRate: 20
+  spinRate: 0
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -195,14 +197,18 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  enableDespawn: 1
+  enableDespawn: 0
   timeToDespawn: 60
+  destroyCollectibleRootOnDespawn: 0
+  useARPGCollectibleInteraction: 1
+  useLevelPlayerAsDefaultCollector: 1
   volume: 1.5
   pitchRange: {x: 0.95, y: 1.05}
   pickupClips:
   - {fileID: 8300000, guid: c4c6337e3bccc064d96e137202ff777f, type: 3}
   - {fileID: 8300000, guid: ac326881a717f9440b357c80fe759ac8, type: 3}
   - {fileID: 8300000, guid: dabd064f027f53c4db2c1ec57ce353e0, type: 3}
+  enableDebugLogs: 0
 --- !u!135 &2591896974795309236
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -220,7 +226,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.16018875
   m_Center: {x: -0.0036992133, y: 0.003017351, z: -0.0021001995}

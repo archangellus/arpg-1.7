@@ -87,6 +87,23 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("Mouse button used for click and hold interactions when mouse interaction is enabled.")]
         public InteractionMouseButton mouseButtonToInteract = InteractionMouseButton.Left;
 
+        [Header("Player Facing")]
+        [Tooltip("Rotate the player toward the selected interactable only after interaction input starts, not while the prompt is merely active.")]
+        public bool rotatePlayerToFaceInteractable;
+
+        [Tooltip("Optional transform to rotate instead of the player Entity transform. Use this when only a model child should turn.")]
+        public Transform playerRotationTransform;
+
+        [Tooltip("When true, ignore height differences and rotate only around the Y axis. Recommended for top-down ARPG cameras.")]
+        public bool useFlatPlayerFacing = true;
+
+        [Tooltip("When true, face the interactable instantly when interaction input starts. When false, rotate using Player Rotation Speed until the target is faced.")]
+        public bool snapPlayerRotationToInteractable;
+
+        [Min(1f)]
+        [Tooltip("Degrees per second used when Snap Player Rotation To Interactable is disabled.")]
+        public float playerRotationSpeed = 720f;
+
         [Header("Universal Prompt Settings")]
         public ARPGInteractionPrompt prompt;
         public Sprite universalPromptIcon;
@@ -118,6 +135,8 @@ namespace PLAYERTWO.ARPGProject
         protected bool m_holdCompletedThisPress;
         protected string m_lastInvalidPlayerTag;
         protected Camera m_cachedCamera;
+        protected Transform m_playerFacingTarget;
+        protected bool m_playerFacingActive;
 
         public static ARPGInteractionManager instance { get; protected set; }
 
@@ -167,6 +186,7 @@ namespace PLAYERTWO.ARPGProject
             RefreshCurrentInteractable();
             UpdatePrompt();
             HandleInput();
+            UpdatePlayerFacing();
         }
 
         protected virtual void ResolvePlayer()
@@ -623,6 +643,81 @@ namespace PLAYERTWO.ARPGProject
 
         protected virtual Camera GetPromptCamera() => GetInteractionCamera();
 
+        protected virtual Transform GetPlayerRotationTransform() =>
+            playerRotationTransform ? playerRotationTransform : playerTransform;
+
+        protected virtual void StartPlayerFacingInteraction()
+        {
+            if (!rotatePlayerToFaceInteractable)
+                return;
+
+            var rotationTransform = GetPlayerRotationTransform();
+            var target = GetTargetTransform(m_current, m_currentLegacy);
+
+            if (!rotationTransform || !target)
+                return;
+
+            m_playerFacingTarget = target;
+            m_playerFacingActive = true;
+            UpdatePlayerFacing();
+        }
+
+        protected virtual void StopPlayerFacingInteraction()
+        {
+            m_playerFacingActive = false;
+            m_playerFacingTarget = null;
+        }
+
+        protected virtual void UpdatePlayerFacing()
+        {
+            if (!m_playerFacingActive)
+                return;
+
+            if (!rotatePlayerToFaceInteractable)
+            {
+                StopPlayerFacingInteraction();
+                return;
+            }
+
+            var rotationTransform = GetPlayerRotationTransform();
+
+            if (!rotationTransform || !m_playerFacingTarget)
+            {
+                StopPlayerFacingInteraction();
+                return;
+            }
+
+            var direction = m_playerFacingTarget.position - rotationTransform.position;
+
+            if (useFlatPlayerFacing)
+                direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.0001f)
+            {
+                StopPlayerFacingInteraction();
+                return;
+            }
+
+            var targetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+
+            if (snapPlayerRotationToInteractable)
+            {
+                rotationTransform.rotation = targetRotation;
+                StopPlayerFacingInteraction();
+                return;
+            }
+
+            var step = playerRotationSpeed * Time.deltaTime;
+            rotationTransform.rotation = Quaternion.RotateTowards(
+                rotationTransform.rotation,
+                targetRotation,
+                step
+            );
+
+            if (Quaternion.Angle(rotationTransform.rotation, targetRotation) <= 0.1f)
+                StopPlayerFacingInteraction();
+        }
+
         protected virtual void UpdatePrompt()
         {
             if (!prompt)
@@ -696,13 +791,21 @@ namespace PLAYERTWO.ARPGProject
             }
 
             if (WasInteractionInputPressedThisFrame())
+            {
+                StartPlayerFacingInteraction();
                 CompleteInteraction();
+            }
         }
 
         protected virtual void HandleHoldInput()
         {
-            if (IsInteractionInputPressed() && !m_holdCompletedThisPress)
+            var inputPressed = IsInteractionInputPressed();
+
+            if (inputPressed && !m_holdCompletedThisPress)
             {
+                if (m_holdTime <= 0f)
+                    StartPlayerFacingInteraction();
+
                 m_holdTime += Time.deltaTime;
 
                 if (m_holdTime >= m_current.holdDuration)
@@ -712,8 +815,11 @@ namespace PLAYERTWO.ARPGProject
                 }
             }
 
-            if (!IsInteractionInputPressed())
+            if (!inputPressed)
+            {
                 ResetHold();
+                StopPlayerFacingInteraction();
+            }
         }
 
         protected virtual bool IsInteractionInputPressed() =>

@@ -25569,6 +25569,7 @@ GameObject:
   - component: {fileID: 3043232846201754691}
   - component: {fileID: 6284599845968256153}
   - component: {fileID: 8179862490445287946}
+  - component: {fileID: 8194932457037081385}
   m_Layer: 8
   m_Name: HumanFemale_Skin
   m_TagString: Untagged
@@ -63942,7 +63943,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd775d84c98fad47bc3176726ddc02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShatterStone.PickaxeAnimationEventRelay
-  pickaxeController: {fileID: 0}
+  enableDebugLogs: 1
+  searchRoot: {fileID: 0}
+  allowGlobalSceneSearch: 1
+--- !u!114 &8194932457037081385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6235072306971297195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212e7f6aa13a70ef198843522da6b96c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationAudioRelay
 --- !u!1 &6268540230067057091
 GameObject:
   m_ObjectHideFlags: 0

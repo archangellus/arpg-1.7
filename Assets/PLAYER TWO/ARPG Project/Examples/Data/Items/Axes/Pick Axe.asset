@@ -21,7 +21,7 @@ MonoBehaviour:
   columns: 2
   canStack: 0
   stackCapacity: 0
-  maxDurability: 0
+  maxDurability: 99999
   requiredLevel: 1
   requiredStrength: 1
   requiredDexterity: 1
