@@ -32,6 +32,10 @@ namespace PLAYERTWO.ARPGProject
         [Tooltip("The initial energy of this Entity.")]
         public int energy = 10;
 
+        [Header("Formula Settings")]
+        [Tooltip("Optional visual formula graph that overrides built-in dynamic stat calculations.")]
+        public EntityStatsFormulaGraph formulaGraph;
+
         [Header("Combo Settings")]
         [Tooltip("If true, the Entity will always use the base combo stats.")]
         public bool alwaysUseBaseComboStats;
@@ -723,6 +727,122 @@ namespace PLAYERTWO.ARPGProject
         {
             success = Random.value > 1 - criticalChance;
             return success ? Game.instance.criticalMultiplier : 1;
+        }
+
+
+        /// <summary>
+        /// Evaluates an optional visual formula override for a dynamic stat.
+        /// </summary>
+        protected virtual bool TryEvaluateFormula(EntityStatsFormulaTarget target, out float value)
+        {
+            value = 0f;
+
+            if (!formulaGraph)
+                return false;
+
+            return formulaGraph.TryEvaluate(target, CreateFormulaContext(), out value);
+        }
+
+        /// <summary>
+        /// Creates the value provider used by visual stat formula graphs.
+        /// </summary>
+        protected virtual EntityStatsFormulaContext CreateFormulaContext() =>
+            new EntityStatsFormulaContext(GetFormulaInputValue);
+
+        /// <summary>
+        /// Returns a value that can be consumed by a visual stat formula node.
+        /// </summary>
+        protected virtual float GetFormulaInputValue(EntityStatsFormulaInput input)
+        {
+            switch (input)
+            {
+                case EntityStatsFormulaInput.Level:
+                    return level;
+                case EntityStatsFormulaInput.Strength:
+                    return strength;
+                case EntityStatsFormulaInput.Dexterity:
+                    return dexterity;
+                case EntityStatsFormulaInput.Vitality:
+                    return vitality;
+                case EntityStatsFormulaInput.Energy:
+                    return energy;
+                case EntityStatsFormulaInput.WeaponDamageMin:
+                    return GetItemsDamage().min;
+                case EntityStatsFormulaInput.WeaponDamageMax:
+                    return GetItemsDamage().max;
+                case EntityStatsFormulaInput.ItemDefense:
+                    return GetItemsDefense();
+                case EntityStatsFormulaInput.ItemAttackSpeed:
+                    return GetItemsAttackSpeed();
+                case EntityStatsFormulaInput.ItemChanceToBlock:
+                    return GetItemsChanceToBlock();
+                case EntityStatsFormulaInput.AdditionalDamage:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Damage];
+                case EntityStatsFormulaInput.AdditionalMagicDamage:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.MagicDamage];
+                case EntityStatsFormulaInput.AdditionalHealth:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Health];
+                case EntityStatsFormulaInput.AdditionalMana:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Mana];
+                case EntityStatsFormulaInput.AdditionalStrength:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Strength];
+                case EntityStatsFormulaInput.AdditionalDexterity:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
+                case EntityStatsFormulaInput.AdditionalVitality:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Vitality];
+                case EntityStatsFormulaInput.AdditionalEnergy:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Energy];
+                case EntityStatsFormulaInput.AdditionalAttackSpeed:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.AttackSpeed];
+                case EntityStatsFormulaInput.AdditionalDefense:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Defense];
+                case EntityStatsFormulaInput.AdditionalChanceOfBlockingPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.ChanceOfBlockingPercent];
+                case EntityStatsFormulaInput.AdditionalBlockRecoveryPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.BlockRecoveryPercent];
+                case EntityStatsFormulaInput.AdditionalChanceToStunPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.ChanceToStunPercent];
+                case EntityStatsFormulaInput.AdditionalStunRecoveryPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.StunRecoveryPercent];
+                case EntityStatsFormulaInput.AdditionalAccuracy:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Accuracy];
+                case EntityStatsFormulaInput.AdditionalAccuracyPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.AccuracyPercent];
+                case EntityStatsFormulaInput.AdditionalEvasion:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.Evasion];
+                case EntityStatsFormulaInput.AdditionalEvasionPercent:
+                    return m_additionalAttributes[ItemAttributes.AttributeType.EvasionPercent];
+                case EntityStatsFormulaInput.HealthMultiplier:
+                    return m_additionalAttributes.GetHealthMultiplier();
+                case EntityStatsFormulaInput.ManaMultiplier:
+                    return m_additionalAttributes.GetManaMultiplier();
+                case EntityStatsFormulaInput.DamageMultiplier:
+                    return m_additionalAttributes.GetDamageMultiplier();
+                case EntityStatsFormulaInput.MagicDamageMultiplier:
+                    return m_additionalAttributes.GetMagicDamageMultiplier();
+                case EntityStatsFormulaInput.CriticalMultiplier:
+                    return m_additionalAttributes.GetCriticalMultiplier();
+                case EntityStatsFormulaInput.DefenseMultiplier:
+                    return m_additionalAttributes.GetDefenseMultiplier();
+                case EntityStatsFormulaInput.BaseExperience:
+                    return Game.instance.baseExperience;
+                case EntityStatsFormulaInput.ExperiencePerLevel:
+                    return Game.instance.experiencePerLevel;
+                case EntityStatsFormulaInput.MaxAttackSpeed:
+                    return Game.instance.maxAttackSpeed;
+                case EntityStatsFormulaInput.MaxBlockChance:
+                    return Game.instance.maxBlockChance;
+                case EntityStatsFormulaInput.MaxBlockSpeed:
+                    return Game.instance.maxBlockSpeed;
+                case EntityStatsFormulaInput.MaxStunChance:
+                    return Game.instance.maxStunChance;
+                case EntityStatsFormulaInput.MaxStunSpeed:
+                    return Game.instance.maxStunSpeed;
+                case EntityStatsFormulaInput.AccuracyBase:
+                    return Game.instance.accuracyBase;
+                default:
+                    return 0f;
+            }
         }
 
         /// <summary>
