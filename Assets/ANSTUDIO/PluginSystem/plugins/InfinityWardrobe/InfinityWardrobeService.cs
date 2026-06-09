@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,9 @@ namespace PLAYERTWO.ARPGProject.InfinityWardrobe
         private InfinityWardrobeLibrary m_library;
 
         private readonly List<InfinityWardrobeBinder> m_binders = new();
+        private Coroutine m_attachRoutine;
+
+        private static readonly WaitForSeconds k_AttachPollDelay = new(0.5f);
 
         private void Awake()
         {
@@ -40,12 +44,20 @@ namespace PLAYERTWO.ARPGProject.InfinityWardrobe
             SceneManager.sceneLoaded += HandleSceneLoaded;
             EventBus.InfinityWardrobeRefreshEvent += HandleRefreshRequested;
             AttachBindersToScene();
+
+            m_attachRoutine ??= StartCoroutine(AttachBindersRoutine());
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= HandleSceneLoaded;
             EventBus.InfinityWardrobeRefreshEvent -= HandleRefreshRequested;
+
+            if (m_attachRoutine != null)
+            {
+                StopCoroutine(m_attachRoutine);
+                m_attachRoutine = null;
+            }
         }
 
         public void Shutdown()
@@ -64,12 +76,24 @@ namespace PLAYERTWO.ARPGProject.InfinityWardrobe
             AttachBindersToScene();
         }
 
+        private IEnumerator AttachBindersRoutine()
+        {
+            while (enabled)
+            {
+                yield return k_AttachPollDelay;
+                AttachBindersToScene();
+            }
+        }
+
         private void HandleRefreshRequested(Entity entity)
         {
             if (entity != null && entity.items)
             {
+                AttachBinder(entity.items);
+
                 if (entity.items.TryGetComponent<InfinityWardrobeBinder>(out var binder))
                     binder.ApplyImmediate();
+
                 return;
             }
 
