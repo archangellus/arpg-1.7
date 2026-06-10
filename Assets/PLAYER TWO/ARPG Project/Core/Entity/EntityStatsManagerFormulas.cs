@@ -9,23 +9,27 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual MinMax CalculateDamage()
         {
-            var fallback = CalculateDefaultDamage();
             var hasMinOverride = TryEvaluateFormula(
                 EntityStatsFormulaTarget.MinDamage,
-                fallback.min,
                 out var minOverride
             );
             var hasMaxOverride = TryEvaluateFormula(
                 EntityStatsFormulaTarget.MaxDamage,
-                fallback.max,
                 out var maxOverride
             );
 
-            return new MinMax
+            if (hasMinOverride || hasMaxOverride)
             {
-                min = hasMinOverride ? Mathf.RoundToInt(minOverride) : fallback.min,
-                max = hasMaxOverride ? Mathf.RoundToInt(maxOverride) : fallback.max,
-            };
+                var fallback = CalculateDefaultDamage();
+
+                return new MinMax
+                {
+                    min = hasMinOverride ? Mathf.RoundToInt(minOverride) : fallback.min,
+                    max = hasMaxOverride ? Mathf.RoundToInt(maxOverride) : fallback.max,
+                };
+            }
+
+            return CalculateDefaultDamage();
         }
 
         protected virtual MinMax CalculateDefaultDamage()
@@ -52,23 +56,27 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual MinMax CalculateMagicDamage()
         {
-            var fallback = CalculateDefaultMagicDamage();
             var hasMinOverride = TryEvaluateFormula(
                 EntityStatsFormulaTarget.MinMagicDamage,
-                fallback.min,
                 out var minOverride
             );
             var hasMaxOverride = TryEvaluateFormula(
                 EntityStatsFormulaTarget.MaxMagicDamage,
-                fallback.max,
                 out var maxOverride
             );
 
-            return new MinMax
+            if (hasMinOverride || hasMaxOverride)
             {
-                min = hasMinOverride ? Mathf.RoundToInt(minOverride) : fallback.min,
-                max = hasMaxOverride ? Mathf.RoundToInt(maxOverride) : fallback.max,
-            };
+                var fallback = CalculateDefaultMagicDamage();
+
+                return new MinMax
+                {
+                    min = hasMinOverride ? Mathf.RoundToInt(minOverride) : fallback.min,
+                    max = hasMaxOverride ? Mathf.RoundToInt(maxOverride) : fallback.max,
+                };
+            }
+
+            return CalculateDefaultMagicDamage();
         }
 
         protected virtual MinMax CalculateDefaultMagicDamage()
@@ -89,28 +97,20 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateNextLevelExperience()
         {
-            var fallback = CalculateDefaultNextLevelExperience();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.NextLevelExperience, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.NextLevelExperience, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultNextLevelExperience() =>
-            Game.instance.baseExperience + (Game.instance.experiencePerLevel * (level - 1));
+            return Game.instance.baseExperience + (Game.instance.experiencePerLevel * (level - 1));
+        }
 
         /// <summary>
         /// Calculates the max health points of the entity.
         /// </summary>
         protected virtual int CalculateMaxHealth()
         {
-            var fallback = CalculateDefaultMaxHealth();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.MaxHealth, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.MaxHealth, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultMaxHealth()
-        {
             var effectiveVitality =
                 vitality + m_additionalAttributes[ItemAttributes.AttributeType.Vitality];
 
@@ -128,14 +128,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateMaxMana()
         {
-            var fallback = CalculateDefaultMaxMana();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.MaxMana, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.MaxMana, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultMaxMana()
-        {
             var effectiveEnergy =
                 energy + m_additionalAttributes[ItemAttributes.AttributeType.Energy];
 
@@ -153,14 +148,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateAttackSpeed()
         {
-            var fallback = CalculateDefaultAttackSpeed();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.AttackSpeed, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.AttackSpeed, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultAttackSpeed()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
 
@@ -176,14 +166,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual float CalculateCriticalChance()
         {
-            var fallback = CalculateDefaultCriticalChance();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.CriticalChance, fallback, out var value)
-                ? value
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.CriticalChance, out var value))
+                return value;
 
-        protected virtual float CalculateDefaultCriticalChance()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
 
@@ -197,14 +182,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateDefense()
         {
-            var fallback = CalculateDefaultDefense();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.Defense, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.Defense, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultDefense()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
 
@@ -226,14 +206,9 @@ namespace PLAYERTWO.ARPGProject
             if (m_items == null || !m_items.IsUsingShield() || m_items.GetLeftHand().IsBroken())
                 return 0;
 
-            var fallback = CalculateDefaultChanceToBlock();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.ChanceToBlock, fallback, out var value)
-                ? value
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.ChanceToBlock, out var value))
+                return value;
 
-        protected virtual float CalculateDefaultChanceToBlock()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
             var baseChance = (effectiveDexterity / 20 + 5 + level) / 100f + GetItemsChanceToBlock();
@@ -250,14 +225,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateBlockSpeed()
         {
-            var fallback = CalculateDefaultBlockSpeed();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.BlockSpeed, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.BlockSpeed, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultBlockSpeed()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
             var baseSpeed = effectiveDexterity / 5 + 100 + level * 10;
@@ -273,14 +243,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual float CalculateStunChance()
         {
-            var fallback = CalculateDefaultStunChance();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.StunChance, fallback, out var value)
-                ? value
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.StunChance, out var value))
+                return value;
 
-        protected virtual float CalculateDefaultStunChance()
-        {
             var effectiveStrength =
                 strength + m_additionalAttributes[ItemAttributes.AttributeType.Strength];
             var baseChance = (effectiveStrength / 10 + level) / 100f;
@@ -296,14 +261,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateStunSpeed()
         {
-            var fallback = CalculateDefaultStunSpeed();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.StunSpeed, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.StunSpeed, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultStunSpeed()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
             var baseSpeed = effectiveDexterity / 2 + 100 + level * 20;
@@ -322,14 +282,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateAccuracy()
         {
-            var fallback = CalculateDefaultAccuracy();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.Accuracy, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.Accuracy, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultAccuracy()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
             var flatBonus = m_additionalAttributes[ItemAttributes.AttributeType.Accuracy];
@@ -350,14 +305,9 @@ namespace PLAYERTWO.ARPGProject
         /// </summary>
         protected virtual int CalculateEvasion()
         {
-            var fallback = CalculateDefaultEvasion();
-            return TryEvaluateFormula(EntityStatsFormulaTarget.Evasion, fallback, out var value)
-                ? Mathf.RoundToInt(value)
-                : fallback;
-        }
+            if (TryEvaluateFormula(EntityStatsFormulaTarget.Evasion, out var value))
+                return Mathf.RoundToInt(value);
 
-        protected virtual int CalculateDefaultEvasion()
-        {
             var effectiveDexterity =
                 dexterity + m_additionalAttributes[ItemAttributes.AttributeType.Dexterity];
             var flatBonus = m_additionalAttributes[ItemAttributes.AttributeType.Evasion];

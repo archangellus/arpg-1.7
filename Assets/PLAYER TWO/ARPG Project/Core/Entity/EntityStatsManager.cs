@@ -733,117 +733,21 @@ namespace PLAYERTWO.ARPGProject
         /// <summary>
         /// Evaluates an optional visual formula override for a dynamic stat.
         /// </summary>
-        protected virtual bool TryEvaluateFormula(EntityStatsFormulaTarget target, out float value) =>
-            TryEvaluateFormula(target, 0f, out value);
-
-        /// <summary>
-        /// Evaluates an optional visual formula override for a dynamic stat and exposes the built-in
-        /// value to formula graphs through the BuiltInValue node/input.
-        /// </summary>
-        protected virtual bool TryEvaluateFormula(
-            EntityStatsFormulaTarget target,
-            float builtInValue,
-            out float value
-        )
+        protected virtual bool TryEvaluateFormula(EntityStatsFormulaTarget target, out float value)
         {
             value = 0f;
 
             if (!formulaGraph)
                 return false;
 
-            return formulaGraph.TryEvaluate(
-                target,
-                CreateFormulaContext(target, builtInValue),
-                out value
-            );
+            return formulaGraph.TryEvaluate(target, CreateFormulaContext(), out value);
         }
 
         /// <summary>
         /// Creates the value provider used by visual stat formula graphs.
         /// </summary>
         protected virtual EntityStatsFormulaContext CreateFormulaContext() =>
-            CreateFormulaContext(default, 0f);
-
-        /// <summary>
-        /// Creates the value provider used by visual stat formula graphs.
-        /// </summary>
-        protected virtual EntityStatsFormulaContext CreateFormulaContext(
-            EntityStatsFormulaTarget target,
-            float builtInValue
-        ) => new EntityStatsFormulaContext(
-            target,
-            builtInValue,
-            GetFormulaInputValue,
-            ResolveReferencedFormula
-        );
-
-        /// <summary>
-        /// Evaluates a referenced formula target for FormulaReference nodes while guarding target cycles.
-        /// </summary>
-        protected virtual bool ResolveReferencedFormula(
-            EntityStatsFormulaTarget target,
-            HashSet<EntityStatsFormulaTarget> visitingTargets,
-            out float value
-        )
-        {
-            value = 0f;
-
-            if (!formulaGraph || visitingTargets.Contains(target))
-                return false;
-
-            return formulaGraph.TryEvaluate(
-                target,
-                CreateFormulaContext(target, CalculateDefaultFormulaValue(target)),
-                visitingTargets,
-                out value
-            );
-        }
-
-        /// <summary>
-        /// Calculates the built-in value for a formula target without evaluating graph overrides.
-        /// </summary>
-        protected virtual float CalculateDefaultFormulaValue(EntityStatsFormulaTarget target)
-        {
-            switch (target)
-            {
-                case EntityStatsFormulaTarget.MinDamage:
-                    return CalculateDefaultDamage().min;
-                case EntityStatsFormulaTarget.MaxDamage:
-                    return CalculateDefaultDamage().max;
-                case EntityStatsFormulaTarget.MinMagicDamage:
-                    return CalculateDefaultMagicDamage().min;
-                case EntityStatsFormulaTarget.MaxMagicDamage:
-                    return CalculateDefaultMagicDamage().max;
-                case EntityStatsFormulaTarget.NextLevelExperience:
-                    return CalculateDefaultNextLevelExperience();
-                case EntityStatsFormulaTarget.MaxHealth:
-                    return CalculateDefaultMaxHealth();
-                case EntityStatsFormulaTarget.MaxMana:
-                    return CalculateDefaultMaxMana();
-                case EntityStatsFormulaTarget.AttackSpeed:
-                    return CalculateDefaultAttackSpeed();
-                case EntityStatsFormulaTarget.CriticalChance:
-                    return CalculateDefaultCriticalChance();
-                case EntityStatsFormulaTarget.Defense:
-                    return CalculateDefaultDefense();
-                case EntityStatsFormulaTarget.ChanceToBlock:
-                    return m_items == null || !m_items.IsUsingShield() || m_items.GetLeftHand().IsBroken()
-                        ? 0f
-                        : CalculateDefaultChanceToBlock();
-                case EntityStatsFormulaTarget.BlockSpeed:
-                    return CalculateDefaultBlockSpeed();
-                case EntityStatsFormulaTarget.StunChance:
-                    return CalculateDefaultStunChance();
-                case EntityStatsFormulaTarget.StunSpeed:
-                    return CalculateDefaultStunSpeed();
-                case EntityStatsFormulaTarget.Accuracy:
-                    return CalculateDefaultAccuracy();
-                case EntityStatsFormulaTarget.Evasion:
-                    return CalculateDefaultEvasion();
-                default:
-                    return 0f;
-            }
-        }
+            new EntityStatsFormulaContext(GetFormulaInputValue);
 
         /// <summary>
         /// Returns a value that can be consumed by a visual stat formula node.
