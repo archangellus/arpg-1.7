@@ -269,3 +269,96 @@ The current graph inputs expose raw entity, item, attribute, and game-setting va
 - Incomplete formulas fall back to built-in calculations.
 - The editor-only window is not included in runtime builds.
 - Runtime formula assets can be reused by multiple entities.
+
+## Advanced Formula System Features
+
+The formula system now includes additional runtime safety and editor feedback features for larger balancing workflows.
+
+### Validation and Diagnostics
+
+Formula assets are validated for missing result nodes, duplicate result nodes, missing required input ports, stale connections, duplicate single-input connections, unused outputs, and node cycles. Invalid formulas continue to fall back to the built-in calculation rather than applying partial or unsafe results.
+
+### Built-In Value Node
+
+Use the `Built In Value` node when a formula should start from the original `EntityStatsManager` calculation and then modify it. This avoids duplicating the full built-in calculation in the graph.
+
+Examples:
+
+- `Built In Value × 1.25` for a 25% elite health bonus.
+- `Clamp(Built In Value, 0, MaxAttackSpeed)` for a safe attack speed override.
+- `Built In Value + 50` for a flat bonus on top of the default stat.
+
+### Formula Reference Node
+
+Use the `Formula Reference` node to read another enabled formula target from the same graph. The evaluator guards against cross-formula cycles, so circular dependencies fail validation/evaluation and fall back safely.
+
+### Target Metadata and Clamping
+
+Each formula target has metadata describing whether it is an integer, float, or normalized percent value. Runtime outputs are normalized before they are applied. Integer targets are rounded, negative stat outputs are clamped to zero, and capped targets such as block chance, stun chance, attack speed, block speed, and stun speed respect their game-setting maximums.
+
+### Expanded Operators
+
+Operators now include binary math, unary math, percent helpers, clamping, interpolation, and simple conditionals:
+
+- `Add`, `Subtract`, `Multiply`, `Divide`, `Min`, `Max`
+- `Clamp`
+- `Abs`, `Negate`, `Floor`, `Ceil`, `Round`, `Sqrt`, `Log`
+- `Power`
+- `PercentOf`
+- `Lerp`
+- `IfGreater`, `IfLess`, `Select`
+- `NormalizePercent`
+
+`NormalizePercent` converts designer-friendly percent values like `25` into normalized runtime values like `0.25`.
+
+### Preview Modes
+
+The editor preview can use sample data or values from the selected entity prefab. Preview output includes the formula result, the built-in value when available, and the delta between them.
+
+### Runtime Caching
+
+Graphs compile formula, node, and connection lookup dictionaries at runtime so evaluation does not need repeated list scans. The cache is invalidated when graph assets are edited or validated.
+
+### Data Safety and Versioning
+
+Graph assets include a schema version and validation cleanup for duplicate formula targets, missing result nodes, stale connections, and duplicate input connections. This provides a migration path for future formula graph changes.
+
+### Annotations and Group Boxes
+
+Use resizable comment boxes for free-form notes, and use `Group Selection` from the right-click menu to create a titled group box around selected nodes. Reroutes remain available as flow helpers for keeping long wires readable.
+
+### Automated Tests
+
+The evaluator includes editor tests for built-in-value formulas, divide-by-zero behavior, validation diagnostics, and percent-target clamping. Run them from Unity's Test Runner in Edit Mode.
+
+### JSON Import and Export
+
+Use `Export JSON` to save a graph snapshot that can be reviewed outside Unity or stored as a balancing backup. Use `Import JSON` to overwrite the selected graph asset with a previously exported snapshot. Imported data is validated and cleaned before the graph cache is rebuilt.
+
+### Searchable Node Creation
+
+Drag a connection into empty graph space to open the searchable node creation window. Nodes are grouped into Inputs, Constants, Math, Reusable, Flow, and Annotations categories, and operator entries include the designer-friendly `To Percent 0-1 / Normalize Percent` option.
+
+### Multi-Entity and Custom Previews
+
+The `Preview With` dropdown supports sample data, the selected entity prefab, all discovered entity prefabs, and custom attribute values. All-entity preview lists the first few prefab results in the toolbar so broad balance changes can be checked quickly. Custom preview fields let you edit level, strength, dexterity, vitality, and energy without changing a prefab.
+
+### Percent Constants and Percent Display
+
+Use the `% Constant` node for chance formulas. Enter designer-facing values like `25`, and the node outputs normalized runtime values like `0.25`. Normalized percent targets continue to show both the raw value and the human-readable percent value in previews.
+
+### Undo, Save Batching, and Organization Tools
+
+Node changes are batched through delayed editor saves so small field edits do not call `AssetDatabase.SaveAssets()` repeatedly. Use the toolbar `Save` button when you want to persist the asset to disk immediately. The toolbar also includes `Auto Layout`, `Group`, and `Frame All`; right-click handles duplicate/copy/cut/paste/delete operations.
+
+### Formula Function Assets
+
+Create reusable formula snippets from `Create > PLAYER TWO > ARPG Project > Entity > Stats Formula Function`, then reference them with a `Formula Function Asset` node. Function assets evaluate as raw reusable subgraphs in the current context, making common balance snippets reusable across graph assets.
+
+### Undo/Redo Details
+
+The editor records undo steps for formula enable toggles, node creation/deletion, node movement, edge connection/disconnection, field edits, auto-layout, duplication, JSON import, and example loading. Graph edits are batched through a delayed writeback so dragging nodes or changing fields does not repeatedly save assets to disk; switching formulas, closing the window, or pressing `Save` flushes pending graph changes first.
+
+### Graph Editing Shortcuts and Layout Notes
+
+Use the right-click graph menu for `Duplicate`, `Copy`, `Cut`, `Paste`, `Delete`, `Group Selection`, `Auto Layout`, and `Frame All`. The top toolbar intentionally keeps creation/edit controls compact and wraps when the window is narrow. Keyboard shortcuts are supported in the graph view: `Ctrl/Cmd+C` copies, `Ctrl/Cmd+X` cuts, `Ctrl/Cmd+V` pastes, `Ctrl/Cmd+D` duplicates, `Delete` deletes, `Ctrl/Cmd+Z` undoes, and `Ctrl/Cmd+Y` redoes. Auto-layout arranges nodes horizontally in rows. Use `Group Selection` to create a titled group box around selected nodes. The graph also includes a minimap and color-coded node headers for inputs/references, constants, operators, results, and annotations.
