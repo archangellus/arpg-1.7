@@ -21,6 +21,11 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
     public class EntityStatsFormulaEditorWindow : EditorWindow
     {
+        static readonly Color WindowBackground = new Color(0.09f, 0.10f, 0.12f, 1f);
+        static readonly Color ToolbarBackground = new Color(0.13f, 0.15f, 0.18f, 1f);
+        static readonly Color ToolbarAccent = new Color(0.33f, 0.56f, 0.92f, 1f);
+        static readonly Color PanelBackground = new Color(0.11f, 0.12f, 0.15f, 0.96f);
+
         EntityStatsFormulaGraph m_graphAsset;
         EntityStatsFormulaTarget m_target;
         EntityStatsFormulaTarget m_exampleTarget;
@@ -74,6 +79,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             rootVisualElement.Clear();
             rootVisualElement.style.flexDirection = FlexDirection.Column;
+            rootVisualElement.style.backgroundColor = WindowBackground;
 
             RefreshEntitySourceOptions();
 
@@ -82,11 +88,27 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             toolbar.style.flexWrap = Wrap.Wrap;
             toolbar.style.flexShrink = 0f;
             toolbar.style.alignItems = Align.Center;
-            toolbar.style.paddingLeft = 2f;
-            toolbar.style.paddingRight = 2f;
-            toolbar.style.paddingTop = 1f;
-            toolbar.style.paddingBottom = 1f;
-            toolbar.style.backgroundColor = new Color(0.21f, 0.21f, 0.21f, 1f);
+            toolbar.style.paddingLeft = 10f;
+            toolbar.style.paddingRight = 10f;
+            toolbar.style.paddingTop = 8f;
+            toolbar.style.paddingBottom = 8f;
+            toolbar.style.backgroundColor = ToolbarBackground;
+            toolbar.style.borderBottomWidth = 1f;
+            toolbar.style.borderBottomColor = new Color(1f, 1f, 1f, 0.08f);
+
+            var title = new Label("Stats Formula Graph")
+            {
+                tooltip = "Build, preview, and maintain entity stat formulas.",
+                style =
+                {
+                    unityFontStyleAndWeight = FontStyle.Bold,
+                    fontSize = 15,
+                    color = ToolbarAccent,
+                    marginRight = 12f,
+                    marginLeft = 2f,
+                }
+            };
+            toolbar.Add(title);
             var assetField = new ObjectField("Graph")
             {
                 objectType = typeof(EntityStatsFormulaGraph),
@@ -171,6 +193,17 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 {
                     unityTextAlign = TextAnchor.MiddleLeft,
                     whiteSpace = WhiteSpace.Normal,
+                    color = new Color(0.82f, 0.9f, 1f, 1f),
+                    backgroundColor = PanelBackground,
+                    borderTopLeftRadius = 5f,
+                    borderTopRightRadius = 5f,
+                    borderBottomLeftRadius = 5f,
+                    borderBottomRightRadius = 5f,
+                    paddingLeft = 8f,
+                    paddingRight = 8f,
+                    paddingTop = 3f,
+                    paddingBottom = 3f,
+                    marginLeft = 4f,
                 }
             };
             toolbar.Add(m_previewLabel);
@@ -186,6 +219,8 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var field = new IntegerField(label) { value = getter() };
             field.style.width = 72f;
+            field.style.marginLeft = 2f;
+            field.style.marginRight = 2f;
             field.RegisterValueChangedCallback(evt =>
             {
                 setter(Mathf.Max(0, evt.newValue));
@@ -1001,6 +1036,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             focusable = true;
             style.flexGrow = 1;
             style.minHeight = 0f;
+            style.backgroundColor = new Color(0.075f, 0.085f, 0.105f, 1f);
 
             Insert(0, new GridBackground());
             this.AddManipulator(new ContentZoomer());
@@ -1020,7 +1056,12 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         void AddMiniMap()
         {
             var miniMap = new MiniMap { anchored = false };
-            miniMap.SetPosition(new Rect(12, 32, 220, 150));
+            miniMap.SetPosition(new Rect(16, 36, 240, 160));
+            miniMap.style.backgroundColor = new Color(0.08f, 0.09f, 0.11f, 0.86f);
+            miniMap.style.borderTopLeftRadius = 6f;
+            miniMap.style.borderTopRightRadius = 6f;
+            miniMap.style.borderBottomLeftRadius = 6f;
+            miniMap.style.borderBottomRightRadius = 6f;
             Add(miniMap);
         }
 
@@ -1682,6 +1723,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var node = new Node { title = GetTitle(data), userData = data, tooltip = GetTooltip(data) };
             node.SetPosition(data.position);
+            ApplyNodeChrome(node);
             ApplyCategoryStyle(node, data);
 
             switch (data.type)
@@ -1838,10 +1880,29 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             return nameField;
         }
 
+        static void ApplyNodeChrome(Node node)
+        {
+            node.style.backgroundColor = PanelBackground;
+            node.style.borderTopWidth = 1f;
+            node.style.borderRightWidth = 1f;
+            node.style.borderBottomWidth = 1f;
+            node.style.borderLeftWidth = 1f;
+            node.style.borderTopColor = new Color(1f, 1f, 1f, 0.12f);
+            node.style.borderRightColor = new Color(0f, 0f, 0f, 0.5f);
+            node.style.borderBottomColor = new Color(0f, 0f, 0f, 0.55f);
+            node.style.borderLeftColor = new Color(1f, 1f, 1f, 0.10f);
+            node.style.borderTopLeftRadius = 7f;
+            node.style.borderTopRightRadius = 7f;
+            node.style.borderBottomLeftRadius = 7f;
+            node.style.borderBottomRightRadius = 7f;
+        }
+
         static void ApplyCategoryStyle(Node node, EntityStatsFormulaNodeData data)
         {
             var color = GetCategoryColor(data);
             node.titleContainer.style.backgroundColor = color;
+            node.titleContainer.style.borderTopLeftRadius = 7f;
+            node.titleContainer.style.borderTopRightRadius = 7f;
             node.tooltip = GetTooltip(data);
         }
 
@@ -1952,6 +2013,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(float));
             port.portName = name;
+            StylePort(port, new Color(0.38f, 0.68f, 1f, 1f));
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.inputContainer.Add(port);
         }
@@ -1960,8 +2022,16 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
             port.portName = name;
+            StylePort(port, new Color(0.58f, 0.92f, 0.68f, 1f));
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.outputContainer.Add(port);
+        }
+
+        static void StylePort(Port port, Color color)
+        {
+            port.portColor = color;
+            port.style.marginTop = 2f;
+            port.style.marginBottom = 2f;
         }
 
         void AddConnection(EntityStatsFormulaConnectionData connection)
