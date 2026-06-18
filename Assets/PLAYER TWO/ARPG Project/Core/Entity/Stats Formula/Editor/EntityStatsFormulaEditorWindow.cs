@@ -147,9 +147,6 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             toolbar.Add(new Button(ImportJson) { text = "Import JSON" });
             toolbar.Add(new Button(() => Undo.PerformUndo()) { text = "Undo" });
             toolbar.Add(new Button(() => Undo.PerformRedo()) { text = "Redo" });
-            toolbar.Add(new Button(() => m_graphView.CopySelectionToClipboard()) { text = "Copy" });
-            toolbar.Add(new Button(() => m_graphView.CutSelectionToClipboard()) { text = "Cut" });
-            toolbar.Add(new Button(() => m_graphView.PasteClipboard()) { text = "Paste" });
             toolbar.Add(new Button(() => m_graphView.CreateGroupFromSelection()) { text = "Group" });
             toolbar.Add(new Button(() => m_graphView.AutoLayout()) { text = "Auto Layout" });
             toolbar.Add(new Button(() => m_graphView.FrameAllNodes()) { text = "Frame All" });
@@ -167,7 +164,15 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             AddCustomPreviewField(toolbar, "Vit", () => m_customVitality, value => m_customVitality = value);
             AddCustomPreviewField(toolbar, "Ene", () => m_customEnergy, value => m_customEnergy = value);
 
-            m_previewLabel = new Label("Preview: —") { style = { unityTextAlign = TextAnchor.MiddleLeft } };
+            m_previewLabel = new Label("Preview: —")
+            {
+                tooltip = "Shows the evaluated formula result for the selected preview source.",
+                style =
+                {
+                    unityTextAlign = TextAnchor.MiddleLeft,
+                    whiteSpace = WhiteSpace.Normal,
+                }
+            };
             toolbar.Add(m_previewLabel);
             rootVisualElement.Add(toolbar);
 
@@ -738,9 +743,16 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 return $"{label}: not connected";
 
             var metadata = EntityStatsFormulaTargetMetadataProvider.Get(m_formula.target, context);
-            var builtIn = context.hasBuiltInValue ? $" built-in {metadata.Format(context.builtInValue)}" : string.Empty;
-            var delta = context.hasBuiltInValue ? $" Δ {metadata.Format(value - context.builtInValue)}" : string.Empty;
-            return $"{label}: {metadata.Format(value)}{builtIn}{delta}";
+            var result = metadata.Format(value);
+
+            if (!context.hasBuiltInValue)
+                return $"{label} → Result {result}";
+
+            var builtIn = metadata.Format(context.builtInValue);
+            var difference = value - context.builtInValue;
+            var change = metadata.Format(difference);
+            var sign = difference > 0f ? "+" : string.Empty;
+            return $"{label} → Result {result} (Built-in {builtIn}, Change {sign}{change})";
         }
     }
 
@@ -1007,7 +1019,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         void AddMiniMap()
         {
-            var miniMap = new MiniMap { anchored = true };
+            var miniMap = new MiniMap { anchored = false };
             miniMap.SetPosition(new Rect(12, 32, 220, 150));
             Add(miniMap);
         }
@@ -1068,7 +1080,8 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             var position = GetContentPosition(evt.localMousePosition);
-            evt.menu.AppendAction("Create Node...", _ => OpenSearchAtPosition(position, null));
+            var screenPosition = GetScreenPosition(evt.localMousePosition);
+            evt.menu.AppendAction("Create Node...", _ => OpenSearch(screenPosition, position, null));
             evt.menu.AppendSeparator();
             evt.menu.AppendAction("Duplicate", _ => DuplicateSelection(), CanDuplicateSelection());
             evt.menu.AppendAction("Copy", _ => CopySelectionToClipboard(), CanDuplicateSelection());
@@ -1092,10 +1105,14 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         void OpenSearchAtPosition(Vector2 position, Port connectedPort)
         {
-            var screenPosition = Event.current != null
-                ? GUIUtility.GUIToScreenPoint(Event.current.mousePosition)
-                : m_window.position.center;
-            OpenSearch(screenPosition, position, connectedPort);
+            var panelPosition = contentViewContainer.LocalToWorld(position);
+            OpenSearch(GUIUtility.GUIToScreenPoint(panelPosition), position, connectedPort);
+        }
+
+        Vector2 GetScreenPosition(Vector2 localPosition)
+        {
+            var panelPosition = this.LocalToWorld(localPosition);
+            return GUIUtility.GUIToScreenPoint(panelPosition);
         }
 
         void OpenSearch(Vector2 screenPosition, Vector2 contentPosition, Port connectedPort)
