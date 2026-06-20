@@ -27,23 +27,66 @@ namespace PLAYERTWO.ARPGProject
             EntityStatsFormulaContext context,
             HashSet<EntityStatsFormulaTarget> visitingTargets,
             out float value
-        ) => TryEvaluateFormulaData(formula, context, visitingTargets, true, true, out value);
+        ) => TryEvaluateFormulaData(formula, context, visitingTargets, null, true, true, out value);
+
+        public static bool TryEvaluateRaw(
+            EntityStatsFormulaData formula,
+            EntityStatsFormulaContext context,
+            out float normalizedValue,
+            out float rawValue
+        )
+        {
+            rawValue = 0f;
+            var success = TryEvaluateFormulaData(formula, context, null, null, true, false, out rawValue);
+            normalizedValue = success
+                ? EntityStatsFormulaTargetMetadataProvider.Get(formula.target, context).Normalize(rawValue)
+                : 0f;
+            return success;
+        }
 
         public static bool TryEvaluateFunction(
             EntityStatsFormulaFunction function,
             EntityStatsFormulaContext context,
             out float value
+        ) => TryEvaluateFunction(function, context, null, null, out value);
+
+        public static bool TryEvaluateFunction(
+            EntityStatsFormulaFunction function,
+            EntityStatsFormulaContext context,
+            HashSet<EntityStatsFormulaTarget> visitingTargets,
+            HashSet<EntityStatsFormulaFunction> visitingFunctions,
+            out float value
         )
         {
             value = 0f;
-            return function != null
-                && TryEvaluateFormulaData(function.formula, context, null, false, false, out value);
+
+            if (function == null)
+                return false;
+
+            visitingFunctions ??= new HashSet<EntityStatsFormulaFunction>();
+
+            if (!visitingFunctions.Add(function))
+                return false;
+
+            var success = TryEvaluateFormulaData(
+                function.formula,
+                context,
+                visitingTargets,
+                visitingFunctions,
+                false,
+                false,
+                out value
+            );
+
+            visitingFunctions.Remove(function);
+            return success;
         }
 
         static bool TryEvaluateFormulaData(
             EntityStatsFormulaData formula,
             EntityStatsFormulaContext context,
             HashSet<EntityStatsFormulaTarget> visitingTargets,
+            HashSet<EntityStatsFormulaFunction> visitingFunctions,
             bool trackFormulaTarget,
             bool normalizeOutput,
             out float value
@@ -78,6 +121,7 @@ namespace PLAYERTWO.ARPGProject
                 cache,
                 visitingNodes,
                 visitingTargets,
+                visitingFunctions,
                 out value
             );
 
@@ -96,6 +140,7 @@ namespace PLAYERTWO.ARPGProject
             Dictionary<string, float> cache,
             HashSet<string> visitingNodes,
             HashSet<EntityStatsFormulaTarget> visitingTargets,
+            HashSet<EntityStatsFormulaFunction> visitingFunctions,
             out float value
         )
         {
@@ -128,7 +173,7 @@ namespace PLAYERTWO.ARPGProject
                     value = node.constant / 100f;
                     break;
                 case EntityStatsFormulaNodeType.FormulaFunction:
-                    success = TryEvaluateFunction(node.function, context, out value);
+                    success = TryEvaluateFunction(node.function, context, visitingTargets, visitingFunctions, out value);
                     break;
                 case EntityStatsFormulaNodeType.FormulaReference:
                     success = context.TryResolveFormulaReference(
@@ -146,6 +191,7 @@ namespace PLAYERTWO.ARPGProject
                         cache,
                         visitingNodes,
                         visitingTargets,
+                        visitingFunctions,
                         out value
                     );
                     break;
@@ -157,6 +203,7 @@ namespace PLAYERTWO.ARPGProject
                         cache,
                         visitingNodes,
                         visitingTargets,
+                        visitingFunctions,
                         out value
                     );
                     break;
@@ -169,6 +216,7 @@ namespace PLAYERTWO.ARPGProject
                         cache,
                         visitingNodes,
                         visitingTargets,
+                        visitingFunctions,
                         out value
                     );
                     break;
@@ -194,6 +242,7 @@ namespace PLAYERTWO.ARPGProject
             Dictionary<string, float> cache,
             HashSet<string> visitingNodes,
             HashSet<EntityStatsFormulaTarget> visitingTargets,
+            HashSet<EntityStatsFormulaFunction> visitingFunctions,
             out float value
         )
         {
@@ -207,6 +256,7 @@ namespace PLAYERTWO.ARPGProject
                 cache,
                 visitingNodes,
                 visitingTargets,
+                visitingFunctions,
                 out input
             );
 
@@ -309,6 +359,7 @@ namespace PLAYERTWO.ARPGProject
             Dictionary<string, float> cache,
             HashSet<string> visitingNodes,
             HashSet<EntityStatsFormulaTarget> visitingTargets,
+            HashSet<EntityStatsFormulaFunction> visitingFunctions,
             out float value
         )
         {
@@ -326,6 +377,7 @@ namespace PLAYERTWO.ARPGProject
                     cache,
                     visitingNodes,
                     visitingTargets,
+                    visitingFunctions,
                     out value
                 );
         }
