@@ -1,4 +1,5 @@
 #if UNITY_EDITOR && UNITY_INCLUDE_TESTS
+using System.Collections.Generic;
 using NUnit.Framework;
 using PLAYERTWO.ARPGProject;
 using UnityEngine;
@@ -107,6 +108,61 @@ namespace PLAYERTWO.ARPGProject.Tests
                 out var value
             ));
             Assert.AreEqual(12f, value);
+        }
+
+
+        [Test]
+        public void FormulaFunctionSelfCycleFailsEvaluation()
+        {
+            var function = ScriptableObject.CreateInstance<EntityStatsFormulaFunction>();
+            function.formula = CreateFormula(EntityStatsFormulaTarget.MaxHealth);
+            var functionNode = AddNode(function.formula, EntityStatsFormulaNodeType.FormulaFunction);
+            functionNode.function = function;
+            Connect(function.formula, functionNode, function.formula.GetResultNode(), EntityStatsFormulaEvaluator.ValuePort);
+
+            Assert.IsFalse(EntityStatsFormulaEvaluator.TryEvaluateFunction(
+                function,
+                EntityStatsFormulaContext.Preview,
+                out _
+            ));
+        }
+
+        [Test]
+        public void FormulaFunctionReferenceBackToOwningTargetFailsEvaluation()
+        {
+            var graph = ScriptableObject.CreateInstance<EntityStatsFormulaGraph>();
+            var formula = CreateFormula(EntityStatsFormulaTarget.MaxHealth);
+            graph.formulas.Add(formula);
+
+            var function = ScriptableObject.CreateInstance<EntityStatsFormulaFunction>();
+            function.formula = CreateFormula(EntityStatsFormulaTarget.MaxHealth);
+            var reference = AddNode(function.formula, EntityStatsFormulaNodeType.FormulaReference);
+            reference.formulaTarget = EntityStatsFormulaTarget.MaxHealth;
+            Connect(function.formula, reference, function.formula.GetResultNode(), EntityStatsFormulaEvaluator.ValuePort);
+
+            var functionNode = AddNode(formula, EntityStatsFormulaNodeType.FormulaFunction);
+            functionNode.function = function;
+            Connect(formula, functionNode, formula.GetResultNode(), EntityStatsFormulaEvaluator.ValuePort);
+
+            EntityStatsFormulaContext context = default;
+            context = EntityStatsFormulaContext.Preview.WithReferenceResolver(
+                (
+                    EntityStatsFormulaTarget target,
+                    HashSet<EntityStatsFormulaTarget> visitingTargets,
+                    out float value
+                ) => graph.TryEvaluate(
+                    target,
+                    context,
+                    visitingTargets,
+                    out value
+                )
+            );
+
+            Assert.IsFalse(graph.TryEvaluate(
+                EntityStatsFormulaTarget.MaxHealth,
+                context,
+                out _
+            ));
         }
 
         static EntityStatsFormulaData CreateFormula(EntityStatsFormulaTarget target)
