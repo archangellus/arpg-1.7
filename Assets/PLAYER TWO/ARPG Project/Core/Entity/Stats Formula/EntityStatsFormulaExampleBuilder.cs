@@ -137,7 +137,7 @@ namespace PLAYERTWO.ARPGProject
                 return;
 
             var connection = formula.connections.Find(edge =>
-                edge.inputNodeGuid == result.guid && edge.inputPortName == "Value"
+                edge.inputNodeGuid == result.guid && edge.inputPortName == EntityStatsFormulaEvaluator.ValuePort
             );
 
             if (connection == null)
@@ -164,19 +164,19 @@ namespace PLAYERTWO.ARPGProject
             {
                 outputNodeGuid = connection.outputNodeGuid,
                 inputNodeGuid = multiplyNode.guid,
-                inputPortName = "A",
+                inputPortName = EntityStatsFormulaEvaluator.APort,
             });
             formula.connections.Add(new EntityStatsFormulaConnectionData
             {
                 outputNodeGuid = multiplierNode.guid,
                 inputNodeGuid = multiplyNode.guid,
-                inputPortName = "B",
+                inputPortName = EntityStatsFormulaEvaluator.BPort,
             });
             formula.connections.Add(new EntityStatsFormulaConnectionData
             {
                 outputNodeGuid = multiplyNode.guid,
                 inputNodeGuid = result.guid,
-                inputPortName = "Value",
+                inputPortName = EntityStatsFormulaEvaluator.ValuePort,
             });
         }
 
@@ -977,15 +977,15 @@ namespace PLAYERTWO.ARPGProject
             {
                 var node = Node(EntityStatsFormulaNodeType.Operator, x, y);
                 node.operation = operation;
-                Connect(a, node, "A");
-                Connect(b, node, "B");
+                Connect(a, node, EntityStatsFormulaEvaluator.APort);
+                Connect(b, node, EntityStatsFormulaEvaluator.BPort);
                 return node;
             }
 
             public EntityStatsFormulaData Build(EntityStatsFormulaNodeData resultInput)
             {
                 var result = Node(EntityStatsFormulaNodeType.Result, resultInput.position.x + 240, resultInput.position.y);
-                Connect(resultInput, result, "Value");
+                Connect(resultInput, result, EntityStatsFormulaEvaluator.ValuePort);
                 return m_formula;
             }
 
