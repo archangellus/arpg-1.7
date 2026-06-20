@@ -31,8 +31,14 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         EntityStatsFormulaData m_formula;
         StatsFormulaGraphView m_graphView;
         Toggle m_enabledToggle;
-        Label m_previewLabel;
-        Label m_diagnosticsLabel;
+        VisualElement m_previewCard;
+        Label m_previewTargetLabel;
+        Label m_previewResultLabel;
+        Label m_previewBuiltInLabel;
+        Label m_previewChangeLabel;
+        Label m_previewStatusLabel;
+        Label m_healthBadge;
+        VisualElement m_diagnosticsContainer;
         bool m_saveQueued;
         bool m_queuedSaveNeedsUndo;
         string m_queuedSaveUndoName;
@@ -75,41 +81,46 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             rootVisualElement.Clear();
             rootVisualElement.style.flexDirection = FlexDirection.Column;
+            LoadStyleSheet();
 
             RefreshEntitySourceOptions();
 
             var toolbar = new VisualElement { name = "StatsFormulaToolbar" };
-            toolbar.style.flexDirection = FlexDirection.Row;
-            toolbar.style.flexWrap = Wrap.Wrap;
-            toolbar.style.flexShrink = 0f;
-            toolbar.style.alignItems = Align.Center;
-            toolbar.style.paddingLeft = 2f;
-            toolbar.style.paddingRight = 2f;
-            toolbar.style.paddingTop = 1f;
-            toolbar.style.paddingBottom = 1f;
-            toolbar.style.backgroundColor = new Color(0.21f, 0.21f, 0.21f, 1f);
-            var assetField = new ObjectField("Graph")
+            toolbar.AddToClassList("stats-formula-toolbar");
+
+            var graphSection = new VisualElement();
+            graphSection.AddToClassList("toolbar-section");
+            graphSection.AddToClassList("graph-toolbar-section");
+            graphSection.Add(new Button(CreateAsset) { text = "New Graph Asset" });
+
+            graphSection.Add(CreateInlineToolbarLabel("Graph"));
+            var assetField = new ObjectField
             {
                 objectType = typeof(EntityStatsFormulaGraph),
                 allowSceneObjects = false,
                 value = m_graphAsset,
             };
+            assetField.AddToClassList("toolbar-graph-field");
             assetField.RegisterValueChangedCallback(evt =>
             {
                 m_graphAsset = evt.newValue as EntityStatsFormulaGraph;
                 LoadFormula();
             });
-            toolbar.Add(assetField);
+            graphSection.Add(assetField);
 
-            var targetField = new EnumField("Stat", m_target);
+            graphSection.Add(CreateInlineToolbarLabel("Stat"));
+            var targetField = new EnumField(m_target);
+            targetField.AddToClassList("toolbar-stat-field");
             targetField.RegisterValueChangedCallback(evt =>
             {
                 m_target = (EntityStatsFormulaTarget)evt.newValue;
                 LoadFormula();
             });
-            toolbar.Add(targetField);
+            graphSection.Add(targetField);
 
-            m_enabledToggle = new Toggle("Enabled") { value = m_formula?.enabled ?? true };
+            graphSection.Add(CreateInlineToolbarLabel("Graph / Stat / Enabled"));
+            m_enabledToggle = new Toggle { value = m_formula?.enabled ?? true };
+            m_enabledToggle.AddToClassList("toolbar-enabled-toggle");
             m_enabledToggle.RegisterValueChangedCallback(evt =>
             {
                 if (m_formula == null)
@@ -119,9 +130,91 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 m_formula.enabled = evt.newValue;
                 Save();
             });
-            toolbar.Add(m_enabledToggle);
+            graphSection.Add(m_enabledToggle);
 
-            toolbar.Add(new Button(CreateAsset) { text = "New Graph Asset" });
+            graphSection.Add(CreateInlineToolbarLabel("Status"));
+            m_healthBadge = new Label("—");
+            m_healthBadge.AddToClassList("formula-health-badge");
+            graphSection.Add(m_healthBadge);
+            toolbar.Add(graphSection);
+
+            var exampleSection = CreateToolbarSection("Examples");
+            var exampleField = new EnumField(m_exampleTarget);
+            exampleField.RegisterValueChangedCallback(evt =>
+            {
+                m_exampleTarget = (EntityStatsFormulaTarget)evt.newValue;
+            });
+            exampleSection.Add(exampleField);
+            exampleSection.Add(new Button(PopulateSelectedBuiltInExample) { text = "Load Example" });
+            exampleSection.Add(new Button(PopulateAllBuiltInExamples) { text = "Load All Examples" });
+            toolbar.Add(exampleSection);
+
+            var saveSection = CreateToolbarSection("Save / JSON");
+            saveSection.Add(new Button(SaveAndPersist) { text = "Save" });
+            saveSection.Add(new Button(ExportJson) { text = "Export JSON" });
+            saveSection.Add(new Button(ImportJson) { text = "Import JSON" });
+            toolbar.Add(saveSection);
+
+            var toolsSection = CreateToolbarSection("Edit Tools");
+            toolsSection.Add(new Button(() => Undo.PerformUndo()) { text = "Undo" });
+            toolsSection.Add(new Button(() => Undo.PerformRedo()) { text = "Redo" });
+            toolsSection.Add(new Button(() => m_graphView.CreateGroupFromSelection()) { text = "Group" });
+            toolsSection.Add(new Button(() => m_graphView.AutoLayout()) { text = "Auto Layout" });
+            toolsSection.Add(new Button(() => m_graphView.FrameAllNodes()) { text = "Frame All" });
+            toolbar.Add(toolsSection);
+
+            rootVisualElement.Add(toolbar);
+
+            var content = new VisualElement { name = "StatsFormulaContent" };
+            content.AddToClassList("stats-formula-content");
+
+            var graphColumn = new VisualElement();
+            graphColumn.AddToClassList("stats-formula-graph-column");
+
+            m_graphView = new StatsFormulaGraphView(this);
+            graphColumn.Add(m_graphView);
+            content.Add(graphColumn);
+
+            m_previewCard = CreatePreviewCard();
+            content.Add(m_previewCard);
+            rootVisualElement.Add(content);
+
+            m_diagnosticsContainer = new VisualElement();
+            m_diagnosticsContainer.AddToClassList("diagnostics-panel");
+            rootVisualElement.Add(m_diagnosticsContainer);
+
+            LoadFormula();
+        }
+
+        void LoadStyleSheet()
+        {
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                "Assets/PLAYER TWO/ARPG Project/Core/Entity/Stats Formula/Editor/StatsFormulaEditor.uss"
+            );
+
+            if (styleSheet != null)
+                rootVisualElement.styleSheets.Add(styleSheet);
+        }
+
+        VisualElement CreateToolbarSection(string title)
+        {
+            var section = new VisualElement();
+            section.AddToClassList("toolbar-section");
+            section.Add(new Label(title) { name = "ToolbarSectionLabel" });
+            return section;
+        }
+
+        static Label CreateInlineToolbarLabel(string text)
+        {
+            var label = new Label(text);
+            label.AddToClassList("toolbar-inline-label");
+            return label;
+        }
+
+        VisualElement CreatePreviewControls()
+        {
+            var controls = new VisualElement();
+            controls.AddToClassList("preview-controls");
 
             var entityField = new PopupField<string>(
                 "Entity",
@@ -131,26 +224,10 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             entityField.RegisterValueChangedCallback(evt =>
             {
                 m_selectedEntityIndex = Mathf.Max(0, m_entitySourceNames.IndexOf(evt.newValue));
+                UpdatePreview();
             });
-            toolbar.Add(entityField);
-            toolbar.Add(new Button(BuildWindow) { text = "Refresh Entities" });
-
-            var exampleField = new EnumField("Example", m_exampleTarget);
-            exampleField.RegisterValueChangedCallback(evt =>
-            {
-                m_exampleTarget = (EntityStatsFormulaTarget)evt.newValue;
-            });
-            toolbar.Add(exampleField);
-            toolbar.Add(new Button(PopulateSelectedBuiltInExample) { text = "Load Example" });
-            toolbar.Add(new Button(PopulateAllBuiltInExamples) { text = "Load All Examples" });
-            toolbar.Add(new Button(SaveAndPersist) { text = "Save" });
-            toolbar.Add(new Button(ExportJson) { text = "Export JSON" });
-            toolbar.Add(new Button(ImportJson) { text = "Import JSON" });
-            toolbar.Add(new Button(() => Undo.PerformUndo()) { text = "Undo" });
-            toolbar.Add(new Button(() => Undo.PerformRedo()) { text = "Redo" });
-            toolbar.Add(new Button(() => m_graphView.CreateGroupFromSelection()) { text = "Group" });
-            toolbar.Add(new Button(() => m_graphView.AutoLayout()) { text = "Auto Layout" });
-            toolbar.Add(new Button(() => m_graphView.FrameAllNodes()) { text = "Frame All" });
+            controls.Add(entityField);
+            controls.Add(new Button(BuildWindow) { text = "Refresh Entities" });
 
             var previewModeField = new EnumField("Preview With", m_previewMode);
             previewModeField.RegisterValueChangedCallback(evt =>
@@ -158,42 +235,45 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 m_previewMode = (StatsFormulaPreviewMode)evt.newValue;
                 UpdatePreview();
             });
-            toolbar.Add(previewModeField);
-            AddCustomPreviewField(toolbar, "Lvl", () => m_customLevel, value => m_customLevel = value);
-            AddCustomPreviewField(toolbar, "Str", () => m_customStrength, value => m_customStrength = value);
-            AddCustomPreviewField(toolbar, "Dex", () => m_customDexterity, value => m_customDexterity = value);
-            AddCustomPreviewField(toolbar, "Vit", () => m_customVitality, value => m_customVitality = value);
-            AddCustomPreviewField(toolbar, "Ene", () => m_customEnergy, value => m_customEnergy = value);
+            controls.Add(previewModeField);
+            AddCustomPreviewField(controls, "Lvl", () => m_customLevel, value => m_customLevel = value);
+            AddCustomPreviewField(controls, "Str", () => m_customStrength, value => m_customStrength = value);
+            AddCustomPreviewField(controls, "Dex", () => m_customDexterity, value => m_customDexterity = value);
+            AddCustomPreviewField(controls, "Vit", () => m_customVitality, value => m_customVitality = value);
+            AddCustomPreviewField(controls, "Ene", () => m_customEnergy, value => m_customEnergy = value);
+            return controls;
+        }
 
-            m_previewLabel = new Label("Preview: —")
-            {
-                tooltip = "Shows the evaluated formula result for the selected preview source.",
-                style =
-                {
-                    unityTextAlign = TextAnchor.MiddleLeft,
-                    whiteSpace = WhiteSpace.Normal,
-                }
-            };
-            toolbar.Add(m_previewLabel);
-            rootVisualElement.Add(toolbar);
+        VisualElement CreatePreviewCard()
+        {
+            var card = new VisualElement();
+            card.AddToClassList("preview-card");
+            card.Add(new Label("Preview") { name = "PreviewCardTitle" });
+            card.Add(CreatePreviewControls());
 
-            m_diagnosticsLabel = new Label
-            {
-                style =
-                {
-                    whiteSpace = WhiteSpace.Normal,
-                    paddingLeft = 6f,
-                    paddingRight = 6f,
-                    paddingTop = 4f,
-                    paddingBottom = 4f,
-                }
-            };
-            rootVisualElement.Add(m_diagnosticsLabel);
+            var previewScroll = new ScrollView(ScrollViewMode.Vertical);
+            previewScroll.AddToClassList("preview-scroll");
+            m_previewTargetLabel = AddPreviewRow(previewScroll, "Target", "—");
+            m_previewResultLabel = AddPreviewRow(previewScroll, "Result", "—");
+            m_previewResultLabel.AddToClassList("preview-result-value");
+            m_previewBuiltInLabel = AddPreviewRow(previewScroll, "Built-in", "—");
+            m_previewChangeLabel = AddPreviewRow(previewScroll, "Change", "—");
+            m_previewStatusLabel = AddPreviewRow(previewScroll, "Status", "—");
+            card.Add(previewScroll);
+            return card;
+        }
 
-            m_graphView = new StatsFormulaGraphView(this);
-            rootVisualElement.Add(m_graphView);
-
-            LoadFormula();
+        Label AddPreviewRow(VisualElement card, string name, string value)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("preview-row");
+            row.Add(new Label(name + ":") { name = "PreviewRowName" });
+            var label = new Label(value);
+            label.AddToClassList("preview-row-value");
+            label.style.whiteSpace = WhiteSpace.Normal;
+            row.Add(label);
+            card.Add(row);
+            return label;
         }
 
         void AddCustomPreviewField(VisualElement toolbar, string label, Func<int> getter, Action<int> setter)
@@ -708,12 +788,13 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         public void UpdatePreview()
         {
-            if (m_previewLabel == null)
+            if (m_previewCard == null)
                 return;
 
             if (m_formula == null)
             {
-                m_previewLabel.text = "Preview: —";
+                SetPreviewCard("—", "—", "—", "—", "No formula");
+                SetHealthBadge(null, null);
                 return;
             }
 
@@ -723,9 +804,11 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             UpdateDiagnostics(validation, graphValidation);
             m_graphView?.ApplyDiagnostics(validation, graphValidation);
 
+            SetHealthBadge(validation, graphValidation);
+
             if (validation.hasErrors)
             {
-                m_previewLabel.text = $"Preview: invalid ({validation.Summary})";
+                SetPreviewCard(m_formula.target.ToString(), "—", "—", "—", $"Invalid ({validation.Summary})");
                 return;
             }
 
@@ -737,13 +820,11 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     .ToList();
 
                 var remaining = m_entitySourceOptions.Count - previews.Count;
-                m_previewLabel.text = remaining > 0
-                    ? $"Preview: {string.Join("  |  ", previews)} (+{remaining} more)"
-                    : $"Preview: {string.Join("  |  ", previews)}";
+                SetPreviewCard(m_formula.target.ToString(), string.Join("\n", previews), "—", "—", remaining > 0 ? $"Valid (+{remaining} more)" : "Valid");
                 return;
             }
 
-            m_previewLabel.text = $"Preview: {FormatPreview(GetPreviewLabel(), CreatePreviewContext(m_formula.target))}";
+            SetPreviewCard(GetPreviewLabel(), CreatePreviewContext(m_formula.target), validation);
         }
 
         void UpdateDiagnostics(
@@ -751,8 +832,10 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             EntityStatsFormulaValidationResult graphValidation
         )
         {
-            if (m_diagnosticsLabel == null)
+            if (m_diagnosticsContainer == null)
                 return;
+
+            m_diagnosticsContainer.Clear();
 
             var diagnostics = new List<EntityStatsFormulaDiagnostic>();
 
@@ -764,14 +847,120 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
             if (diagnostics.Count == 0)
             {
-                m_diagnosticsLabel.text = "Diagnostics: Valid";
+                var valid = new Label("Diagnostics: Valid");
+                valid.AddToClassList("diagnostic-valid");
+                m_diagnosticsContainer.Add(valid);
                 return;
             }
 
             var errors = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Error);
             var warnings = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Warning);
-            m_diagnosticsLabel.text = $"Diagnostics: {errors} error(s), {warnings} warning(s)\n" + string.Join("\n", diagnostics.Select(diagnostic =>
-                $"• {diagnostic.severity}: {diagnostic.message}{(string.IsNullOrEmpty(diagnostic.nodeGuid) ? string.Empty : $" [Node {diagnostic.nodeGuid}]")}{(string.IsNullOrEmpty(diagnostic.portName) ? string.Empty : $" Port {diagnostic.portName}")}"));
+            var header = new Label($"Diagnostics: {errors} error(s), {warnings} warning(s)");
+            header.AddToClassList("diagnostics-header");
+            m_diagnosticsContainer.Add(header);
+
+            foreach (var diagnostic in diagnostics)
+                m_diagnosticsContainer.Add(CreateDiagnosticElement(diagnostic));
+        }
+
+        VisualElement CreateDiagnosticElement(EntityStatsFormulaDiagnostic diagnostic)
+        {
+            var node = FindNodeData(diagnostic.nodeGuid);
+            var button = new Button(() => m_graphView?.FrameNode(diagnostic.nodeGuid));
+            button.AddToClassList("diagnostic-item");
+            button.AddToClassList("diagnostic-" + diagnostic.severity.ToString().ToLowerInvariant());
+            button.text = string.Empty;
+            button.Add(new Label($"{diagnostic.severity}: {diagnostic.message}"));
+            if (node != null)
+                button.Add(new Label($"Node: {StatsFormulaGraphView.GetTitle(node)}"));
+            if (!string.IsNullOrEmpty(diagnostic.portName))
+                button.Add(new Label($"Port: {diagnostic.portName}"));
+            if (!string.IsNullOrEmpty(diagnostic.nodeGuid))
+                button.Add(new Label("Frame Node"));
+            return button;
+        }
+
+        EntityStatsFormulaNodeData FindNodeData(string guid) =>
+            string.IsNullOrEmpty(guid) || m_formula?.nodes == null
+                ? null
+                : m_formula.nodes.FirstOrDefault(node => node.guid == guid);
+
+        void SetHealthBadge(EntityStatsFormulaValidationResult validation, EntityStatsFormulaValidationResult graphValidation)
+        {
+            if (m_healthBadge == null)
+                return;
+
+            var diagnostics = new List<EntityStatsFormulaDiagnostic>();
+            if (validation != null)
+                diagnostics.AddRange(validation.diagnostics);
+            if (graphValidation != null)
+                diagnostics.AddRange(graphValidation.diagnostics);
+
+            m_healthBadge.RemoveFromClassList("health-valid");
+            m_healthBadge.RemoveFromClassList("health-warning");
+            m_healthBadge.RemoveFromClassList("health-error");
+            m_healthBadge.RemoveFromClassList("health-disabled");
+
+            if (m_formula != null && !m_formula.enabled)
+            {
+                m_healthBadge.text = "Disabled";
+                m_healthBadge.AddToClassList("health-disabled");
+                return;
+            }
+
+            var errors = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Error);
+            var warnings = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Warning);
+            if (errors > 0)
+            {
+                m_healthBadge.text = $"✖ {errors} error" + (errors == 1 ? string.Empty : "s");
+                m_healthBadge.AddToClassList("health-error");
+            }
+            else if (warnings > 0)
+            {
+                m_healthBadge.text = $"⚠ {warnings} warning" + (warnings == 1 ? string.Empty : "s");
+                m_healthBadge.AddToClassList("health-warning");
+            }
+            else
+            {
+                m_healthBadge.text = "✓ Valid";
+                m_healthBadge.AddToClassList("health-valid");
+            }
+        }
+
+        void SetPreviewCard(string target, string result, string builtIn, string change, string status)
+        {
+            if (m_previewTargetLabel == null)
+                return;
+
+            m_previewTargetLabel.text = target;
+            m_previewResultLabel.text = result;
+            m_previewBuiltInLabel.text = builtIn;
+            m_previewChangeLabel.text = change;
+            m_previewStatusLabel.text = status;
+        }
+
+        void SetPreviewCard(string label, EntityStatsFormulaContext context, EntityStatsFormulaValidationResult validation)
+        {
+            if (!EntityStatsFormulaEvaluator.TryEvaluateRaw(m_formula, context, out var value, out var rawValue))
+            {
+                SetPreviewCard(label, "Not connected", "—", "—", "Missing result input");
+                return;
+            }
+
+            var metadata = EntityStatsFormulaTargetMetadataProvider.Get(m_formula.target, context);
+            var result = metadata.Format(value);
+            if (!Mathf.Approximately(rawValue, value))
+                result += $" (raw {metadata.Format(rawValue)}, clamped)";
+
+            var builtIn = context.hasBuiltInValue ? metadata.Format(context.builtInValue) : "—";
+            var change = "—";
+            if (context.hasBuiltInValue)
+            {
+                var difference = value - context.builtInValue;
+                change = (difference > 0f ? "+" : string.Empty) + metadata.Format(difference);
+            }
+
+            SetPreviewCard(label, result, builtIn, change, validation?.Summary ?? "Valid");
         }
 
         string GetPreviewLabel()
@@ -1227,6 +1416,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 return;
 
             var edge = output.ConnectTo(input);
+            ApplyEdgeStyle(edge, output.node?.userData as EntityStatsFormulaNodeData);
             AddElement(edge);
         }
 
@@ -1260,6 +1450,16 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             );
         }
 
+
+        public void FrameNode(string guid)
+        {
+            if (string.IsNullOrEmpty(guid) || !m_nodesByGuid.TryGetValue(guid, out var node))
+                return;
+
+            ClearSelection();
+            AddToSelection(node);
+            FrameSelection();
+        }
 
         public void ApplyDiagnostics(
             EntityStatsFormulaValidationResult validation,
@@ -1389,8 +1589,38 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         void AddGroup(EntityStatsFormulaGroupData data)
         {
-            var group = new Group { title = data.title, userData = data };
+            var group = new Group { title = $"▦ {data.title}", userData = data };
+            group.AddToClassList("formula-group");
+            group.style.backgroundColor = data.color;
             group.SetPosition(data.position);
+            var descriptionField = new TextField
+            {
+                value = data.description,
+                tooltip = "Short subtitle or note for this formula group.",
+            };
+            descriptionField.AddToClassList("group-description-field");
+            descriptionField.RegisterValueChangedCallback(evt =>
+            {
+                Undo.RecordObject(m_window.GraphAsset, "Change Formula Group Description");
+                data.description = evt.newValue;
+                m_window.Save();
+            });
+            group.headerContainer.Add(descriptionField);
+            var colorField = new ColorField("Color") { value = data.color, showAlpha = true };
+            colorField.AddToClassList("group-color-field");
+            colorField.style.width = 220f;
+            colorField.style.height = 22f;
+            colorField.RegisterValueChangedCallback(evt =>
+            {
+                Undo.RecordObject(m_window.GraphAsset, "Change Formula Group Color");
+                data.color = evt.newValue;
+                group.style.backgroundColor = data.color;
+                m_window.Save();
+            });
+            group.headerContainer.Add(colorField);
+            var collapseButton = new Button(() => ToggleGroupCollapsed(group, data)) { text = data.collapsed ? "Expand" : "Collapse" };
+            collapseButton.AddToClassList("group-collapse-button");
+            group.headerContainer.Add(collapseButton);
             m_groupsByGuid[data.guid] = group;
             AddElement(group);
 
@@ -1399,6 +1629,38 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 if (m_nodesByGuid.TryGetValue(nodeData.guid, out var node))
                     group.AddElement(node);
             }
+
+            SetGroupCollapsed(group, data.collapsed);
+        }
+
+        void ToggleGroupCollapsed(Group group, EntityStatsFormulaGroupData data)
+        {
+            data.collapsed = !data.collapsed;
+            SetGroupCollapsed(group, data.collapsed);
+            var button = group.headerContainer.Query<Button>(className: "group-collapse-button").First();
+            if (button != null)
+                button.text = data.collapsed ? "Expand" : "Collapse";
+
+            m_window.Save();
+        }
+
+        void SetGroupCollapsed(Group group, bool collapsed)
+        {
+            var containedNodes = group.containedElements.OfType<Node>().ToList();
+            var containedNodeSet = new HashSet<Node>(containedNodes);
+
+            foreach (var node in containedNodes)
+                node.style.display = collapsed ? DisplayStyle.None : DisplayStyle.Flex;
+
+            foreach (var edge in edges.ToList())
+            {
+                if (edge.input?.node != null && containedNodeSet.Contains(edge.input.node)
+                    || edge.output?.node != null && containedNodeSet.Contains(edge.output.node))
+                    edge.style.display = collapsed ? DisplayStyle.None : DisplayStyle.Flex;
+            }
+
+            group.AddToClassList(collapsed ? "formula-group-collapsed" : "formula-group-expanded");
+            group.RemoveFromClassList(collapsed ? "formula-group-expanded" : "formula-group-collapsed");
         }
 
         DropdownMenuAction.Status CanDuplicateSelection() =>
@@ -1792,7 +2054,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             {
                 if (group.userData is EntityStatsFormulaGroupData groupData)
                 {
-                    groupData.title = group.title;
+                    groupData.title = group.title.Replace("▦ ", string.Empty);
                     groupData.position = group.GetPosition();
                     formula.groups.Add(groupData);
                 }
@@ -1851,6 +2113,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     break;
                 case EntityStatsFormulaNodeType.FormulaReference:
                     AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddBadge(node, data.formulaTarget.ToString(), "target-badge");
                     var targetField = new EnumField("Target", data.formulaTarget);
                     targetField.RegisterValueChangedCallback(evt =>
                     {
@@ -1863,6 +2126,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     break;
                 case EntityStatsFormulaNodeType.FormulaFunction:
                     AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddBadge(node, data.function ? data.function.name : "Function", "function-badge");
                     var functionField = new ObjectField("Function")
                     {
                         objectType = typeof(EntityStatsFormulaFunction),
@@ -1880,6 +2144,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     break;
                 case EntityStatsFormulaNodeType.Constant:
                     AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddBadge(node, data.constant.ToString("0.###"), "value-badge");
                     var constantNameField = CreateNameField(data, node, "Constant");
                     node.extensionContainer.Add(constantNameField);
                     var floatField = new FloatField("Value") { value = data.constant, tooltip = "Numeric value emitted by this named constant." };
@@ -1893,6 +2158,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     break;
                 case EntityStatsFormulaNodeType.PercentConstant:
                     AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddBadge(node, data.constant.ToString("0.###") + "%", "value-badge");
                     var percentNameField = CreateNameField(data, node, "% Constant");
                     node.extensionContainer.Add(percentNameField);
                     var percentField = new FloatField("Percent") { value = data.constant };
@@ -1909,6 +2175,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(normalizedPercentLabel);
                     break;
                 case EntityStatsFormulaNodeType.Operator:
+                    AddBadge(node, GetOperatorSymbol(data.operation), "operator-badge");
                     foreach (var portName in EntityStatsFormulaValidator.GetOperatorInputPorts(data.operation))
                         AddInput(node, portName);
                     AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
@@ -1928,6 +2195,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     break;
                 case EntityStatsFormulaNodeType.Comment:
                     node.tooltip = "Resizable note box. Use this to document nearby formula nodes.";
+                    node.AddToClassList("comment-note-card");
                     node.style.minWidth = 220f;
                     node.style.minHeight = 140f;
                     var titleField = new TextField("Title") { value = data.title, tooltip = "Comment title shown in the top-left of the box." };
@@ -1939,6 +2207,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                         m_window.Save();
                     });
                     var noteField = new TextField("Note") { value = data.note, multiline = true, tooltip = "Free-form formula notes." };
+                    noteField.AddToClassList("comment-note-text");
                     noteField.style.flexGrow = 1f;
                     noteField.style.minHeight = 80f;
                     noteField.RegisterValueChangedCallback(evt =>
@@ -1948,10 +2217,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                         m_window.Save();
                     });
                     var resizeHandle = new VisualElement { tooltip = "Drag to resize this comment box." };
-                    resizeHandle.style.width = 16f;
-                    resizeHandle.style.height = 16f;
-                    resizeHandle.style.alignSelf = Align.FlexEnd;
-                    resizeHandle.style.backgroundColor = new Color(1f, 1f, 1f, 0.35f);
+                    resizeHandle.AddToClassList("comment-resize-handle");
                     resizeHandle.AddManipulator(new FormulaCommentResizeManipulator(node, data, m_window));
                     node.extensionContainer.Add(titleField);
                     node.extensionContainer.Add(noteField);
@@ -1966,6 +2232,17 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             node.RefreshExpandedState();
             node.RefreshPorts();
             return node;
+        }
+
+        static void AddBadge(Node node, string text, string className)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+
+            var badge = new Label(text);
+            badge.AddToClassList("node-badge");
+            badge.AddToClassList(className);
+            node.titleContainer.Add(badge);
         }
 
         TextField CreateNameField(EntityStatsFormulaNodeData data, Node node, string fallbackName)
@@ -1987,8 +2264,13 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         static void ApplyCategoryStyle(Node node, EntityStatsFormulaNodeData data)
         {
-            var color = GetCategoryColor(data);
-            node.titleContainer.style.backgroundColor = color;
+            node.AddToClassList("formula-node");
+            node.AddToClassList("formula-node-" + data.type.ToString().ToLowerInvariant());
+            node.titleContainer.AddToClassList("formula-node-header");
+
+            // Keep the original category colors visible even when GraphView's built-in
+            // node header styles win over USS class selectors in older Unity versions.
+            node.titleContainer.style.backgroundColor = GetCategoryColor(data);
             node.tooltip = GetTooltip(data);
         }
 
@@ -2099,6 +2381,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(float));
             port.portName = name;
+            ApplyPortClass(port, name);
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.inputContainer.Add(port);
         }
@@ -2107,8 +2390,53 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
             port.portName = name;
+            ApplyPortClass(port, name);
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.outputContainer.Add(port);
+        }
+
+        static void ApplyPortClass(Port port, string name)
+        {
+            port.AddToClassList("formula-port");
+            var normalized = (name ?? string.Empty).ToLowerInvariant();
+            var color = new Color(0.74f, 0.74f, 0.74f, 1f);
+            if (normalized.Contains("percent"))
+            {
+                port.AddToClassList("port-percent");
+                color = new Color(0.58f, 0.34f, 0.88f, 1f);
+            }
+            else if (normalized == "true")
+            {
+                port.AddToClassList("port-true");
+                color = new Color(0.25f, 0.78f, 0.38f, 1f);
+            }
+            else if (normalized == "false")
+            {
+                port.AddToClassList("port-false");
+                color = new Color(0.86f, 0.26f, 0.24f, 1f);
+            }
+            else if (normalized == "min")
+            {
+                port.AddToClassList("port-min");
+                color = new Color(0.30f, 0.55f, 0.92f, 1f);
+            }
+            else if (normalized == "max")
+            {
+                port.AddToClassList("port-max");
+                color = new Color(0.92f, 0.55f, 0.20f, 1f);
+            }
+            else
+            {
+                port.AddToClassList("port-value");
+            }
+
+            port.portColor = color;
+            var label = port.Q<Label>();
+            if (label != null)
+            {
+                label.style.color = Color.white;
+                label.style.unityFontStyleAndWeight = FontStyle.Bold;
+            }
         }
 
         void AddConnection(EntityStatsFormulaConnectionData connection)
@@ -2127,7 +2455,20 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 return;
 
             var edge = output.ConnectTo(input);
+            ApplyEdgeStyle(edge, outputNode.userData as EntityStatsFormulaNodeData);
             AddElement(edge);
+        }
+
+        static void ApplyEdgeStyle(Edge edge, EntityStatsFormulaNodeData outputData)
+        {
+            edge.AddToClassList("formula-edge");
+            if (outputData == null)
+                return;
+
+            if (outputData.type == EntityStatsFormulaNodeType.FormulaReference)
+                edge.AddToClassList("edge-formula-reference");
+            else if (outputData.type == EntityStatsFormulaNodeType.BuiltInValue)
+                edge.AddToClassList("edge-built-in-value");
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange change)
@@ -2161,7 +2502,12 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             }
 
             if (change.edgesToCreate != null && change.edgesToCreate.Count > 0)
+            {
+                foreach (var edge in change.edgesToCreate)
+                    ApplyEdgeStyle(edge, edge.output?.node?.userData as EntityStatsFormulaNodeData);
+
                 changedSerializedData = true;
+            }
 
             if (change.movedElements != null && change.movedElements.Count > 0)
                 changedSerializedData = true;
@@ -2197,7 +2543,32 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             return "Edit Formula Graph";
         }
 
-        static string GetTitle(EntityStatsFormulaNodeData data)
+        static string GetOperatorDisplayName(EntityStatsFormulaOperator operation) =>
+            operation switch
+            {
+                EntityStatsFormulaOperator.Add => "Add",
+                EntityStatsFormulaOperator.Subtract => "Subtract",
+                EntityStatsFormulaOperator.Multiply => "Multiply",
+                EntityStatsFormulaOperator.Divide => "Divide",
+                EntityStatsFormulaOperator.PercentOf => "Percent Of",
+                EntityStatsFormulaOperator.NormalizePercent => "To Percent 0-1",
+                _ => operation.ToString(),
+            };
+
+        static string GetOperatorSymbol(EntityStatsFormulaOperator operation) =>
+            operation switch
+            {
+                EntityStatsFormulaOperator.Add => "+",
+                EntityStatsFormulaOperator.Subtract => "−",
+                EntityStatsFormulaOperator.Multiply => "×",
+                EntityStatsFormulaOperator.Divide => "÷",
+                EntityStatsFormulaOperator.Clamp => "Clamp",
+                EntityStatsFormulaOperator.PercentOf => "%",
+                EntityStatsFormulaOperator.NormalizePercent => "%",
+                _ => string.Empty,
+            };
+
+        public static string GetTitle(EntityStatsFormulaNodeData data)
         {
             switch (data.type)
             {
@@ -2206,19 +2577,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 case EntityStatsFormulaNodeType.Constant:
                     return string.IsNullOrEmpty(data.title) ? "Constant" : data.title;
                 case EntityStatsFormulaNodeType.Operator:
-                    return data.operation switch
-                    {
-                        EntityStatsFormulaOperator.Add => "+",
-                        EntityStatsFormulaOperator.Subtract => "−",
-                        EntityStatsFormulaOperator.Multiply => "×",
-                        EntityStatsFormulaOperator.Divide => "÷",
-                        EntityStatsFormulaOperator.Min => "Min",
-                        EntityStatsFormulaOperator.Max => "Max",
-                        EntityStatsFormulaOperator.Clamp => "Clamp",
-                        EntityStatsFormulaOperator.PercentOf => "Percent Of",
-                        EntityStatsFormulaOperator.NormalizePercent => "To Percent 0-1",
-                        _ => data.operation.ToString(),
-                    };
+                    return GetOperatorDisplayName(data.operation);
                 case EntityStatsFormulaNodeType.BuiltInValue:
                     return "Built In Value";
                 case EntityStatsFormulaNodeType.PercentConstant:
