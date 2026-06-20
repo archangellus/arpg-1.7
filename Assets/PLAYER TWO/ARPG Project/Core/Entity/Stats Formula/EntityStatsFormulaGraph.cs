@@ -153,8 +153,6 @@ namespace PLAYERTWO.ARPGProject
     {
         public string guid = Guid.NewGuid().ToString();
         public string title = "Group";
-        public string description;
-        public bool collapsed;
         public Color color = new Color(0.25f, 0.25f, 0.25f, 0.35f);
         public Rect position = new Rect(80, 80, 320, 240);
     }
