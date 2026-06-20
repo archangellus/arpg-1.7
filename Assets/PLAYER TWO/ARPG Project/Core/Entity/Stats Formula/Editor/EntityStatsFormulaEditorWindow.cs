@@ -32,7 +32,6 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         StatsFormulaGraphView m_graphView;
         Toggle m_enabledToggle;
         Label m_previewLabel;
-        Label m_diagnosticsLabel;
         bool m_saveQueued;
         bool m_queuedSaveNeedsUndo;
         string m_queuedSaveUndoName;
@@ -177,19 +176,6 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             toolbar.Add(m_previewLabel);
             rootVisualElement.Add(toolbar);
 
-            m_diagnosticsLabel = new Label
-            {
-                style =
-                {
-                    whiteSpace = WhiteSpace.Normal,
-                    paddingLeft = 6f,
-                    paddingRight = 6f,
-                    paddingTop = 4f,
-                    paddingBottom = 4f,
-                }
-            };
-            rootVisualElement.Add(m_diagnosticsLabel);
-
             m_graphView = new StatsFormulaGraphView(this);
             rootVisualElement.Add(m_graphView);
 
@@ -202,11 +188,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             field.style.width = 72f;
             field.RegisterValueChangedCallback(evt =>
             {
-                var clampedValue = Mathf.Max(0, evt.newValue);
-                if (clampedValue != evt.newValue)
-                    field.SetValueWithoutNotify(clampedValue);
-
-                setter(clampedValue);
+                setter(Mathf.Max(0, evt.newValue));
                 UpdatePreview();
             });
             toolbar.Add(field);
@@ -718,10 +700,6 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             }
 
             var validation = EntityStatsFormulaValidator.Validate(m_formula);
-            var graphValidation = m_graphAsset ? m_graphAsset.ValidateGraph() : null;
-
-            UpdateDiagnostics(validation, graphValidation);
-            m_graphView?.ApplyDiagnostics(validation, graphValidation);
 
             if (validation.hasErrors)
             {
@@ -746,34 +724,6 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             m_previewLabel.text = $"Preview: {FormatPreview(GetPreviewLabel(), CreatePreviewContext(m_formula.target))}";
         }
 
-        void UpdateDiagnostics(
-            EntityStatsFormulaValidationResult validation,
-            EntityStatsFormulaValidationResult graphValidation
-        )
-        {
-            if (m_diagnosticsLabel == null)
-                return;
-
-            var diagnostics = new List<EntityStatsFormulaDiagnostic>();
-
-            if (validation != null)
-                diagnostics.AddRange(validation.diagnostics);
-
-            if (graphValidation != null)
-                diagnostics.AddRange(graphValidation.diagnostics);
-
-            if (diagnostics.Count == 0)
-            {
-                m_diagnosticsLabel.text = "Diagnostics: Valid";
-                return;
-            }
-
-            var errors = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Error);
-            var warnings = diagnostics.Count(diagnostic => diagnostic.severity == EntityStatsFormulaDiagnosticSeverity.Warning);
-            m_diagnosticsLabel.text = $"Diagnostics: {errors} error(s), {warnings} warning(s)\n" + string.Join("\n", diagnostics.Select(diagnostic =>
-                $"• {diagnostic.severity}: {diagnostic.message}{(string.IsNullOrEmpty(diagnostic.nodeGuid) ? string.Empty : $" [Node {diagnostic.nodeGuid}]")}{(string.IsNullOrEmpty(diagnostic.portName) ? string.Empty : $" Port {diagnostic.portName}")}"));
-        }
-
         string GetPreviewLabel()
         {
             switch (m_previewMode)
@@ -789,23 +739,20 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
         string FormatPreview(string label, EntityStatsFormulaContext context)
         {
-            if (!EntityStatsFormulaEvaluator.TryEvaluateRaw(m_formula, context, out var value, out var rawValue))
+            if (!EntityStatsFormulaEvaluator.TryEvaluate(m_formula, context, out var value))
                 return $"{label}: not connected";
 
             var metadata = EntityStatsFormulaTargetMetadataProvider.Get(m_formula.target, context);
             var result = metadata.Format(value);
-            var rawSuffix = !Mathf.Approximately(rawValue, value)
-                ? $" (raw {metadata.Format(rawValue)}, clamped)"
-                : string.Empty;
 
             if (!context.hasBuiltInValue)
-                return $"{label} → Result {result}{rawSuffix}";
+                return $"{label} → Result {result}";
 
             var builtIn = metadata.Format(context.builtInValue);
             var difference = value - context.builtInValue;
             var change = metadata.Format(difference);
             var sign = difference > 0f ? "+" : string.Empty;
-            return $"{label} → Result {result}{rawSuffix} (Built-in {builtIn}, Change {sign}{change})";
+            return $"{label} → Result {result} (Built-in {builtIn}, Change {sign}{change})";
         }
     }
 
@@ -1242,7 +1189,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         }
 
 
-        public void OpenNodeCreationMenuForDroppedEdge(Edge edge, Vector2 localMousePosition)
+        public void OpenNodeCreationMenuForDroppedEdge(Edge edge, Vector2 screenPosition)
         {
             if (edge == null)
                 return;
@@ -1252,100 +1199,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             if (connectedPort == null)
                 return;
 
-            OpenSearch(
-                GetScreenPosition(localMousePosition),
-                GetContentPosition(localMousePosition),
-                connectedPort
-            );
-        }
-
-
-        public void ApplyDiagnostics(
-            EntityStatsFormulaValidationResult validation,
-            EntityStatsFormulaValidationResult graphValidation
-        )
-        {
-            var severitiesByNodeGuid = new Dictionary<string, EntityStatsFormulaDiagnosticSeverity>();
-            CollectNodeDiagnosticSeverities(validation, severitiesByNodeGuid);
-            CollectNodeDiagnosticSeverities(graphValidation, severitiesByNodeGuid);
-
-            foreach (var pair in m_nodesByGuid)
-            {
-                if (severitiesByNodeGuid.TryGetValue(pair.Key, out var severity))
-                    ApplyDiagnosticStyle(pair.Value, severity);
-                else
-                    ClearDiagnosticStyle(pair.Value);
-            }
-        }
-
-        static void CollectNodeDiagnosticSeverities(
-            EntityStatsFormulaValidationResult validation,
-            Dictionary<string, EntityStatsFormulaDiagnosticSeverity> severitiesByNodeGuid
-        )
-        {
-            if (validation == null)
-                return;
-
-            foreach (var diagnostic in validation.diagnostics)
-            {
-                if (diagnostic == null || string.IsNullOrEmpty(diagnostic.nodeGuid))
-                    continue;
-
-                if (
-                    !severitiesByNodeGuid.TryGetValue(diagnostic.nodeGuid, out var currentSeverity)
-                    || GetDiagnosticSeverityRank(diagnostic.severity) > GetDiagnosticSeverityRank(currentSeverity)
-                )
-                    severitiesByNodeGuid[diagnostic.nodeGuid] = diagnostic.severity;
-            }
-        }
-
-        static int GetDiagnosticSeverityRank(EntityStatsFormulaDiagnosticSeverity severity)
-        {
-            switch (severity)
-            {
-                case EntityStatsFormulaDiagnosticSeverity.Error:
-                    return 3;
-                case EntityStatsFormulaDiagnosticSeverity.Warning:
-                    return 2;
-                case EntityStatsFormulaDiagnosticSeverity.Info:
-                    return 1;
-                default:
-                    return 0;
-            }
-        }
-
-        static void ApplyDiagnosticStyle(Node node, EntityStatsFormulaDiagnosticSeverity severity)
-        {
-            var color = GetDiagnosticColor(severity);
-            node.style.borderTopColor = color;
-            node.style.borderRightColor = color;
-            node.style.borderBottomColor = color;
-            node.style.borderLeftColor = color;
-            node.style.borderTopWidth = 3f;
-            node.style.borderRightWidth = 3f;
-            node.style.borderBottomWidth = 3f;
-            node.style.borderLeftWidth = 3f;
-        }
-
-        static void ClearDiagnosticStyle(Node node)
-        {
-            node.style.borderTopWidth = 0f;
-            node.style.borderRightWidth = 0f;
-            node.style.borderBottomWidth = 0f;
-            node.style.borderLeftWidth = 0f;
-        }
-
-        static Color GetDiagnosticColor(EntityStatsFormulaDiagnosticSeverity severity)
-        {
-            switch (severity)
-            {
-                case EntityStatsFormulaDiagnosticSeverity.Error:
-                    return new Color(1f, 0.22f, 0.18f, 1f);
-                case EntityStatsFormulaDiagnosticSeverity.Warning:
-                    return new Color(1f, 0.68f, 0.15f, 1f);
-                default:
-                    return new Color(0.25f, 0.55f, 1f, 1f);
-            }
+            ShowNodeCreationMenu(GetContentPositionFromScreen(screenPosition), connectedPort);
         }
 
         public void ClearGraph()
