@@ -174,112 +174,26 @@ namespace PLAYERTWO.ARPGProject
 
         public EntityStatsFormulaCompiledData Compile()
         {
-            if (m_compiled == null)
+            if (m_compiled == null || m_compiled.version != EntityStatsFormulaGraph.RuntimeCacheVersion)
                 m_compiled = new EntityStatsFormulaCompiledData(this);
 
             return m_compiled;
         }
 
         public void InvalidateCache() => m_compiled = null;
-
-        public bool EnsureValid(string ownerName = null)
-        {
-            nodes ??= new List<EntityStatsFormulaNodeData>();
-            connections ??= new List<EntityStatsFormulaConnectionData>();
-            groups ??= new List<EntityStatsFormulaGroupData>();
-
-            var repaired = false;
-            var seenNodes = new HashSet<string>();
-            var resultFound = false;
-
-            foreach (var node in nodes)
-            {
-                if (node == null)
-                    continue;
-
-                if (string.IsNullOrEmpty(node.guid) || !seenNodes.Add(node.guid))
-                {
-                    node.guid = Guid.NewGuid().ToString();
-                    repaired = true;
-                }
-
-                if (node.type == EntityStatsFormulaNodeType.Result)
-                {
-                    if (resultFound)
-                    {
-                        node.type = EntityStatsFormulaNodeType.Reroute;
-                        repaired = true;
-                    }
-                    else
-                    {
-                        resultFound = true;
-                    }
-                }
-            }
-
-            if (!resultFound)
-            {
-                nodes.Add(new EntityStatsFormulaNodeData
-                {
-                    type = EntityStatsFormulaNodeType.Result,
-                    position = new Rect(520, 180, 120, 72),
-                });
-                repaired = true;
-            }
-
-            var validNodeGuids = new HashSet<string>();
-            foreach (var node in nodes)
-            {
-                if (node != null)
-                    validNodeGuids.Add(node.guid);
-            }
-
-            var seenInputs = new HashSet<string>();
-            for (var i = connections.Count - 1; i >= 0; i--)
-            {
-                var connection = connections[i];
-
-                if (
-                    connection == null
-                    || !validNodeGuids.Contains(connection.outputNodeGuid)
-                    || !validNodeGuids.Contains(connection.inputNodeGuid)
-                )
-                {
-                    connections.RemoveAt(i);
-                    repaired = true;
-                    continue;
-                }
-
-                var key = EntityStatsFormulaCompiledData.GetConnectionKey(
-                    connection.inputNodeGuid,
-                    connection.inputPortName
-                );
-
-                if (!seenInputs.Add(key))
-                {
-                    connections.RemoveAt(i);
-                    repaired = true;
-                }
-            }
-
-            if (repaired)
-            {
-                InvalidateCache();
-                Debug.LogWarning($"Repaired invalid stats formula data{(string.IsNullOrEmpty(ownerName) ? string.Empty : $" in {ownerName}")}.");
-            }
-
-            return repaired;
-        }
     }
 
     public sealed class EntityStatsFormulaCompiledData
     {
+        public readonly int version;
         public readonly Dictionary<string, EntityStatsFormulaNodeData> nodesByGuid = new();
         public readonly Dictionary<string, EntityStatsFormulaConnectionData> inputConnections = new();
         public readonly EntityStatsFormulaNodeData resultNode;
 
         public EntityStatsFormulaCompiledData(EntityStatsFormulaData formula)
         {
+            version = EntityStatsFormulaGraph.RuntimeCacheVersion;
+
             if (formula == null)
                 return;
 
@@ -475,7 +389,14 @@ namespace PLAYERTWO.ARPGProject
         {
             formula ??= new EntityStatsFormulaData();
             formula.enabled = true;
-            formula.EnsureValid(name);
+
+            if (formula.GetResultNode() == null)
+                formula.nodes.Add(new EntityStatsFormulaNodeData
+                {
+                    type = EntityStatsFormulaNodeType.Result,
+                    position = new Rect(520, 180, 120, 72),
+                });
+
             formula.InvalidateCache();
         }
     }
@@ -487,6 +408,7 @@ namespace PLAYERTWO.ARPGProject
     public class EntityStatsFormulaGraph : ScriptableObject
     {
         public const int CurrentSchemaVersion = 2;
+        public static int RuntimeCacheVersion { get; private set; } = 1;
 
         public int schemaVersion = CurrentSchemaVersion;
         public List<EntityStatsFormulaData> formulas = new();
@@ -533,9 +455,6 @@ namespace PLAYERTWO.ARPGProject
                 : EntityStatsFormulaValidator.Validate(null);
         }
 
-        public EntityStatsFormulaValidationResult ValidateGraph() =>
-            EntityStatsFormulaValidator.ValidateGraph(this);
-
 
         public string ExportJson(bool prettyPrint = true) =>
             JsonUtility.ToJson(this, prettyPrint);
@@ -552,6 +471,7 @@ namespace PLAYERTWO.ARPGProject
 
         public void InvalidateRuntimeCache()
         {
+            RuntimeCacheVersion++;
             m_formulaByTarget = null;
 
             foreach (var formula in formulas)
@@ -602,7 +522,69 @@ namespace PLAYERTWO.ARPGProject
             }
         }
 
-        static void EnsureFormulaData(EntityStatsFormulaData formula) => formula?.EnsureValid();
+        static void EnsureFormulaData(EntityStatsFormulaData formula)
+        {
+            formula.nodes ??= new List<EntityStatsFormulaNodeData>();
+            formula.connections ??= new List<EntityStatsFormulaConnectionData>();
+            formula.groups ??= new List<EntityStatsFormulaGroupData>();
 
+            var seenNodes = new HashSet<string>();
+            var resultFound = false;
+
+            foreach (var node in formula.nodes)
+            {
+                if (node == null)
+                    continue;
+
+                if (string.IsNullOrEmpty(node.guid) || !seenNodes.Add(node.guid))
+                    node.guid = Guid.NewGuid().ToString();
+
+                if (node.type == EntityStatsFormulaNodeType.Result)
+                {
+                    if (resultFound)
+                        node.type = EntityStatsFormulaNodeType.Reroute;
+                    else
+                        resultFound = true;
+                }
+            }
+
+            if (!resultFound)
+                formula.nodes.Add(new EntityStatsFormulaNodeData
+                {
+                    type = EntityStatsFormulaNodeType.Result,
+                    position = new Rect(520, 180, 120, 72),
+                });
+
+            var validNodeGuids = new HashSet<string>();
+            foreach (var node in formula.nodes)
+            {
+                if (node != null)
+                    validNodeGuids.Add(node.guid);
+            }
+
+            var seenInputs = new HashSet<string>();
+            for (var i = formula.connections.Count - 1; i >= 0; i--)
+            {
+                var connection = formula.connections[i];
+
+                if (
+                    connection == null
+                    || !validNodeGuids.Contains(connection.outputNodeGuid)
+                    || !validNodeGuids.Contains(connection.inputNodeGuid)
+                )
+                {
+                    formula.connections.RemoveAt(i);
+                    continue;
+                }
+
+                var key = EntityStatsFormulaCompiledData.GetConnectionKey(
+                    connection.inputNodeGuid,
+                    connection.inputPortName
+                );
+
+                if (!seenInputs.Add(key))
+                    formula.connections.RemoveAt(i);
+            }
+        }
     }
 }
