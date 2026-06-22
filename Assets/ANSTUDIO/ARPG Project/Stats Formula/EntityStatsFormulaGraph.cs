@@ -464,7 +464,7 @@ namespace PLAYERTWO.ARPGProject
 
     [CreateAssetMenu(
         fileName = "New Entity Stats Formula Function",
-        menuName = "PLAYER TWO/ARPG Project/Entity/Stats Formula Function"
+        menuName = "ANSTUDIO/ARPG Project/Entity/Stats Formula Function"
     )]
     public class EntityStatsFormulaFunction : ScriptableObject
     {
@@ -484,7 +484,7 @@ namespace PLAYERTWO.ARPGProject
 
     [CreateAssetMenu(
         fileName = "New Entity Stats Formula Graph",
-        menuName = "PLAYER TWO/ARPG Project/Entity/Stats Formula Graph"
+        menuName = "ANSTUDIO/ARPG Project/Entity/Stats Formula Graph"
     )]
     public class EntityStatsFormulaGraph : ScriptableObject
     {

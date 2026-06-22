@@ -1,0 +1,421 @@
+/* Stats Formula Editor visual polish. UI-only styling. */
+
+.stats-formula-toolbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    align-items: stretch;
+    padding: 6px 8px 4px 8px;
+    background-color: rgb(35, 38, 45);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.toolbar-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 2px 6px 6px 0;
+    padding: 6px 8px;
+    border-radius: 9px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(142, 154, 180, 0.23);
+    background-color: rgb(48, 51, 59);
+}
+
+.graph-toolbar-section {
+    flex-wrap: nowrap;
+    flex-grow: 1;
+    min-height: 42px;
+}
+
+.edit-tools-section {
+    flex-wrap: nowrap;
+    align-items: center;
+    min-height: 36px;
+    padding: 6px 9px;
+}
+
+#ToolbarSectionLabel,
+.toolbar-inline-label {
+    color: rgb(158, 171, 197);
+    -unity-font-style: bold;
+    font-size: 11px;
+    margin-left: 5px;
+    margin-right: 7px;
+}
+
+Button {
+    min-height: 24px;
+    margin: 2px 4px 2px 0;
+    padding: 4px 10px;
+    border-radius: 7px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(111, 124, 150, 0.32);
+    background-color: rgb(36, 39, 47);
+    color: rgb(219, 226, 238);
+    -unity-font-style: bold;
+}
+
+Button:hover {
+    background-color: rgb(48, 55, 68);
+    border-color: rgba(139, 167, 220, 0.45);
+}
+
+Button:active {
+    background-color: rgb(28, 31, 38);
+}
+
+.primary-toolbar-button {
+    padding-left: 14px;
+    padding-right: 16px;
+    border-color: rgba(107, 145, 214, 0.35);
+    background-color: rgb(38, 44, 57);
+}
+
+.icon-toolbar-button {
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+    height: 26px;
+    min-height: 26px;
+    max-height: 26px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 1px;
+    margin-left: 2px;
+    margin-right: 4px;
+    -unity-text-align: middle-center;
+    font-size: 15px;
+    -unity-font-style: bold;
+}
+
+.toolbar-graph-field { width: 300px; min-width: 240px; }
+.toolbar-stat-field { width: 140px; min-width: 120px; }
+.toolbar-enabled-toggle { margin-left: 0; margin-right: 6px; min-width: 18px; }
+
+.unity-base-field,
+.unity-enum-field,
+.unity-object-field,
+.unity-integer-field,
+.unity-float-field,
+.unity-text-field,
+.unity-popup-field {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.unity-base-field__label {
+    color: rgb(156, 169, 193);
+    -unity-font-style: bold;
+}
+
+.unity-base-field__input,
+.unity-text-input {
+    min-height: 23px;
+    border-radius: 6px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(85, 105, 142, 0.55);
+    background-color: rgb(28, 34, 47);
+    color: rgb(235, 241, 250);
+}
+
+.unity-toggle__input {
+    border-radius: 10px;
+    border-color: rgba(100, 115, 140, 0.55);
+    background-color: rgb(36, 43, 53);
+}
+
+.unity-toggle:checked .unity-toggle__input {
+    background-color: rgb(73, 177, 106);
+    border-color: rgb(92, 214, 129);
+}
+
+.formula-health-badge {
+    padding: 3px 8px;
+    margin: 0 4px;
+    border-radius: 7px;
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+.health-valid { color: rgb(184, 255, 194); background-color: rgba(48, 134, 75, 0.62); }
+.health-warning { color: rgb(255, 224, 150); background-color: rgba(157, 105, 28, 0.58); }
+.health-error { color: rgb(255, 169, 164); background-color: rgba(152, 54, 56, 0.62); }
+.health-disabled { color: rgb(199, 204, 212); background-color: rgba(82, 88, 99, 0.62); }
+
+.stats-formula-content {
+    flex-direction: row;
+    flex-grow: 1;
+    min-height: 0;
+    background-color: rgb(21, 24, 30);
+}
+
+.stats-formula-graph-column {
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+    background-color: rgb(22, 25, 31);
+}
+
+.stats-formula-graph-view {
+    flex-grow: 1;
+    min-height: 0;
+    background-color: rgb(21, 24, 31);
+}
+
+.stats-formula-graph-view GridBackground {
+    --grid-background-color: rgb(21, 24, 31);
+    --line-color: rgba(82, 96, 119, 0.18);
+    --thick-line-color: rgba(82, 96, 119, 0.30);
+    --spacing: 16;
+}
+
+.formula-minimap {
+    border-radius: 6px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(104, 123, 155, 0.55);
+    background-color: rgba(17, 21, 29, 0.92);
+}
+
+.preview-card {
+    width: 300px;
+    min-width: 300px;
+    flex-shrink: 0;
+    margin: 10px 12px 10px 8px;
+    padding: 12px;
+    border-radius: 10px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(104, 123, 155, 0.68);
+    background-color: rgb(31, 38, 52);
+    overflow: hidden;
+}
+
+#PreviewCardTitle {
+    -unity-font-style: bold;
+    color: rgb(246, 249, 255);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.preview-controls {
+    flex-direction: column;
+    flex-shrink: 0;
+    margin-bottom: 9px;
+    padding-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(126, 144, 176, 0.25);
+}
+
+.preview-control-label {
+    color: rgb(150, 166, 193);
+    -unity-font-style: bold;
+    font-size: 11px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.preview-dropdown-field,
+.preview-refresh-button {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 4px;
+}
+
+.preview-dropdown-field .unity-base-field__label,
+.preview-dropdown-field .unity-label {
+    width: 0;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.preview-dropdown-field .unity-base-field__input,
+.preview-dropdown-field .unity-enum-field__input,
+.preview-dropdown-field .unity-popup-field__input {
+    flex-grow: 1;
+    min-width: 210px;
+}
+
+.preview-number-field {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 3px;
+}
+
+.preview-number-field .unity-base-field__label {
+    width: 42px;
+    min-width: 42px;
+}
+
+.preview-number-field .unity-base-field__input {
+    flex-grow: 1;
+    min-width: 180px;
+}
+
+.preview-scroll { flex-grow: 1; min-height: 0; }
+.preview-row { flex-direction: column; margin-bottom: 8px; }
+#PreviewRowName { color: rgb(150, 166, 193); font-size: 11px; }
+.preview-row-value { flex-grow: 1; white-space: normal; -unity-font-style: bold; color: rgb(232, 239, 252); }
+.preview-result-value { white-space: normal; color: rgb(111, 255, 151); font-size: 28px; }
+
+.diagnostics-panel {
+    flex-shrink: 0;
+    max-height: 120px;
+    padding: 6px 10px;
+    background-color: rgb(18, 20, 25);
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.diagnostics-header { -unity-font-style: bold; margin-bottom: 3px; color: rgb(218, 225, 238); }
+.diagnostic-valid { color: rgb(127, 255, 151); -unity-font-style: bold; }
+.diagnostic-item {
+    margin: 2px 0;
+    padding: 6px 8px;
+    border-radius: 7px;
+    white-space: normal;
+    -unity-text-align: upper-left;
+    background-color: rgba(35, 40, 50, 0.86);
+}
+.diagnostic-error { border-left-width: 3px; border-left-color: rgb(214, 72, 79); }
+.diagnostic-warning { border-left-width: 3px; border-left-color: rgb(232, 164, 68); }
+.diagnostic-info { border-left-width: 3px; border-left-color: rgb(78, 137, 224); }
+
+.formula-node {
+    border-radius: 9px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgba(123, 140, 170, 0.42);
+    background-color: rgb(32, 36, 46);
+    overflow: hidden;
+}
+
+.formula-node:selected { border-color: rgb(129, 163, 225); }
+.formula-node-header { border-top-left-radius: 8px; border-top-right-radius: 8px; padding: 4px 6px; }
+.formula-node-input .formula-node-header,
+.formula-node-builtinvalue .formula-node-header,
+.formula-node-formulareference .formula-node-header,
+.formula-node-formulafunction .formula-node-header { background-color: rgb(52, 114, 196); }
+.formula-node-constant .formula-node-header,
+.formula-node-percentconstant .formula-node-header { background-color: rgb(54, 146, 78); }
+.formula-node-operator .formula-node-header { background-color: rgb(163, 106, 43); }
+.formula-node-result .formula-node-header { background-color: rgb(154, 61, 66); }
+
+.node-badge {
+    margin-left: 7px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.18);
+    -unity-font-style: bold;
+}
+.value-badge { color: rgb(210, 255, 215); }
+.target-badge, .function-badge { color: rgb(200, 225, 255); }
+.operator-badge { color: rgb(255, 222, 160); }
+
+.comment-note-card {
+    background-color: rgb(255, 242, 165);
+    border-color: rgba(120, 95, 25, 0.45);
+    border-width: 1px;
+}
+.comment-note-card .formula-node-header { background-color: rgba(255, 224, 95, 0.88); color: rgb(55, 45, 20); }
+.comment-note-text { font-size: 13px; color: rgb(45, 38, 20); white-space: normal; }
+.comment-resize-handle {
+    width: 16px;
+    height: 16px;
+    align-self: flex-end;
+    background-color: rgba(120, 95, 25, 0.28);
+    border-radius: 3px;
+}
+
+.formula-port { border-radius: 8px; }
+.port-value { border-left-width: 3px; border-left-color: rgb(190, 190, 190); }
+.port-percent { border-left-width: 3px; border-left-color: rgb(150, 95, 220); }
+.port-true { border-left-width: 3px; border-left-color: rgb(70, 190, 95); }
+.port-false { border-left-width: 3px; border-left-color: rgb(215, 70, 70); }
+.port-min { border-left-width: 3px; border-left-color: rgb(75, 140, 235); }
+.port-max { border-left-width: 3px; border-left-color: rgb(235, 145, 50); }
+.formula-edge { border-width: 2px; }
+.edge-formula-reference { border-style: dashed; }
+.edge-built-in-value { border-width: 3px; }
+
+.formula-group {
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16);
+}
+.group-description-field { width: 220px; margin-left: 8px; }
+.group-color-field { width: 220px; min-height: 22px; margin-left: 8px; }
+.group-collapse-button { margin-left: 6px; }
+.formula-group-collapsed { min-width: 210px; min-height: 92px; }
+
+/* PNG toolbar icons */
+.icon-toolbar-button,
+.icon-text-toolbar-button {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-text-toolbar-button {
+    padding-left: 9px;
+    padding-right: 12px;
+}
+
+.toolbar-button-icon-image {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.icon-text-toolbar-button .toolbar-button-icon-image {
+    margin-right: 6px;
+}
+
+.icon-toolbar-button:hover .toolbar-button-icon-image,
+.icon-text-toolbar-button:hover .toolbar-button-icon-image {
+    opacity: 1;
+}
+
+/* Connection and port color hints. Runtime C# also sets the real GraphView portColor/EdgeControl colors. */
+.port-output-input,
+.port-output-builtinvalue { border-left-width: 3px; border-left-color: rgb(77, 150, 255); }
+.port-output-constant { border-left-width: 3px; border-left-color: rgb(90, 210, 111); }
+.port-output-percentconstant { border-left-width: 3px; border-left-color: rgb(158, 107, 235); }
+.port-output-operator { border-left-width: 3px; border-left-color: rgb(242, 171, 72); }
+.port-output-formulareference,
+.port-output-formulafunction { border-left-width: 3px; border-left-color: rgb(174, 143, 235); }
+.port-output-result { border-left-width: 3px; border-left-color: rgb(240, 122, 128); }
+.port-time { border-left-width: 3px; border-left-color: rgb(87, 199, 219); }
+
+.edge-output-input,
+.edge-output-builtinvalue,
+.edge-output-constant,
+.edge-output-percentconstant,
+.edge-output-operator,
+.edge-output-formulareference,
+.edge-output-formulafunction {
+    border-radius: 2px;
+}

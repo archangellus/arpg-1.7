@@ -1,0 +1,4358 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5164bfb8305cb1d4ab1a8af276ed36cc, type: 3}
+  m_Name: Built-In Stats Formula Examples
+  m_EditorClassIdentifier: Assembly-CSharp::PLAYERTWO.ARPGProject.EntityStatsFormulaGraph
+  schemaVersion: 2
+  formulas:
+  - target: 0
+    enabled: 1
+    nodes:
+    - guid: 10cf3ab2-3122-4de6-88d5-a38d58c0bf21
+      type: 0
+      input: 1
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: c34353dd-0a76-4862-9b89-91feece45663
+      type: 0
+      input: 14
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 16285c21-9cb8-43ee-9c58-567925e5f32a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: e40267f4-a56a-4996-8001-c54977ff04d8
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 8
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 31ae222e-df6d-431f-9627-9928747e9243
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 0b7d5e58-ba6d-4b94-9288-94b9341cb51f
+      type: 0
+      input: 5
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 373ed40f-8cdc-4a59-a967-9a37e9dd9f6b
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7a1a6c2d-d217-44c6-9834-adfa40e4c997
+      type: 0
+      input: 10
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: 6a670b20-59a5-40ba-a1b5-d767b38c3ac2
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 5a64213a-ae9a-4476-8356-1455ed848b97
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 10cf3ab2-3122-4de6-88d5-a38d58c0bf21
+      inputNodeGuid: 16285c21-9cb8-43ee-9c58-567925e5f32a
+      inputPortName: A
+    - outputNodeGuid: c34353dd-0a76-4862-9b89-91feece45663
+      inputNodeGuid: 16285c21-9cb8-43ee-9c58-567925e5f32a
+      inputPortName: B
+    - outputNodeGuid: 16285c21-9cb8-43ee-9c58-567925e5f32a
+      inputNodeGuid: 31ae222e-df6d-431f-9627-9928747e9243
+      inputPortName: A
+    - outputNodeGuid: e40267f4-a56a-4996-8001-c54977ff04d8
+      inputNodeGuid: 31ae222e-df6d-431f-9627-9928747e9243
+      inputPortName: B
+    - outputNodeGuid: 31ae222e-df6d-431f-9627-9928747e9243
+      inputNodeGuid: 373ed40f-8cdc-4a59-a967-9a37e9dd9f6b
+      inputPortName: A
+    - outputNodeGuid: 0b7d5e58-ba6d-4b94-9288-94b9341cb51f
+      inputNodeGuid: 373ed40f-8cdc-4a59-a967-9a37e9dd9f6b
+      inputPortName: B
+    - outputNodeGuid: 373ed40f-8cdc-4a59-a967-9a37e9dd9f6b
+      inputNodeGuid: 6a670b20-59a5-40ba-a1b5-d767b38c3ac2
+      inputPortName: A
+    - outputNodeGuid: 7a1a6c2d-d217-44c6-9834-adfa40e4c997
+      inputNodeGuid: 6a670b20-59a5-40ba-a1b5-d767b38c3ac2
+      inputPortName: B
+    - outputNodeGuid: 6a670b20-59a5-40ba-a1b5-d767b38c3ac2
+      inputNodeGuid: 5a64213a-ae9a-4476-8356-1455ed848b97
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 1
+    enabled: 1
+    nodes:
+    - guid: a44321ff-9307-4af9-a8ae-5352c26a795d
+      type: 0
+      input: 1
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: bbe7032b-ad20-4e82-8545-8023584bccc3
+      type: 0
+      input: 14
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 2bd71db4-6ea6-473e-b1d2-f537f19a9a47
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 792a584b-bb12-4445-99e5-2c6f9e40802f
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 4
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: c5ca65c4-d24e-4a38-9771-7930ae255866
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 2a7ebe50-93b4-4c3e-b1cc-fe551ad0e5e4
+      type: 0
+      input: 6
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: f89f9af4-25ad-4506-a2c0-102b6267ad2e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 2964afce-47be-42d4-9627-297213b5e755
+      type: 0
+      input: 10
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: ebdddb0c-d2f1-41d2-a642-ea85ba0d6d9d
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: e65cd0d5-8a8f-4fab-b1f0-fe155e8958c3
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: a44321ff-9307-4af9-a8ae-5352c26a795d
+      inputNodeGuid: 2bd71db4-6ea6-473e-b1d2-f537f19a9a47
+      inputPortName: A
+    - outputNodeGuid: bbe7032b-ad20-4e82-8545-8023584bccc3
+      inputNodeGuid: 2bd71db4-6ea6-473e-b1d2-f537f19a9a47
+      inputPortName: B
+    - outputNodeGuid: 2bd71db4-6ea6-473e-b1d2-f537f19a9a47
+      inputNodeGuid: c5ca65c4-d24e-4a38-9771-7930ae255866
+      inputPortName: A
+    - outputNodeGuid: 792a584b-bb12-4445-99e5-2c6f9e40802f
+      inputNodeGuid: c5ca65c4-d24e-4a38-9771-7930ae255866
+      inputPortName: B
+    - outputNodeGuid: c5ca65c4-d24e-4a38-9771-7930ae255866
+      inputNodeGuid: f89f9af4-25ad-4506-a2c0-102b6267ad2e
+      inputPortName: A
+    - outputNodeGuid: 2a7ebe50-93b4-4c3e-b1cc-fe551ad0e5e4
+      inputNodeGuid: f89f9af4-25ad-4506-a2c0-102b6267ad2e
+      inputPortName: B
+    - outputNodeGuid: f89f9af4-25ad-4506-a2c0-102b6267ad2e
+      inputNodeGuid: ebdddb0c-d2f1-41d2-a642-ea85ba0d6d9d
+      inputPortName: A
+    - outputNodeGuid: 2964afce-47be-42d4-9627-297213b5e755
+      inputNodeGuid: ebdddb0c-d2f1-41d2-a642-ea85ba0d6d9d
+      inputPortName: B
+    - outputNodeGuid: ebdddb0c-d2f1-41d2-a642-ea85ba0d6d9d
+      inputNodeGuid: e65cd0d5-8a8f-4fab-b1f0-fe155e8958c3
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 2
+    enabled: 1
+    nodes:
+    - guid: 5f44996a-0ae2-4026-97ca-8591f3249acc
+      type: 0
+      input: 4
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: a9d0b031-298c-4e13-86a5-17a664a86e89
+      type: 0
+      input: 17
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 0979e22a-c4ed-4db4-aa04-253f99b01cbf
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 02c74cdc-9e60-4894-aa63-6b619fd39ed4
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 4
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 28bc6ab6-d735-4e29-a3c7-ad44871376f5
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: e525734a-f9a8-4249-a6b7-d9701a66507b
+      type: 0
+      input: 11
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 6309fbfd-73e7-44cb-b0d7-29267f0941f6
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: f5573e05-5d1a-48c5-bd42-35859d140fab
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 5f44996a-0ae2-4026-97ca-8591f3249acc
+      inputNodeGuid: 0979e22a-c4ed-4db4-aa04-253f99b01cbf
+      inputPortName: A
+    - outputNodeGuid: a9d0b031-298c-4e13-86a5-17a664a86e89
+      inputNodeGuid: 0979e22a-c4ed-4db4-aa04-253f99b01cbf
+      inputPortName: B
+    - outputNodeGuid: 0979e22a-c4ed-4db4-aa04-253f99b01cbf
+      inputNodeGuid: 28bc6ab6-d735-4e29-a3c7-ad44871376f5
+      inputPortName: A
+    - outputNodeGuid: 02c74cdc-9e60-4894-aa63-6b619fd39ed4
+      inputNodeGuid: 28bc6ab6-d735-4e29-a3c7-ad44871376f5
+      inputPortName: B
+    - outputNodeGuid: 28bc6ab6-d735-4e29-a3c7-ad44871376f5
+      inputNodeGuid: 6309fbfd-73e7-44cb-b0d7-29267f0941f6
+      inputPortName: A
+    - outputNodeGuid: e525734a-f9a8-4249-a6b7-d9701a66507b
+      inputNodeGuid: 6309fbfd-73e7-44cb-b0d7-29267f0941f6
+      inputPortName: B
+    - outputNodeGuid: 6309fbfd-73e7-44cb-b0d7-29267f0941f6
+      inputNodeGuid: f5573e05-5d1a-48c5-bd42-35859d140fab
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 3
+    enabled: 1
+    nodes:
+    - guid: 03402c76-5315-4553-b360-9305eb83caea
+      type: 0
+      input: 4
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 15d18b49-9d13-4209-bb6a-c949d1612cca
+      type: 0
+      input: 17
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: c8aa65f0-be8b-4ee8-8173-55ba66ab27f2
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 18d523b2-ab43-4cac-9d5a-18a08aacb06c
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 2
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 86e9ecec-52f7-4210-96db-c5626987131d
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 00480465-70a3-4938-8b3a-02e7595e42de
+      type: 0
+      input: 11
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: ea694116-70f1-4702-9f2a-1c01619a5909
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7d4fd617-7ac0-4a89-b596-4da344b76ef0
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 03402c76-5315-4553-b360-9305eb83caea
+      inputNodeGuid: c8aa65f0-be8b-4ee8-8173-55ba66ab27f2
+      inputPortName: A
+    - outputNodeGuid: 15d18b49-9d13-4209-bb6a-c949d1612cca
+      inputNodeGuid: c8aa65f0-be8b-4ee8-8173-55ba66ab27f2
+      inputPortName: B
+    - outputNodeGuid: c8aa65f0-be8b-4ee8-8173-55ba66ab27f2
+      inputNodeGuid: 86e9ecec-52f7-4210-96db-c5626987131d
+      inputPortName: A
+    - outputNodeGuid: 18d523b2-ab43-4cac-9d5a-18a08aacb06c
+      inputNodeGuid: 86e9ecec-52f7-4210-96db-c5626987131d
+      inputPortName: B
+    - outputNodeGuid: 86e9ecec-52f7-4210-96db-c5626987131d
+      inputNodeGuid: ea694116-70f1-4702-9f2a-1c01619a5909
+      inputPortName: A
+    - outputNodeGuid: 00480465-70a3-4938-8b3a-02e7595e42de
+      inputNodeGuid: ea694116-70f1-4702-9f2a-1c01619a5909
+      inputPortName: B
+    - outputNodeGuid: ea694116-70f1-4702-9f2a-1c01619a5909
+      inputNodeGuid: 7d4fd617-7ac0-4a89-b596-4da344b76ef0
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 4
+    enabled: 1
+    nodes:
+    - guid: 99c83d21-e856-4c77-b3e9-7eb05cca7ba6
+      type: 0
+      input: 34
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 87f02cba-c9c9-4f04-8776-3201978b7e50
+      type: 0
+      input: 35
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: afc371e8-c9ee-48ca-a019-325550b6e10f
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 236
+        width: 170
+        height: 76
+    - guid: 455d0c4f-14c7-4e05-bd90-72a692d4b2c1
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 324
+        width: 170
+        height: 76
+    - guid: 5baae08d-2a8b-4639-a95d-8bbca70a7006
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 1
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7b279fef-faa2-4c88-9354-55d9aa62b9c8
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 458c59b7-88ec-43e3-afff-dd3f3b0c34f2
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 946f206c-3e25-4678-adb2-d2c9a93ededb
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: afc371e8-c9ee-48ca-a019-325550b6e10f
+      inputNodeGuid: 5baae08d-2a8b-4639-a95d-8bbca70a7006
+      inputPortName: A
+    - outputNodeGuid: 455d0c4f-14c7-4e05-bd90-72a692d4b2c1
+      inputNodeGuid: 5baae08d-2a8b-4639-a95d-8bbca70a7006
+      inputPortName: B
+    - outputNodeGuid: 87f02cba-c9c9-4f04-8776-3201978b7e50
+      inputNodeGuid: 7b279fef-faa2-4c88-9354-55d9aa62b9c8
+      inputPortName: A
+    - outputNodeGuid: 5baae08d-2a8b-4639-a95d-8bbca70a7006
+      inputNodeGuid: 7b279fef-faa2-4c88-9354-55d9aa62b9c8
+      inputPortName: B
+    - outputNodeGuid: 99c83d21-e856-4c77-b3e9-7eb05cca7ba6
+      inputNodeGuid: 458c59b7-88ec-43e3-afff-dd3f3b0c34f2
+      inputPortName: A
+    - outputNodeGuid: 7b279fef-faa2-4c88-9354-55d9aa62b9c8
+      inputNodeGuid: 458c59b7-88ec-43e3-afff-dd3f3b0c34f2
+      inputPortName: B
+    - outputNodeGuid: 458c59b7-88ec-43e3-afff-dd3f3b0c34f2
+      inputNodeGuid: 946f206c-3e25-4678-adb2-d2c9a93ededb
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 5
+    enabled: 1
+    nodes:
+    - guid: eff3101c-cd40-4911-8bcc-340249b1c988
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: ec9ee2d6-46aa-4c5d-bd3a-1db10610a5b6
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: cb684364-c2b8-4ded-835b-dbe9d45959af
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 72816aee-b486-46aa-9a76-83be58243fe4
+      type: 0
+      input: 3
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 88a86ba7-bebd-4498-90e7-65dee758e962
+      type: 0
+      input: 16
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 324
+        width: 170
+        height: 76
+    - guid: 0f6b873c-5533-46d6-8290-5e99dfee53ea
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 82ce3259-3c16-4cf7-8e62-75b046f65e5c
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 2
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 412
+        width: 170
+        height: 76
+    - guid: 37691d6a-bd1f-43f5-a873-5076591aa667
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 2eff01b2-4f7a-4fa7-8491-2808b6bd659e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 3d6472f8-7efe-4dfe-a87d-d018454adcc0
+      type: 0
+      input: 12
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: 2fac1158-34e0-47d7-b3ff-7549fff30e01
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 9c2b949c-e318-45fd-aae4-e575dbcc990d
+      type: 0
+      input: 28
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: c967c54b-2369-4383-a576-7dc6c940dd3e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: 9564f93d-591c-4362-93da-02bd0e341919
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: eff3101c-cd40-4911-8bcc-340249b1c988
+      inputNodeGuid: cb684364-c2b8-4ded-835b-dbe9d45959af
+      inputPortName: A
+    - outputNodeGuid: ec9ee2d6-46aa-4c5d-bd3a-1db10610a5b6
+      inputNodeGuid: cb684364-c2b8-4ded-835b-dbe9d45959af
+      inputPortName: B
+    - outputNodeGuid: 72816aee-b486-46aa-9a76-83be58243fe4
+      inputNodeGuid: 0f6b873c-5533-46d6-8290-5e99dfee53ea
+      inputPortName: A
+    - outputNodeGuid: 88a86ba7-bebd-4498-90e7-65dee758e962
+      inputNodeGuid: 0f6b873c-5533-46d6-8290-5e99dfee53ea
+      inputPortName: B
+    - outputNodeGuid: 0f6b873c-5533-46d6-8290-5e99dfee53ea
+      inputNodeGuid: 37691d6a-bd1f-43f5-a873-5076591aa667
+      inputPortName: A
+    - outputNodeGuid: 82ce3259-3c16-4cf7-8e62-75b046f65e5c
+      inputNodeGuid: 37691d6a-bd1f-43f5-a873-5076591aa667
+      inputPortName: B
+    - outputNodeGuid: cb684364-c2b8-4ded-835b-dbe9d45959af
+      inputNodeGuid: 2eff01b2-4f7a-4fa7-8491-2808b6bd659e
+      inputPortName: A
+    - outputNodeGuid: 37691d6a-bd1f-43f5-a873-5076591aa667
+      inputNodeGuid: 2eff01b2-4f7a-4fa7-8491-2808b6bd659e
+      inputPortName: B
+    - outputNodeGuid: 2eff01b2-4f7a-4fa7-8491-2808b6bd659e
+      inputNodeGuid: 2fac1158-34e0-47d7-b3ff-7549fff30e01
+      inputPortName: A
+    - outputNodeGuid: 3d6472f8-7efe-4dfe-a87d-d018454adcc0
+      inputNodeGuid: 2fac1158-34e0-47d7-b3ff-7549fff30e01
+      inputPortName: B
+    - outputNodeGuid: 2fac1158-34e0-47d7-b3ff-7549fff30e01
+      inputNodeGuid: c967c54b-2369-4383-a576-7dc6c940dd3e
+      inputPortName: A
+    - outputNodeGuid: 9c2b949c-e318-45fd-aae4-e575dbcc990d
+      inputNodeGuid: c967c54b-2369-4383-a576-7dc6c940dd3e
+      inputPortName: B
+    - outputNodeGuid: c967c54b-2369-4383-a576-7dc6c940dd3e
+      inputNodeGuid: 9564f93d-591c-4362-93da-02bd0e341919
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 6
+    enabled: 1
+    nodes:
+    - guid: 3b6471cf-7ea9-4929-a1fc-95e6077db3d7
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: ab94f2e3-ce59-4e8d-8c3f-3225ca05e2dd
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 5
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 781588b4-d51b-45fd-876d-09522f46797b
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 85a1ddd6-55fd-4466-9978-739fe376faa3
+      type: 0
+      input: 4
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 9faf7a75-8b7c-4a6b-b997-7474808b46f2
+      type: 0
+      input: 17
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 324
+        width: 170
+        height: 76
+    - guid: 858242d1-2670-4ed3-875c-981036dad271
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 48d5b33d-225e-4a2e-9b4d-a85285557d79
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 2
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 412
+        width: 170
+        height: 76
+    - guid: 7cffdb00-9238-4892-ada1-46db3f15db44
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 94ec5e22-9ebe-4ae9-a70e-593c1f3ff891
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: ce082ff5-34fc-4535-be2c-4f3714b272de
+      type: 0
+      input: 13
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: bacc229c-0c8f-40ff-8546-1fef1edba2fb
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: bd222ce7-fabb-467d-9b8b-217299e738f2
+      type: 0
+      input: 29
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 4ad25bcf-83fe-44f8-8362-5be6df187429
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: 9fdf468a-c919-4965-b706-d92790928068
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 3b6471cf-7ea9-4929-a1fc-95e6077db3d7
+      inputNodeGuid: 781588b4-d51b-45fd-876d-09522f46797b
+      inputPortName: A
+    - outputNodeGuid: ab94f2e3-ce59-4e8d-8c3f-3225ca05e2dd
+      inputNodeGuid: 781588b4-d51b-45fd-876d-09522f46797b
+      inputPortName: B
+    - outputNodeGuid: 85a1ddd6-55fd-4466-9978-739fe376faa3
+      inputNodeGuid: 858242d1-2670-4ed3-875c-981036dad271
+      inputPortName: A
+    - outputNodeGuid: 9faf7a75-8b7c-4a6b-b997-7474808b46f2
+      inputNodeGuid: 858242d1-2670-4ed3-875c-981036dad271
+      inputPortName: B
+    - outputNodeGuid: 858242d1-2670-4ed3-875c-981036dad271
+      inputNodeGuid: 7cffdb00-9238-4892-ada1-46db3f15db44
+      inputPortName: A
+    - outputNodeGuid: 48d5b33d-225e-4a2e-9b4d-a85285557d79
+      inputNodeGuid: 7cffdb00-9238-4892-ada1-46db3f15db44
+      inputPortName: B
+    - outputNodeGuid: 781588b4-d51b-45fd-876d-09522f46797b
+      inputNodeGuid: 94ec5e22-9ebe-4ae9-a70e-593c1f3ff891
+      inputPortName: A
+    - outputNodeGuid: 7cffdb00-9238-4892-ada1-46db3f15db44
+      inputNodeGuid: 94ec5e22-9ebe-4ae9-a70e-593c1f3ff891
+      inputPortName: B
+    - outputNodeGuid: 94ec5e22-9ebe-4ae9-a70e-593c1f3ff891
+      inputNodeGuid: bacc229c-0c8f-40ff-8546-1fef1edba2fb
+      inputPortName: A
+    - outputNodeGuid: ce082ff5-34fc-4535-be2c-4f3714b272de
+      inputNodeGuid: bacc229c-0c8f-40ff-8546-1fef1edba2fb
+      inputPortName: B
+    - outputNodeGuid: bacc229c-0c8f-40ff-8546-1fef1edba2fb
+      inputNodeGuid: 4ad25bcf-83fe-44f8-8362-5be6df187429
+      inputPortName: A
+    - outputNodeGuid: bd222ce7-fabb-467d-9b8b-217299e738f2
+      inputNodeGuid: 4ad25bcf-83fe-44f8-8362-5be6df187429
+      inputPortName: B
+    - outputNodeGuid: 4ad25bcf-83fe-44f8-8362-5be6df187429
+      inputNodeGuid: 9fdf468a-c919-4965-b706-d92790928068
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 7
+    enabled: 1
+    nodes:
+    - guid: 15888bbb-fa7d-4811-b474-5cd2feb3deb4
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: ca9e8daf-43a2-43ce-bb5d-e156175f2204
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 6e22ff0c-ca96-4a7a-96c3-102931fea727
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 87f1a9f3-2670-40f6-a24d-e8df0bb455a5
+      type: 0
+      input: 8
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: d5c9b096-1d4b-4937-bbde-19052ad3625b
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 8c87acb6-1d3c-497d-8d38-e8e9964c326e
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 26f2e88c-1df9-4402-a912-326d07d5551a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: a325bb39-59f3-4e7a-8447-9f327472c390
+      type: 0
+      input: 18
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: 35f89153-942b-4d98-9b74-73858a3276b8
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: be8466a8-baa0-4379-9ac4-10ddaca8929b
+      type: 0
+      input: 36
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: f088c98c-5141-49dc-b658-aa99d737e52a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 4
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 3017ee98-43ea-4cc5-a927-c47ddf8d98b2
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 15888bbb-fa7d-4811-b474-5cd2feb3deb4
+      inputNodeGuid: 6e22ff0c-ca96-4a7a-96c3-102931fea727
+      inputPortName: A
+    - outputNodeGuid: ca9e8daf-43a2-43ce-bb5d-e156175f2204
+      inputNodeGuid: 6e22ff0c-ca96-4a7a-96c3-102931fea727
+      inputPortName: B
+    - outputNodeGuid: 6e22ff0c-ca96-4a7a-96c3-102931fea727
+      inputNodeGuid: d5c9b096-1d4b-4937-bbde-19052ad3625b
+      inputPortName: A
+    - outputNodeGuid: 87f1a9f3-2670-40f6-a24d-e8df0bb455a5
+      inputNodeGuid: d5c9b096-1d4b-4937-bbde-19052ad3625b
+      inputPortName: B
+    - outputNodeGuid: d5c9b096-1d4b-4937-bbde-19052ad3625b
+      inputNodeGuid: 26f2e88c-1df9-4402-a912-326d07d5551a
+      inputPortName: A
+    - outputNodeGuid: 8c87acb6-1d3c-497d-8d38-e8e9964c326e
+      inputNodeGuid: 26f2e88c-1df9-4402-a912-326d07d5551a
+      inputPortName: B
+    - outputNodeGuid: 26f2e88c-1df9-4402-a912-326d07d5551a
+      inputNodeGuid: 35f89153-942b-4d98-9b74-73858a3276b8
+      inputPortName: A
+    - outputNodeGuid: a325bb39-59f3-4e7a-8447-9f327472c390
+      inputNodeGuid: 35f89153-942b-4d98-9b74-73858a3276b8
+      inputPortName: B
+    - outputNodeGuid: 35f89153-942b-4d98-9b74-73858a3276b8
+      inputNodeGuid: f088c98c-5141-49dc-b658-aa99d737e52a
+      inputPortName: A
+    - outputNodeGuid: be8466a8-baa0-4379-9ac4-10ddaca8929b
+      inputNodeGuid: f088c98c-5141-49dc-b658-aa99d737e52a
+      inputPortName: B
+    - outputNodeGuid: f088c98c-5141-49dc-b658-aa99d737e52a
+      inputNodeGuid: 3017ee98-43ea-4cc5-a927-c47ddf8d98b2
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 8
+    enabled: 1
+    nodes:
+    - guid: 1889ba29-8fce-41db-895e-3d98be9d3300
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 930ad4dc-0dc9-4356-9c45-31718d90bfc5
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 6cff4a4b-de62-48f8-b91c-946e563c3851
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7cb1595f-2251-41b4-a2bd-122f64211991
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 7701ad80-dbb3-4dba-bb36-6ddca610e86b
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7f422d33-3e66-417d-8c62-9f12d6bdbebd
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 20
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: ac56f456-9c29-486b-8a61-b49c1f42f859
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 6e0c3307-2e5b-4b9d-b5e5-060eef762890
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: e40dc1e7-b55a-457a-b04a-2b508a8793b5
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: dc17f4b4-5f49-4ffc-af04-a7f30b92598c
+      type: 0
+      input: 32
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: f200e0e6-eb3c-4f18-9cd8-8825b8d1c8f8
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 901d6749-c8bc-45fb-99a8-d85b666eb765
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 1889ba29-8fce-41db-895e-3d98be9d3300
+      inputNodeGuid: 6cff4a4b-de62-48f8-b91c-946e563c3851
+      inputPortName: A
+    - outputNodeGuid: 930ad4dc-0dc9-4356-9c45-31718d90bfc5
+      inputNodeGuid: 6cff4a4b-de62-48f8-b91c-946e563c3851
+      inputPortName: B
+    - outputNodeGuid: 6cff4a4b-de62-48f8-b91c-946e563c3851
+      inputNodeGuid: 7701ad80-dbb3-4dba-bb36-6ddca610e86b
+      inputPortName: A
+    - outputNodeGuid: 7cb1595f-2251-41b4-a2bd-122f64211991
+      inputNodeGuid: 7701ad80-dbb3-4dba-bb36-6ddca610e86b
+      inputPortName: B
+    - outputNodeGuid: 7701ad80-dbb3-4dba-bb36-6ddca610e86b
+      inputNodeGuid: ac56f456-9c29-486b-8a61-b49c1f42f859
+      inputPortName: A
+    - outputNodeGuid: 7f422d33-3e66-417d-8c62-9f12d6bdbebd
+      inputNodeGuid: ac56f456-9c29-486b-8a61-b49c1f42f859
+      inputPortName: B
+    - outputNodeGuid: ac56f456-9c29-486b-8a61-b49c1f42f859
+      inputNodeGuid: e40dc1e7-b55a-457a-b04a-2b508a8793b5
+      inputPortName: A
+    - outputNodeGuid: 6e0c3307-2e5b-4b9d-b5e5-060eef762890
+      inputNodeGuid: e40dc1e7-b55a-457a-b04a-2b508a8793b5
+      inputPortName: B
+    - outputNodeGuid: e40dc1e7-b55a-457a-b04a-2b508a8793b5
+      inputNodeGuid: f200e0e6-eb3c-4f18-9cd8-8825b8d1c8f8
+      inputPortName: A
+    - outputNodeGuid: dc17f4b4-5f49-4ffc-af04-a7f30b92598c
+      inputNodeGuid: f200e0e6-eb3c-4f18-9cd8-8825b8d1c8f8
+      inputPortName: B
+    - outputNodeGuid: f200e0e6-eb3c-4f18-9cd8-8825b8d1c8f8
+      inputNodeGuid: 901d6749-c8bc-45fb-99a8-d85b666eb765
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 9
+    enabled: 1
+    nodes:
+    - guid: 9c48d37b-901e-4950-b578-5a7190b7fa96
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 15bf64ff-e343-493a-a6c5-b95f1fe3b818
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: c6bf6f50-9238-4d43-b392-40bf6ede4e74
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 72c0c93f-9096-4167-96de-29327472da9a
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 4
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 404742f5-1df9-4acf-8e4d-62a0cebd0ee6
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 8340a3ef-13e1-4c26-8117-afe98c170f87
+      type: 0
+      input: 7
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 5bad421d-83dd-427c-a39f-7a8db704473b
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 73de3ac6-9d54-43cb-847f-2dea4046b3c0
+      type: 0
+      input: 19
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: b928df8f-c249-47ca-8ef0-2c579af505e9
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 8d0c56a0-1ddb-4682-b834-f6e47b03d06a
+      type: 0
+      input: 33
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: e852e6fc-73bf-4e54-a28d-b138d2808a03
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 52474a3a-28db-427a-85e0-f4366f651f80
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 9c48d37b-901e-4950-b578-5a7190b7fa96
+      inputNodeGuid: c6bf6f50-9238-4d43-b392-40bf6ede4e74
+      inputPortName: A
+    - outputNodeGuid: 15bf64ff-e343-493a-a6c5-b95f1fe3b818
+      inputNodeGuid: c6bf6f50-9238-4d43-b392-40bf6ede4e74
+      inputPortName: B
+    - outputNodeGuid: c6bf6f50-9238-4d43-b392-40bf6ede4e74
+      inputNodeGuid: 404742f5-1df9-4acf-8e4d-62a0cebd0ee6
+      inputPortName: A
+    - outputNodeGuid: 72c0c93f-9096-4167-96de-29327472da9a
+      inputNodeGuid: 404742f5-1df9-4acf-8e4d-62a0cebd0ee6
+      inputPortName: B
+    - outputNodeGuid: 404742f5-1df9-4acf-8e4d-62a0cebd0ee6
+      inputNodeGuid: 5bad421d-83dd-427c-a39f-7a8db704473b
+      inputPortName: A
+    - outputNodeGuid: 8340a3ef-13e1-4c26-8117-afe98c170f87
+      inputNodeGuid: 5bad421d-83dd-427c-a39f-7a8db704473b
+      inputPortName: B
+    - outputNodeGuid: 5bad421d-83dd-427c-a39f-7a8db704473b
+      inputNodeGuid: b928df8f-c249-47ca-8ef0-2c579af505e9
+      inputPortName: A
+    - outputNodeGuid: 73de3ac6-9d54-43cb-847f-2dea4046b3c0
+      inputNodeGuid: b928df8f-c249-47ca-8ef0-2c579af505e9
+      inputPortName: B
+    - outputNodeGuid: b928df8f-c249-47ca-8ef0-2c579af505e9
+      inputNodeGuid: e852e6fc-73bf-4e54-a28d-b138d2808a03
+      inputPortName: A
+    - outputNodeGuid: 8d0c56a0-1ddb-4682-b834-f6e47b03d06a
+      inputNodeGuid: e852e6fc-73bf-4e54-a28d-b138d2808a03
+      inputPortName: B
+    - outputNodeGuid: e852e6fc-73bf-4e54-a28d-b138d2808a03
+      inputNodeGuid: 52474a3a-28db-427a-85e0-f4366f651f80
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 10
+    enabled: 1
+    nodes:
+    - guid: 6ef2b109-9119-4780-b5b6-1c56cd8e59f4
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 130aeb33-9dde-4681-8d19-2ed4e8f3ce3f
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 4d5f9aa3-37cf-4e86-b98a-6ffd5432741d
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: bfce0863-9c8e-42fc-9613-5c2c0ab3dea4
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 20
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 044588cd-54a6-4492-a4c2-baade5cc1d5d
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 382d8b9c-a3f3-408f-a5cd-6219de53c512
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 5
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 44dade06-1765-4312-8841-1bf4407ae65e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: dd71ac4a-5306-4ca8-b473-a2581034b688
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: 4945b0d7-a4fd-451a-a67a-1bf88bd0a5a8
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 5892534b-741f-4317-96ea-43f41010870b
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: 30f4c2af-cc92-44c8-b37f-a555575a2564
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: de16b290-f702-4fe2-802c-b4a01110ea65
+      type: 0
+      input: 9
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 0792a740-5201-41f1-b1bf-f9b4ce11765a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: 0296b574-92de-44c0-8d67-8e5ff2ee068a
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 148
+        width: 170
+        height: 76
+    - guid: 80a8d98f-036c-487e-b16e-031b04f3d3ac
+      type: 0
+      input: 20
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 236
+        width: 170
+        height: 76
+    - guid: 4d954598-1c68-424b-aa9d-b679267a3b84
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 324
+        width: 170
+        height: 76
+    - guid: 11596a2a-a769-44a1-acf4-4a5f2e17b7a4
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: 40434dac-155a-47d7-b228-8e712d05bb8a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: 37f16654-5ada-44b6-902b-e0e147c0d311
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 980
+        y: 160
+        width: 120
+        height: 92
+    - guid: 6b0c590e-24cc-4533-b872-5a90ddca587d
+      type: 0
+      input: 37
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1940
+        y: 412
+        width: 170
+        height: 76
+    - guid: 7868fa7b-d141-4b7b-9e76-86740739e5b0
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 4
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1050
+        y: 160
+        width: 120
+        height: 92
+    - guid: 4cac2e70-d36e-4b8a-98a9-1bfda16421af
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 6ef2b109-9119-4780-b5b6-1c56cd8e59f4
+      inputNodeGuid: 4d5f9aa3-37cf-4e86-b98a-6ffd5432741d
+      inputPortName: A
+    - outputNodeGuid: 130aeb33-9dde-4681-8d19-2ed4e8f3ce3f
+      inputNodeGuid: 4d5f9aa3-37cf-4e86-b98a-6ffd5432741d
+      inputPortName: B
+    - outputNodeGuid: 4d5f9aa3-37cf-4e86-b98a-6ffd5432741d
+      inputNodeGuid: 044588cd-54a6-4492-a4c2-baade5cc1d5d
+      inputPortName: A
+    - outputNodeGuid: bfce0863-9c8e-42fc-9613-5c2c0ab3dea4
+      inputNodeGuid: 044588cd-54a6-4492-a4c2-baade5cc1d5d
+      inputPortName: B
+    - outputNodeGuid: 044588cd-54a6-4492-a4c2-baade5cc1d5d
+      inputNodeGuid: 44dade06-1765-4312-8841-1bf4407ae65e
+      inputPortName: A
+    - outputNodeGuid: 382d8b9c-a3f3-408f-a5cd-6219de53c512
+      inputNodeGuid: 44dade06-1765-4312-8841-1bf4407ae65e
+      inputPortName: B
+    - outputNodeGuid: 44dade06-1765-4312-8841-1bf4407ae65e
+      inputNodeGuid: 4945b0d7-a4fd-451a-a67a-1bf88bd0a5a8
+      inputPortName: A
+    - outputNodeGuid: dd71ac4a-5306-4ca8-b473-a2581034b688
+      inputNodeGuid: 4945b0d7-a4fd-451a-a67a-1bf88bd0a5a8
+      inputPortName: B
+    - outputNodeGuid: 4945b0d7-a4fd-451a-a67a-1bf88bd0a5a8
+      inputNodeGuid: 30f4c2af-cc92-44c8-b37f-a555575a2564
+      inputPortName: A
+    - outputNodeGuid: 5892534b-741f-4317-96ea-43f41010870b
+      inputNodeGuid: 30f4c2af-cc92-44c8-b37f-a555575a2564
+      inputPortName: B
+    - outputNodeGuid: 30f4c2af-cc92-44c8-b37f-a555575a2564
+      inputNodeGuid: 0792a740-5201-41f1-b1bf-f9b4ce11765a
+      inputPortName: A
+    - outputNodeGuid: de16b290-f702-4fe2-802c-b4a01110ea65
+      inputNodeGuid: 0792a740-5201-41f1-b1bf-f9b4ce11765a
+      inputPortName: B
+    - outputNodeGuid: 80a8d98f-036c-487e-b16e-031b04f3d3ac
+      inputNodeGuid: 11596a2a-a769-44a1-acf4-4a5f2e17b7a4
+      inputPortName: A
+    - outputNodeGuid: 4d954598-1c68-424b-aa9d-b679267a3b84
+      inputNodeGuid: 11596a2a-a769-44a1-acf4-4a5f2e17b7a4
+      inputPortName: B
+    - outputNodeGuid: 0296b574-92de-44c0-8d67-8e5ff2ee068a
+      inputNodeGuid: 40434dac-155a-47d7-b228-8e712d05bb8a
+      inputPortName: A
+    - outputNodeGuid: 11596a2a-a769-44a1-acf4-4a5f2e17b7a4
+      inputNodeGuid: 40434dac-155a-47d7-b228-8e712d05bb8a
+      inputPortName: B
+    - outputNodeGuid: 0792a740-5201-41f1-b1bf-f9b4ce11765a
+      inputNodeGuid: 37f16654-5ada-44b6-902b-e0e147c0d311
+      inputPortName: A
+    - outputNodeGuid: 40434dac-155a-47d7-b228-8e712d05bb8a
+      inputNodeGuid: 37f16654-5ada-44b6-902b-e0e147c0d311
+      inputPortName: B
+    - outputNodeGuid: 37f16654-5ada-44b6-902b-e0e147c0d311
+      inputNodeGuid: 7868fa7b-d141-4b7b-9e76-86740739e5b0
+      inputPortName: A
+    - outputNodeGuid: 6b0c590e-24cc-4533-b872-5a90ddca587d
+      inputNodeGuid: 7868fa7b-d141-4b7b-9e76-86740739e5b0
+      inputPortName: B
+    - outputNodeGuid: 7868fa7b-d141-4b7b-9e76-86740739e5b0
+      inputNodeGuid: 4cac2e70-d36e-4b8a-98a9-1bfda16421af
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 11
+    enabled: 1
+    nodes:
+    - guid: adca2d35-e4f3-4712-8632-a8c6976d42ef
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: b7255ff5-7a91-47f9-9c17-370efbd4de21
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: e35a8290-788f-4933-a2a5-fb8f0954594c
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: f41eab43-cc75-43e2-b2c6-eafc48736def
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 5
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 57fe6cbd-f4f1-483c-995a-a25f2f1ca594
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 025aa941-5770-4dce-aeec-14b326549bf0
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 799a30b8-51b2-45c1-b66d-baaca21ac464
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 5e2b30ad-6287-4876-aad2-ddc99e03ecc1
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: 4b4f4a84-acdb-4d26-8a15-cd0e90c829fa
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 500
+        width: 170
+        height: 76
+    - guid: 010c651b-7852-48be-8ec4-823fd1fa9f13
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 630
+        y: 160
+        width: 120
+        height: 92
+    - guid: 21eaaafb-798f-4c67-8da7-3a5cd9a19ab3
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 2d4c3454-fd2a-4452-bdb6-405e84b2775e
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 8565a8cb-8d1d-4776-bb3f-1579b92bd735
+      type: 0
+      input: 21
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 148
+        width: 170
+        height: 76
+    - guid: 7402b822-7f2d-468d-b055-932d8af5b2b7
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 236
+        width: 170
+        height: 76
+    - guid: 96cc5461-19af-4952-8728-18cb03f28d1a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: a5e59f81-f40f-41ab-8a12-21d48b4f599d
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: b3fc8572-9330-4927-9df0-b15cd5626bd1
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: f56c5c11-fd15-4678-b204-bc7dc9e3e646
+      type: 0
+      input: 38
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1750
+        y: 324
+        width: 170
+        height: 76
+    - guid: 61cb9e82-88a6-4ce1-b798-ee2e21423b60
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 4
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 980
+        y: 160
+        width: 120
+        height: 92
+    - guid: 5a2599fd-5092-4a77-ab01-d316f1d27930
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: adca2d35-e4f3-4712-8632-a8c6976d42ef
+      inputNodeGuid: e35a8290-788f-4933-a2a5-fb8f0954594c
+      inputPortName: A
+    - outputNodeGuid: b7255ff5-7a91-47f9-9c17-370efbd4de21
+      inputNodeGuid: e35a8290-788f-4933-a2a5-fb8f0954594c
+      inputPortName: B
+    - outputNodeGuid: e35a8290-788f-4933-a2a5-fb8f0954594c
+      inputNodeGuid: 57fe6cbd-f4f1-483c-995a-a25f2f1ca594
+      inputPortName: A
+    - outputNodeGuid: f41eab43-cc75-43e2-b2c6-eafc48736def
+      inputNodeGuid: 57fe6cbd-f4f1-483c-995a-a25f2f1ca594
+      inputPortName: B
+    - outputNodeGuid: 57fe6cbd-f4f1-483c-995a-a25f2f1ca594
+      inputNodeGuid: 799a30b8-51b2-45c1-b66d-baaca21ac464
+      inputPortName: A
+    - outputNodeGuid: 025aa941-5770-4dce-aeec-14b326549bf0
+      inputNodeGuid: 799a30b8-51b2-45c1-b66d-baaca21ac464
+      inputPortName: B
+    - outputNodeGuid: 5e2b30ad-6287-4876-aad2-ddc99e03ecc1
+      inputNodeGuid: 010c651b-7852-48be-8ec4-823fd1fa9f13
+      inputPortName: A
+    - outputNodeGuid: 4b4f4a84-acdb-4d26-8a15-cd0e90c829fa
+      inputNodeGuid: 010c651b-7852-48be-8ec4-823fd1fa9f13
+      inputPortName: B
+    - outputNodeGuid: 799a30b8-51b2-45c1-b66d-baaca21ac464
+      inputNodeGuid: 21eaaafb-798f-4c67-8da7-3a5cd9a19ab3
+      inputPortName: A
+    - outputNodeGuid: 010c651b-7852-48be-8ec4-823fd1fa9f13
+      inputNodeGuid: 21eaaafb-798f-4c67-8da7-3a5cd9a19ab3
+      inputPortName: B
+    - outputNodeGuid: 8565a8cb-8d1d-4776-bb3f-1579b92bd735
+      inputNodeGuid: 96cc5461-19af-4952-8728-18cb03f28d1a
+      inputPortName: A
+    - outputNodeGuid: 7402b822-7f2d-468d-b055-932d8af5b2b7
+      inputNodeGuid: 96cc5461-19af-4952-8728-18cb03f28d1a
+      inputPortName: B
+    - outputNodeGuid: 2d4c3454-fd2a-4452-bdb6-405e84b2775e
+      inputNodeGuid: a5e59f81-f40f-41ab-8a12-21d48b4f599d
+      inputPortName: A
+    - outputNodeGuid: 96cc5461-19af-4952-8728-18cb03f28d1a
+      inputNodeGuid: a5e59f81-f40f-41ab-8a12-21d48b4f599d
+      inputPortName: B
+    - outputNodeGuid: 21eaaafb-798f-4c67-8da7-3a5cd9a19ab3
+      inputNodeGuid: b3fc8572-9330-4927-9df0-b15cd5626bd1
+      inputPortName: A
+    - outputNodeGuid: a5e59f81-f40f-41ab-8a12-21d48b4f599d
+      inputNodeGuid: b3fc8572-9330-4927-9df0-b15cd5626bd1
+      inputPortName: B
+    - outputNodeGuid: b3fc8572-9330-4927-9df0-b15cd5626bd1
+      inputNodeGuid: 61cb9e82-88a6-4ce1-b798-ee2e21423b60
+      inputPortName: A
+    - outputNodeGuid: f56c5c11-fd15-4678-b204-bc7dc9e3e646
+      inputNodeGuid: 61cb9e82-88a6-4ce1-b798-ee2e21423b60
+      inputPortName: B
+    - outputNodeGuid: 61cb9e82-88a6-4ce1-b798-ee2e21423b60
+      inputNodeGuid: 5a2599fd-5092-4a77-ab01-d316f1d27930
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 12
+    enabled: 1
+    nodes:
+    - guid: bf1a16eb-6a87-4ef3-a825-d5e5c5604592
+      type: 0
+      input: 1
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: dc8d68dc-3cc9-4c8d-9b03-c6dbf148a364
+      type: 0
+      input: 14
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 1f6fd7af-5a07-4e47-a241-377a77ed991f
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 1e6f9278-4119-48b5-8447-764f9a2f5da5
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: f771f4c9-8262-4f58-8b0c-dee486744bdd
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: c83a2b5d-5682-4679-b89c-a5a8eec53f47
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 9c929775-3d4b-4f04-aa6f-4e514c53bc52
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 39511a62-ce7b-4f1a-a7b8-ac4fe584dad2
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: 937b3481-1e67-424b-b790-0e8bb0cbb3b7
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 1b065668-d17a-4559-8b92-a8bc49308766
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: 80c367f5-a4ce-4222-8516-abbd0d87718d
+      type: 0
+      input: 22
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 990
+        y: 60
+        width: 170
+        height: 76
+    - guid: 352b20dc-2bfe-4f9a-addd-194f3640cd46
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 990
+        y: 148
+        width: 170
+        height: 76
+    - guid: e6e6a9a2-e0da-4b56-872d-db09dd4b7b4a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 28634a47-0949-4c7f-a108-fa5d0edbb2a3
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: 414230f9-6126-49fd-8eb5-419d3751b507
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: 986ad80d-0bc8-4dd1-89b5-a03166cedc28
+      type: 0
+      input: 40
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1560
+        y: 236
+        width: 170
+        height: 76
+    - guid: 1c5da4cf-0bc6-4840-9d16-79a7ff89c567
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 4
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7425cadc-33ba-4d0f-9c43-fa766f710021
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: bf1a16eb-6a87-4ef3-a825-d5e5c5604592
+      inputNodeGuid: 1f6fd7af-5a07-4e47-a241-377a77ed991f
+      inputPortName: A
+    - outputNodeGuid: dc8d68dc-3cc9-4c8d-9b03-c6dbf148a364
+      inputNodeGuid: 1f6fd7af-5a07-4e47-a241-377a77ed991f
+      inputPortName: B
+    - outputNodeGuid: 1f6fd7af-5a07-4e47-a241-377a77ed991f
+      inputNodeGuid: f771f4c9-8262-4f58-8b0c-dee486744bdd
+      inputPortName: A
+    - outputNodeGuid: 1e6f9278-4119-48b5-8447-764f9a2f5da5
+      inputNodeGuid: f771f4c9-8262-4f58-8b0c-dee486744bdd
+      inputPortName: B
+    - outputNodeGuid: f771f4c9-8262-4f58-8b0c-dee486744bdd
+      inputNodeGuid: 9c929775-3d4b-4f04-aa6f-4e514c53bc52
+      inputPortName: A
+    - outputNodeGuid: c83a2b5d-5682-4679-b89c-a5a8eec53f47
+      inputNodeGuid: 9c929775-3d4b-4f04-aa6f-4e514c53bc52
+      inputPortName: B
+    - outputNodeGuid: 9c929775-3d4b-4f04-aa6f-4e514c53bc52
+      inputNodeGuid: 937b3481-1e67-424b-b790-0e8bb0cbb3b7
+      inputPortName: A
+    - outputNodeGuid: 39511a62-ce7b-4f1a-a7b8-ac4fe584dad2
+      inputNodeGuid: 937b3481-1e67-424b-b790-0e8bb0cbb3b7
+      inputPortName: B
+    - outputNodeGuid: 80c367f5-a4ce-4222-8516-abbd0d87718d
+      inputNodeGuid: e6e6a9a2-e0da-4b56-872d-db09dd4b7b4a
+      inputPortName: A
+    - outputNodeGuid: 352b20dc-2bfe-4f9a-addd-194f3640cd46
+      inputNodeGuid: e6e6a9a2-e0da-4b56-872d-db09dd4b7b4a
+      inputPortName: B
+    - outputNodeGuid: 1b065668-d17a-4559-8b92-a8bc49308766
+      inputNodeGuid: 28634a47-0949-4c7f-a108-fa5d0edbb2a3
+      inputPortName: A
+    - outputNodeGuid: e6e6a9a2-e0da-4b56-872d-db09dd4b7b4a
+      inputNodeGuid: 28634a47-0949-4c7f-a108-fa5d0edbb2a3
+      inputPortName: B
+    - outputNodeGuid: 937b3481-1e67-424b-b790-0e8bb0cbb3b7
+      inputNodeGuid: 414230f9-6126-49fd-8eb5-419d3751b507
+      inputPortName: A
+    - outputNodeGuid: 28634a47-0949-4c7f-a108-fa5d0edbb2a3
+      inputNodeGuid: 414230f9-6126-49fd-8eb5-419d3751b507
+      inputPortName: B
+    - outputNodeGuid: 414230f9-6126-49fd-8eb5-419d3751b507
+      inputNodeGuid: 1c5da4cf-0bc6-4840-9d16-79a7ff89c567
+      inputPortName: A
+    - outputNodeGuid: 986ad80d-0bc8-4dd1-89b5-a03166cedc28
+      inputNodeGuid: 1c5da4cf-0bc6-4840-9d16-79a7ff89c567
+      inputPortName: B
+    - outputNodeGuid: 1c5da4cf-0bc6-4840-9d16-79a7ff89c567
+      inputNodeGuid: 7425cadc-33ba-4d0f-9c43-fa766f710021
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 13
+    enabled: 1
+    nodes:
+    - guid: 12ddde63-7df4-4b1f-8b17-ad854aa9f083
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: ec606749-37ad-4240-a4c5-e667df4e9f2a
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: b8965421-bd12-4d67-b11b-3cd7563a7e76
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 80d28daa-4c98-40b7-b2ab-b00926784c70
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 2
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 097dca83-f6db-4947-9f53-29346330952e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 0c06a20e-7219-4e5c-93e9-4eac5a666d3f
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: c4499063-71a3-4285-843d-1e5798349390
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: f30c826f-089c-4a3a-b47a-c16d20338e91
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 412
+        width: 170
+        height: 76
+    - guid: b203cd80-f8cb-406f-8e85-b8c22cbb91d2
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 20
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 610
+        y: 500
+        width: 170
+        height: 76
+    - guid: cae35fee-263e-4b67-99c0-1ff02a869794
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 630
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7879dce2-08dd-4bd5-a0b0-1c5f040bb5c8
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 96060b98-3876-487d-aef6-eedf91e5c0fd
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 1c958594-47e1-47b0-95de-ed537307d969
+      type: 0
+      input: 23
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 148
+        width: 170
+        height: 76
+    - guid: aca70f97-e51c-40ff-869a-d3bce0cb77bc
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 236
+        width: 170
+        height: 76
+    - guid: 327334c0-9c5c-4bf6-a60a-909362857efe
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: 1b77691b-ab7f-454f-9d68-dfb5cfdabe70
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: 1ed7113b-2596-431f-93f4-8377c2981434
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: 55e92701-4359-4ba6-a025-14174b5914a7
+      type: 0
+      input: 39
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1750
+        y: 324
+        width: 170
+        height: 76
+    - guid: 6366cec9-ba0a-4727-be5f-2f01f96a5940
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 4
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 980
+        y: 160
+        width: 120
+        height: 92
+    - guid: 9912032b-7d7d-4cda-b22e-3a0b8cd79405
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 12ddde63-7df4-4b1f-8b17-ad854aa9f083
+      inputNodeGuid: b8965421-bd12-4d67-b11b-3cd7563a7e76
+      inputPortName: A
+    - outputNodeGuid: ec606749-37ad-4240-a4c5-e667df4e9f2a
+      inputNodeGuid: b8965421-bd12-4d67-b11b-3cd7563a7e76
+      inputPortName: B
+    - outputNodeGuid: b8965421-bd12-4d67-b11b-3cd7563a7e76
+      inputNodeGuid: 097dca83-f6db-4947-9f53-29346330952e
+      inputPortName: A
+    - outputNodeGuid: 80d28daa-4c98-40b7-b2ab-b00926784c70
+      inputNodeGuid: 097dca83-f6db-4947-9f53-29346330952e
+      inputPortName: B
+    - outputNodeGuid: 097dca83-f6db-4947-9f53-29346330952e
+      inputNodeGuid: c4499063-71a3-4285-843d-1e5798349390
+      inputPortName: A
+    - outputNodeGuid: 0c06a20e-7219-4e5c-93e9-4eac5a666d3f
+      inputNodeGuid: c4499063-71a3-4285-843d-1e5798349390
+      inputPortName: B
+    - outputNodeGuid: f30c826f-089c-4a3a-b47a-c16d20338e91
+      inputNodeGuid: cae35fee-263e-4b67-99c0-1ff02a869794
+      inputPortName: A
+    - outputNodeGuid: b203cd80-f8cb-406f-8e85-b8c22cbb91d2
+      inputNodeGuid: cae35fee-263e-4b67-99c0-1ff02a869794
+      inputPortName: B
+    - outputNodeGuid: c4499063-71a3-4285-843d-1e5798349390
+      inputNodeGuid: 7879dce2-08dd-4bd5-a0b0-1c5f040bb5c8
+      inputPortName: A
+    - outputNodeGuid: cae35fee-263e-4b67-99c0-1ff02a869794
+      inputNodeGuid: 7879dce2-08dd-4bd5-a0b0-1c5f040bb5c8
+      inputPortName: B
+    - outputNodeGuid: 1c958594-47e1-47b0-95de-ed537307d969
+      inputNodeGuid: 327334c0-9c5c-4bf6-a60a-909362857efe
+      inputPortName: A
+    - outputNodeGuid: aca70f97-e51c-40ff-869a-d3bce0cb77bc
+      inputNodeGuid: 327334c0-9c5c-4bf6-a60a-909362857efe
+      inputPortName: B
+    - outputNodeGuid: 96060b98-3876-487d-aef6-eedf91e5c0fd
+      inputNodeGuid: 1b77691b-ab7f-454f-9d68-dfb5cfdabe70
+      inputPortName: A
+    - outputNodeGuid: 327334c0-9c5c-4bf6-a60a-909362857efe
+      inputNodeGuid: 1b77691b-ab7f-454f-9d68-dfb5cfdabe70
+      inputPortName: B
+    - outputNodeGuid: 7879dce2-08dd-4bd5-a0b0-1c5f040bb5c8
+      inputNodeGuid: 1ed7113b-2596-431f-93f4-8377c2981434
+      inputPortName: A
+    - outputNodeGuid: 1b77691b-ab7f-454f-9d68-dfb5cfdabe70
+      inputNodeGuid: 1ed7113b-2596-431f-93f4-8377c2981434
+      inputPortName: B
+    - outputNodeGuid: 1ed7113b-2596-431f-93f4-8377c2981434
+      inputNodeGuid: 6366cec9-ba0a-4727-be5f-2f01f96a5940
+      inputPortName: A
+    - outputNodeGuid: 55e92701-4359-4ba6-a025-14174b5914a7
+      inputNodeGuid: 6366cec9-ba0a-4727-be5f-2f01f96a5940
+      inputPortName: B
+    - outputNodeGuid: 6366cec9-ba0a-4727-be5f-2f01f96a5940
+      inputNodeGuid: 9912032b-7d7d-4cda-b22e-3a0b8cd79405
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 14
+    enabled: 1
+    nodes:
+    - guid: 29c7ab21-5f39-4253-be3f-319758689ab3
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 4ea15690-fb5b-46df-bade-ba1af07a2d71
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: ba65fa2d-2e9e-41b7-9341-f88f56b7b6ea
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 507e9d0f-80b8-490e-ad9e-8c74d1eace81
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 4
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 386eac88-c992-4101-a8e3-b398eedff371
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: 77aeca18-85a9-4b06-aea0-e4c27e1c443e
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 20a562d8-5276-4f0d-8608-96ca3588cb95
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 10
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 412
+        width: 170
+        height: 76
+    - guid: cf082e1f-68a7-4c35-a13c-409de9bc8426
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: 06e73dca-70f6-469b-9342-03f842799e45
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 7329379c-793f-4e88-b3b5-d0d1fdc5965b
+      type: 0
+      input: 41
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: 540c6c37-967f-4bdd-b8b6-a787343a4ba5
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: a8c85d8a-41f3-4a8e-8d8a-49bc6948c8ce
+      type: 0
+      input: 24
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 163796a1-ae20-4e89-902e-a221ca947a46
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: b861d7d1-bb5b-4ea3-a35f-828b4aeb2816
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 148
+        width: 170
+        height: 76
+    - guid: aa2a277c-11da-4145-916a-1d16209813d2
+      type: 0
+      input: 25
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 236
+        width: 170
+        height: 76
+    - guid: a8ba1a4c-d6ee-4b39-8802-662013daf979
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1370
+        y: 324
+        width: 170
+        height: 76
+    - guid: 90852490-732b-4b65-a3e0-543a5014723a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: cca68618-0579-4528-b553-11dde8f77da6
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: e877c473-3557-49bc-a8b3-e992d653e204
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 980
+        y: 160
+        width: 120
+        height: 92
+    - guid: 0b11fb21-a1fc-4f49-9d4c-2e989dec2f33
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: 29c7ab21-5f39-4253-be3f-319758689ab3
+      inputNodeGuid: ba65fa2d-2e9e-41b7-9341-f88f56b7b6ea
+      inputPortName: A
+    - outputNodeGuid: 4ea15690-fb5b-46df-bade-ba1af07a2d71
+      inputNodeGuid: ba65fa2d-2e9e-41b7-9341-f88f56b7b6ea
+      inputPortName: B
+    - outputNodeGuid: ba65fa2d-2e9e-41b7-9341-f88f56b7b6ea
+      inputNodeGuid: 386eac88-c992-4101-a8e3-b398eedff371
+      inputPortName: A
+    - outputNodeGuid: 507e9d0f-80b8-490e-ad9e-8c74d1eace81
+      inputNodeGuid: 386eac88-c992-4101-a8e3-b398eedff371
+      inputPortName: B
+    - outputNodeGuid: 77aeca18-85a9-4b06-aea0-e4c27e1c443e
+      inputNodeGuid: cf082e1f-68a7-4c35-a13c-409de9bc8426
+      inputPortName: A
+    - outputNodeGuid: 20a562d8-5276-4f0d-8608-96ca3588cb95
+      inputNodeGuid: cf082e1f-68a7-4c35-a13c-409de9bc8426
+      inputPortName: B
+    - outputNodeGuid: 386eac88-c992-4101-a8e3-b398eedff371
+      inputNodeGuid: 06e73dca-70f6-469b-9342-03f842799e45
+      inputPortName: A
+    - outputNodeGuid: cf082e1f-68a7-4c35-a13c-409de9bc8426
+      inputNodeGuid: 06e73dca-70f6-469b-9342-03f842799e45
+      inputPortName: B
+    - outputNodeGuid: 06e73dca-70f6-469b-9342-03f842799e45
+      inputNodeGuid: 540c6c37-967f-4bdd-b8b6-a787343a4ba5
+      inputPortName: A
+    - outputNodeGuid: 7329379c-793f-4e88-b3b5-d0d1fdc5965b
+      inputNodeGuid: 540c6c37-967f-4bdd-b8b6-a787343a4ba5
+      inputPortName: B
+    - outputNodeGuid: 540c6c37-967f-4bdd-b8b6-a787343a4ba5
+      inputNodeGuid: 163796a1-ae20-4e89-902e-a221ca947a46
+      inputPortName: A
+    - outputNodeGuid: a8c85d8a-41f3-4a8e-8d8a-49bc6948c8ce
+      inputNodeGuid: 163796a1-ae20-4e89-902e-a221ca947a46
+      inputPortName: B
+    - outputNodeGuid: aa2a277c-11da-4145-916a-1d16209813d2
+      inputNodeGuid: 90852490-732b-4b65-a3e0-543a5014723a
+      inputPortName: A
+    - outputNodeGuid: a8ba1a4c-d6ee-4b39-8802-662013daf979
+      inputNodeGuid: 90852490-732b-4b65-a3e0-543a5014723a
+      inputPortName: B
+    - outputNodeGuid: b861d7d1-bb5b-4ea3-a35f-828b4aeb2816
+      inputNodeGuid: cca68618-0579-4528-b553-11dde8f77da6
+      inputPortName: A
+    - outputNodeGuid: 90852490-732b-4b65-a3e0-543a5014723a
+      inputNodeGuid: cca68618-0579-4528-b553-11dde8f77da6
+      inputPortName: B
+    - outputNodeGuid: 163796a1-ae20-4e89-902e-a221ca947a46
+      inputNodeGuid: e877c473-3557-49bc-a8b3-e992d653e204
+      inputPortName: A
+    - outputNodeGuid: cca68618-0579-4528-b553-11dde8f77da6
+      inputNodeGuid: e877c473-3557-49bc-a8b3-e992d653e204
+      inputPortName: B
+    - outputNodeGuid: e877c473-3557-49bc-a8b3-e992d653e204
+      inputNodeGuid: 0b11fb21-a1fc-4f49-9d4c-2e989dec2f33
+      inputPortName: Value
+    groups: []
+    description: 
+  - target: 15
+    enabled: 1
+    nodes:
+    - guid: fc9e30b7-f74a-4ce7-b117-fdd4f713c253
+      type: 0
+      input: 2
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 60
+        width: 170
+        height: 76
+    - guid: 44068182-235c-4586-8c26-b49bcc6b060a
+      type: 0
+      input: 15
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 40
+        y: 148
+        width: 170
+        height: 76
+    - guid: 740f7a00-f4d9-4ac7-91c4-e031cfdaf830
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 350
+        y: 160
+        width: 120
+        height: 92
+    - guid: 267ce73d-f714-47c2-a064-dacc734a9220
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 2
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 230
+        y: 236
+        width: 170
+        height: 76
+    - guid: 710c98a4-9f93-41c5-8f71-e7cf46afa1ea
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 160
+        width: 120
+        height: 92
+    - guid: a0c251a2-6679-40f5-900a-72a5493b09b0
+      type: 0
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 324
+        width: 170
+        height: 76
+    - guid: 94e4cca1-120d-4af4-9264-dc350b5e5ff9
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 5
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 420
+        y: 412
+        width: 170
+        height: 76
+    - guid: 674f1469-44ff-4fd4-9f11-f8365c71474e
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 490
+        y: 160
+        width: 120
+        height: 92
+    - guid: dff430dc-d5af-4d00-861a-50ffa2462e9f
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 560
+        y: 160
+        width: 120
+        height: 92
+    - guid: 17e9c25b-6bde-419a-9b52-d7e8647f95fd
+      type: 0
+      input: 26
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 800
+        y: 500
+        width: 170
+        height: 76
+    - guid: 78101b75-a9a4-4703-ad6b-e19a87396693
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 700
+        y: 160
+        width: 120
+        height: 92
+    - guid: 74b543be-5795-4423-936a-6a435283f75b
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 1
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 60
+        width: 170
+        height: 76
+    - guid: 6f65a116-d421-4395-b4a5-2617d10c3bcd
+      type: 0
+      input: 27
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 148
+        width: 170
+        height: 76
+    - guid: 3ada7341-ef7a-41de-8c6e-d30d95d59fa0
+      type: 1
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 100
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 1180
+        y: 236
+        width: 170
+        height: 76
+    - guid: caad211e-9e5f-4399-b0b4-b2e388f0fe2a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 3
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 770
+        y: 160
+        width: 120
+        height: 92
+    - guid: b563bc0f-8cc8-48ed-b0c5-9245a67f829a
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 840
+        y: 160
+        width: 120
+        height: 92
+    - guid: 31f44057-496f-4537-aa2e-5c21da770928
+      type: 2
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 2
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 910
+        y: 160
+        width: 120
+        height: 92
+    - guid: 820e4f5f-08da-45f0-aaab-1a1ac4009a26
+      type: 3
+      input: 0
+      formulaTarget: 0
+      function: {fileID: 0}
+      operation: 0
+      constant: 0
+      title: 
+      note: 
+      groupId: 
+      position:
+        serializedVersion: 2
+        x: 760
+        y: 220
+        width: 120
+        height: 72
+    connections:
+    - outputNodeGuid: fc9e30b7-f74a-4ce7-b117-fdd4f713c253
+      inputNodeGuid: 740f7a00-f4d9-4ac7-91c4-e031cfdaf830
+      inputPortName: A
+    - outputNodeGuid: 44068182-235c-4586-8c26-b49bcc6b060a
+      inputNodeGuid: 740f7a00-f4d9-4ac7-91c4-e031cfdaf830
+      inputPortName: B
+    - outputNodeGuid: 740f7a00-f4d9-4ac7-91c4-e031cfdaf830
+      inputNodeGuid: 710c98a4-9f93-41c5-8f71-e7cf46afa1ea
+      inputPortName: A
+    - outputNodeGuid: 267ce73d-f714-47c2-a064-dacc734a9220
+      inputNodeGuid: 710c98a4-9f93-41c5-8f71-e7cf46afa1ea
+      inputPortName: B
+    - outputNodeGuid: a0c251a2-6679-40f5-900a-72a5493b09b0
+      inputNodeGuid: 674f1469-44ff-4fd4-9f11-f8365c71474e
+      inputPortName: A
+    - outputNodeGuid: 94e4cca1-120d-4af4-9264-dc350b5e5ff9
+      inputNodeGuid: 674f1469-44ff-4fd4-9f11-f8365c71474e
+      inputPortName: B
+    - outputNodeGuid: 710c98a4-9f93-41c5-8f71-e7cf46afa1ea
+      inputNodeGuid: dff430dc-d5af-4d00-861a-50ffa2462e9f
+      inputPortName: A
+    - outputNodeGuid: 674f1469-44ff-4fd4-9f11-f8365c71474e
+      inputNodeGuid: dff430dc-d5af-4d00-861a-50ffa2462e9f
+      inputPortName: B
+    - outputNodeGuid: dff430dc-d5af-4d00-861a-50ffa2462e9f
+      inputNodeGuid: 78101b75-a9a4-4703-ad6b-e19a87396693
+      inputPortName: A
+    - outputNodeGuid: 17e9c25b-6bde-419a-9b52-d7e8647f95fd
+      inputNodeGuid: 78101b75-a9a4-4703-ad6b-e19a87396693
+      inputPortName: B
+    - outputNodeGuid: 6f65a116-d421-4395-b4a5-2617d10c3bcd
+      inputNodeGuid: caad211e-9e5f-4399-b0b4-b2e388f0fe2a
+      inputPortName: A
+    - outputNodeGuid: 3ada7341-ef7a-41de-8c6e-d30d95d59fa0
+      inputNodeGuid: caad211e-9e5f-4399-b0b4-b2e388f0fe2a
+      inputPortName: B
+    - outputNodeGuid: 74b543be-5795-4423-936a-6a435283f75b
+      inputNodeGuid: b563bc0f-8cc8-48ed-b0c5-9245a67f829a
+      inputPortName: A
+    - outputNodeGuid: caad211e-9e5f-4399-b0b4-b2e388f0fe2a
+      inputNodeGuid: b563bc0f-8cc8-48ed-b0c5-9245a67f829a
+      inputPortName: B
+    - outputNodeGuid: 78101b75-a9a4-4703-ad6b-e19a87396693
+      inputNodeGuid: 31f44057-496f-4537-aa2e-5c21da770928
+      inputPortName: A
+    - outputNodeGuid: b563bc0f-8cc8-48ed-b0c5-9245a67f829a
+      inputNodeGuid: 31f44057-496f-4537-aa2e-5c21da770928
+      inputPortName: B
+    - outputNodeGuid: 31f44057-496f-4537-aa2e-5c21da770928
+      inputNodeGuid: 820e4f5f-08da-45f0-aaab-1a1ac4009a26
+      inputPortName: Value
+    groups: []
+    description: 

@@ -21,6 +21,8 @@ namespace PLAYERTWO.ARPGProjectEditorTools
 
     public class EntityStatsFormulaEditorWindow : EditorWindow
     {
+        const string k_iconAssetFolder = "Assets/ANSTUDIO/ARPG Project/Stats Formula/Editor/Icons";
+
         EntityStatsFormulaGraph m_graphAsset;
         EntityStatsFormulaTarget m_target;
         EntityStatsFormulaTarget m_exampleTarget;
@@ -48,7 +50,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         int m_customVitality = 15;
         int m_customEnergy = 10;
 
-        [MenuItem("Tools/PLAYER TWO/ARPG Project/Stats Formula Editor")]
+        [MenuItem("Tools/ANSTUDIO/ARPG Project/Stats Formula Editor")]
         public static void Open()
         {
             var window = GetWindow<EntityStatsFormulaEditorWindow>();
@@ -150,17 +152,18 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             toolbar.Add(exampleSection);
 
             var saveSection = CreateToolbarSection("Save / JSON");
-            saveSection.Add(new Button(SaveAndPersist) { text = "Save" });
+            saveSection.Add(CreateIconTextToolbarButton(SaveAndPersist, "StatsFormulaIcon_Save", "Save", "Save graph asset"));
             saveSection.Add(new Button(ExportJson) { text = "Export JSON" });
             saveSection.Add(new Button(ImportJson) { text = "Import JSON" });
             toolbar.Add(saveSection);
 
             var toolsSection = CreateToolbarSection("Edit Tools");
-            toolsSection.Add(new Button(() => Undo.PerformUndo()) { text = "Undo" });
-            toolsSection.Add(new Button(() => Undo.PerformRedo()) { text = "Redo" });
-            toolsSection.Add(new Button(() => m_graphView.CreateGroupFromSelection()) { text = "Group" });
-            toolsSection.Add(new Button(() => m_graphView.AutoLayout()) { text = "Auto Layout" });
-            toolsSection.Add(new Button(() => m_graphView.FrameAllNodes()) { text = "Frame All" });
+            toolsSection.AddToClassList("edit-tools-section");
+            toolsSection.Add(CreateIconToolbarButton(() => Undo.PerformUndo(), "StatsFormulaIcon_Undo", "↶", "Undo"));
+            toolsSection.Add(CreateIconToolbarButton(() => Undo.PerformRedo(), "StatsFormulaIcon_Redo", "↷", "Redo"));
+            toolsSection.Add(CreateIconToolbarButton(() => m_graphView.CreateGroupFromSelection(), "StatsFormulaIcon_Group", "≋", "Group Selection"));
+            toolsSection.Add(CreateIconToolbarButton(() => m_graphView.AutoLayout(), "StatsFormulaIcon_AutoLayout", "▦", "Auto Layout"));
+            toolsSection.Add(CreateIconToolbarButton(() => m_graphView.FrameAllNodes(), "StatsFormulaIcon_FrameAll", "#", "Frame All Nodes"));
             toolbar.Add(toolsSection);
 
             rootVisualElement.Add(toolbar);
@@ -179,7 +182,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             content.Add(m_previewCard);
             rootVisualElement.Add(content);
 
-            m_diagnosticsContainer = new VisualElement();
+            m_diagnosticsContainer = new ScrollView(ScrollViewMode.Vertical);
             m_diagnosticsContainer.AddToClassList("diagnostics-panel");
             rootVisualElement.Add(m_diagnosticsContainer);
 
@@ -189,7 +192,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         void LoadStyleSheet()
         {
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                "Assets/PLAYER TWO/ARPG Project/Core/Entity/Stats Formula/Editor/StatsFormulaEditor.uss"
+                "Assets/ANSTUDIO/ARPG Project/Stats Formula/Editor/StatsFormulaEditor.uss"
             );
 
             if (styleSheet != null)
@@ -211,25 +214,88 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             return label;
         }
 
+        static Button CreateIconToolbarButton(Action action, string iconName, string fallbackSymbol, string tooltip)
+        {
+            var button = new Button(action)
+            {
+                text = string.Empty,
+                tooltip = tooltip,
+            };
+            button.AddToClassList("icon-toolbar-button");
+
+            if (!TryAddToolbarIcon(button, iconName))
+                button.text = fallbackSymbol;
+
+            return button;
+        }
+
+        static Button CreateIconTextToolbarButton(Action action, string iconName, string label, string tooltip)
+        {
+            var button = new Button(action)
+            {
+                text = string.Empty,
+                tooltip = tooltip,
+            };
+            button.AddToClassList("icon-text-toolbar-button");
+
+            if (!TryAddToolbarIcon(button, iconName))
+                button.text = label;
+            else
+                button.Add(new Label(label));
+
+            return button;
+        }
+
+        static bool TryAddToolbarIcon(Button button, string iconName)
+        {
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>($"{k_iconAssetFolder}/{iconName}.png");
+
+            if (texture == null)
+                return false;
+
+            var image = new Image
+            {
+                image = texture,
+                scaleMode = ScaleMode.ScaleToFit,
+                pickingMode = PickingMode.Ignore,
+            };
+            image.AddToClassList("toolbar-button-icon-image");
+            button.Add(image);
+            return true;
+        }
+
+        static Label CreatePreviewControlLabel(string text)
+        {
+            var label = new Label(text);
+            label.AddToClassList("preview-control-label");
+            return label;
+        }
+
         VisualElement CreatePreviewControls()
         {
             var controls = new VisualElement();
             controls.AddToClassList("preview-controls");
 
+            controls.Add(CreatePreviewControlLabel("Entity"));
             var entityField = new PopupField<string>(
-                "Entity",
+                string.Empty,
                 m_entitySourceNames,
                 Mathf.Clamp(m_selectedEntityIndex, 0, Mathf.Max(0, m_entitySourceNames.Count - 1))
             );
+            entityField.AddToClassList("preview-dropdown-field");
             entityField.RegisterValueChangedCallback(evt =>
             {
                 m_selectedEntityIndex = Mathf.Max(0, m_entitySourceNames.IndexOf(evt.newValue));
                 UpdatePreview();
             });
             controls.Add(entityField);
-            controls.Add(new Button(BuildWindow) { text = "Refresh Entities" });
+            var refreshEntitiesButton = new Button(BuildWindow) { text = "Refresh Entities" };
+            refreshEntitiesButton.AddToClassList("preview-refresh-button");
+            controls.Add(refreshEntitiesButton);
 
-            var previewModeField = new EnumField("Preview With", m_previewMode);
+            controls.Add(CreatePreviewControlLabel("Preview With"));
+            var previewModeField = new EnumField(string.Empty, m_previewMode);
+            previewModeField.AddToClassList("preview-dropdown-field");
             previewModeField.RegisterValueChangedCallback(evt =>
             {
                 m_previewMode = (StatsFormulaPreviewMode)evt.newValue;
@@ -279,7 +345,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         void AddCustomPreviewField(VisualElement toolbar, string label, Func<int> getter, Action<int> setter)
         {
             var field = new IntegerField(label) { value = getter() };
-            field.style.width = 72f;
+            field.AddToClassList("preview-number-field");
             field.RegisterValueChangedCallback(evt =>
             {
                 var clampedValue = Mathf.Max(0, evt.newValue);
@@ -1220,6 +1286,12 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         }
     }
 
+    class FormulaPortStyleData
+    {
+        public EntityStatsFormulaNodeData data;
+        public Color baseColor;
+    }
+
     class FormulaClipboardData
     {
         public List<EntityStatsFormulaNodeData> nodes = new();
@@ -1242,6 +1314,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         {
             m_window = window;
             focusable = true;
+            AddToClassList("stats-formula-graph-view");
             style.flexGrow = 1;
             style.minHeight = 0f;
 
@@ -1263,6 +1336,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         void AddMiniMap()
         {
             var miniMap = new MiniMap { anchored = false };
+            miniMap.AddToClassList("formula-minimap");
             miniMap.SetPosition(new Rect(12, 32, 220, 150));
             Add(miniMap);
         }
@@ -2096,7 +2170,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             switch (data.type)
             {
                 case EntityStatsFormulaNodeType.Input:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     var inputField = new EnumField("Stat", data.input);
                     inputField.RegisterValueChangedCallback(evt =>
                     {
@@ -2108,11 +2182,11 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(inputField);
                     break;
                 case EntityStatsFormulaNodeType.BuiltInValue:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     node.extensionContainer.Add(new Label("Default result for this stat."));
                     break;
                 case EntityStatsFormulaNodeType.FormulaReference:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     AddBadge(node, data.formulaTarget.ToString(), "target-badge");
                     var targetField = new EnumField("Target", data.formulaTarget);
                     targetField.RegisterValueChangedCallback(evt =>
@@ -2125,7 +2199,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(targetField);
                     break;
                 case EntityStatsFormulaNodeType.FormulaFunction:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     AddBadge(node, data.function ? data.function.name : "Function", "function-badge");
                     var functionField = new ObjectField("Function")
                     {
@@ -2143,7 +2217,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(functionField);
                     break;
                 case EntityStatsFormulaNodeType.Constant:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     AddBadge(node, data.constant.ToString("0.###"), "value-badge");
                     var constantNameField = CreateNameField(data, node, "Constant");
                     node.extensionContainer.Add(constantNameField);
@@ -2157,7 +2231,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(floatField);
                     break;
                 case EntityStatsFormulaNodeType.PercentConstant:
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     AddBadge(node, data.constant.ToString("0.###") + "%", "value-badge");
                     var percentNameField = CreateNameField(data, node, "% Constant");
                     node.extensionContainer.Add(percentNameField);
@@ -2177,8 +2251,8 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                 case EntityStatsFormulaNodeType.Operator:
                     AddBadge(node, GetOperatorSymbol(data.operation), "operator-badge");
                     foreach (var portName in EntityStatsFormulaValidator.GetOperatorInputPorts(data.operation))
-                        AddInput(node, portName);
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                        AddInput(node, data, portName);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     var opField = new EnumField(data.operation);
                     opField.RegisterValueChangedCallback(evt =>
                     {
@@ -2190,8 +2264,8 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(opField);
                     break;
                 case EntityStatsFormulaNodeType.Reroute:
-                    AddInput(node, EntityStatsFormulaEvaluator.ValuePort);
-                    AddOutput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddInput(node, data, EntityStatsFormulaEvaluator.ValuePort);
+                    AddOutput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     break;
                 case EntityStatsFormulaNodeType.Comment:
                     node.tooltip = "Resizable note box. Use this to document nearby formula nodes.";
@@ -2224,7 +2298,7 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                     node.extensionContainer.Add(resizeHandle);
                     break;
                 case EntityStatsFormulaNodeType.Result:
-                    AddInput(node, EntityStatsFormulaEvaluator.ValuePort);
+                    AddInput(node, data, EntityStatsFormulaEvaluator.ValuePort);
                     node.capabilities &= ~Capabilities.Deletable;
                     break;
             }
@@ -2377,65 +2451,121 @@ namespace PLAYERTWO.ARPGProjectEditorTools
             }
         }
 
-        void AddInput(Node node, string name)
+        void AddInput(Node node, EntityStatsFormulaNodeData data, string name)
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(float));
             port.portName = name;
-            ApplyPortClass(port, name);
+            ApplyPortClass(port, data, name, Direction.Input);
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.inputContainer.Add(port);
         }
 
-        void AddOutput(Node node, string name)
+        void AddOutput(Node node, EntityStatsFormulaNodeData data, string name)
         {
             var port = node.InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
             port.portName = name;
-            ApplyPortClass(port, name);
+            ApplyPortClass(port, data, name, Direction.Output);
             port.AddManipulator(new EdgeConnector<Edge>(m_edgeConnectorListener));
             node.outputContainer.Add(port);
         }
 
-        static void ApplyPortClass(Port port, string name)
+        static void ApplyPortClass(Port port, EntityStatsFormulaNodeData data, string name, Direction direction)
         {
             port.AddToClassList("formula-port");
+            port.userData = new FormulaPortStyleData
+            {
+                data = data,
+                baseColor = GetPortColor(data, name, direction),
+            };
+
             var normalized = (name ?? string.Empty).ToLowerInvariant();
-            var color = new Color(0.74f, 0.74f, 0.74f, 1f);
-            if (normalized.Contains("percent"))
+            if (direction == Direction.Output)
+            {
+                port.AddToClassList("port-output");
+                port.AddToClassList("port-output-" + data.type.ToString().ToLowerInvariant());
+            }
+            else if (normalized.Contains("percent"))
             {
                 port.AddToClassList("port-percent");
-                color = new Color(0.58f, 0.34f, 0.88f, 1f);
             }
             else if (normalized == "true")
             {
                 port.AddToClassList("port-true");
-                color = new Color(0.25f, 0.78f, 0.38f, 1f);
             }
             else if (normalized == "false")
             {
                 port.AddToClassList("port-false");
-                color = new Color(0.86f, 0.26f, 0.24f, 1f);
             }
             else if (normalized == "min")
             {
                 port.AddToClassList("port-min");
-                color = new Color(0.30f, 0.55f, 0.92f, 1f);
             }
             else if (normalized == "max")
             {
                 port.AddToClassList("port-max");
-                color = new Color(0.92f, 0.55f, 0.20f, 1f);
+            }
+            else if (normalized == "t")
+            {
+                port.AddToClassList("port-time");
             }
             else
             {
                 port.AddToClassList("port-value");
             }
 
-            port.portColor = color;
+            SetPortColor(port, ((FormulaPortStyleData)port.userData).baseColor);
             var label = port.Q<Label>();
             if (label != null)
             {
                 label.style.color = Color.white;
                 label.style.unityFontStyleAndWeight = FontStyle.Bold;
+            }
+        }
+
+        static void SetPortColor(Port port, Color color)
+        {
+            if (port == null)
+                return;
+
+            port.portColor = color;
+            port.MarkDirtyRepaint();
+        }
+
+        static void ResetPortColor(Port port)
+        {
+            if (port?.userData is FormulaPortStyleData styleData)
+                SetPortColor(port, styleData.baseColor);
+        }
+
+        static Color GetPortColor(EntityStatsFormulaNodeData data, string name, Direction direction)
+        {
+            if (direction == Direction.Output)
+                return GetWireColor(data);
+
+            return GetInputPortColor(name);
+        }
+
+        static Color GetInputPortColor(string name)
+        {
+            var normalized = (name ?? string.Empty).ToLowerInvariant();
+
+            if (normalized.Contains("percent"))
+                return new Color(0.62f, 0.42f, 0.92f, 1f);
+
+            switch (normalized)
+            {
+                case "true":
+                    return new Color(0.25f, 0.78f, 0.38f, 1f);
+                case "false":
+                    return new Color(0.86f, 0.26f, 0.24f, 1f);
+                case "min":
+                    return new Color(0.30f, 0.55f, 0.92f, 1f);
+                case "max":
+                    return new Color(0.92f, 0.55f, 0.20f, 1f);
+                case "t":
+                    return new Color(0.34f, 0.78f, 0.86f, 1f);
+                default:
+                    return new Color(0.72f, 0.76f, 0.84f, 1f);
             }
         }
 
@@ -2462,13 +2592,72 @@ namespace PLAYERTWO.ARPGProjectEditorTools
         static void ApplyEdgeStyle(Edge edge, EntityStatsFormulaNodeData outputData)
         {
             edge.AddToClassList("formula-edge");
+
+            var wireColor = GetWireColor(outputData);
+            var wireWidth = outputData != null && outputData.type == EntityStatsFormulaNodeType.BuiltInValue ? 3 : 2;
+
+            ApplyConnectionTypeClass(edge, outputData);
+            SetPortColor(edge.output, wireColor);
+            SetPortColor(edge.input, wireColor);
+            ApplyEdgeControlStyle(edge, wireColor, wireWidth);
+            edge.RegisterCallback<MouseEnterEvent>(_ => ApplyEdgeControlStyle(edge, wireColor, wireWidth + 1));
+            edge.RegisterCallback<MouseLeaveEvent>(_ => ApplyEdgeControlStyle(edge, wireColor, wireWidth));
+        }
+
+        static void ApplyConnectionTypeClass(Edge edge, EntityStatsFormulaNodeData outputData)
+        {
             if (outputData == null)
                 return;
 
-            if (outputData.type == EntityStatsFormulaNodeType.FormulaReference)
+            edge.AddToClassList("edge-output-" + outputData.type.ToString().ToLowerInvariant());
+
+            if (outputData.type == EntityStatsFormulaNodeType.FormulaReference
+                || outputData.type == EntityStatsFormulaNodeType.FormulaFunction)
                 edge.AddToClassList("edge-formula-reference");
             else if (outputData.type == EntityStatsFormulaNodeType.BuiltInValue)
                 edge.AddToClassList("edge-built-in-value");
+        }
+
+        static void ApplyEdgeControlStyle(Edge edge, Color color, int width)
+        {
+            if (edge == null)
+                return;
+
+            if (edge.edgeControl != null)
+            {
+                edge.edgeControl.inputColor = color;
+                edge.edgeControl.outputColor = color;
+                edge.edgeControl.edgeWidth = width;
+            }
+
+            edge.MarkDirtyRepaint();
+        }
+
+        static Color GetWireColor(EntityStatsFormulaNodeData outputData)
+        {
+            if (outputData == null)
+                return new Color(0.78f, 0.83f, 0.92f, 1f);
+
+            switch (outputData.type)
+            {
+                case EntityStatsFormulaNodeType.Input:
+                    return new Color(0.35f, 0.62f, 1f, 1f);
+                case EntityStatsFormulaNodeType.Constant:
+                    return new Color(0.42f, 0.83f, 0.48f, 1f);
+                case EntityStatsFormulaNodeType.PercentConstant:
+                    return new Color(0.62f, 0.42f, 0.92f, 1f);
+                case EntityStatsFormulaNodeType.Operator:
+                    return new Color(0.95f, 0.67f, 0.28f, 1f);
+                case EntityStatsFormulaNodeType.BuiltInValue:
+                    return new Color(0.45f, 0.78f, 1f, 1f);
+                case EntityStatsFormulaNodeType.FormulaReference:
+                case EntityStatsFormulaNodeType.FormulaFunction:
+                    return new Color(0.68f, 0.56f, 0.92f, 1f);
+                case EntityStatsFormulaNodeType.Result:
+                    return new Color(0.94f, 0.48f, 0.50f, 1f);
+                default:
+                    return new Color(0.78f, 0.83f, 0.92f, 1f);
+            }
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange change)
@@ -2494,8 +2683,10 @@ namespace PLAYERTWO.ARPGProjectEditorTools
                         m_formula?.nodes.Remove(data);
                         m_formula?.connections.RemoveAll(connection => connection.outputNodeGuid == data.guid || connection.inputNodeGuid == data.guid);
                     }
-                    else if (element is Edge)
+                    else if (element is Edge edge)
                     {
+                        ResetPortColor(edge.input);
+                        ResetPortColor(edge.output);
                         changedSerializedData = true;
                     }
                 }
